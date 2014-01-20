@@ -37,7 +37,7 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	@Override
 	public double getX() {
 		return x;		
-	}
+	}	
 	
 	@Override
 	public void setY(double y) {
@@ -68,6 +68,11 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	public double getDeltaX() {
 		return deltaX;
 	}
+	
+	@Override
+	public void addDeltaX(double deltaDeltaX) {
+		this.deltaX += deltaDeltaX;
+	}
 
 	@Override
 	public void setDeltaY(double deltaY) {
@@ -80,6 +85,11 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	}
 
 	@Override
+	public void addDeltaY(double deltaDeltaY) {
+		this.deltaY += deltaDeltaY;
+	}
+
+	@Override
 	public void setDeltaZ(double deltaZ) {
 		this.deltaZ = deltaZ;
 	}
@@ -87,6 +97,11 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	@Override
 	public double getDeltaZ() {
 		return deltaZ;
+	}
+
+	@Override
+	public void addDeltaZ(double deltaDeltaZ) {
+		this.deltaZ += deltaDeltaZ;
 	}
 
 	@Override

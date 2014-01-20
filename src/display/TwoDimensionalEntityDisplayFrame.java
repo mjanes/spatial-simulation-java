@@ -42,13 +42,12 @@ public class TwoDimensionalEntityDisplayFrame extends JFrame {
 	
 	@Override
 	public void paint(Graphics g) {
-		/*
+		// Paint background. And yes, I'd prefer something like a super.paint() but having issues with that at the moment.
 		g.setColor(Color.WHITE);
 		g.fillRect(0, 0, getWidth(), getHeight());
-		*/
 		
-		g.setColor(Color.BLACK);		
-		
+		// Paint entities
+		g.setColor(Color.BLACK);				
 		double radius;
 		for (BasePhysicalEntity entity : entities) {
 			radius = entity.getRadius();

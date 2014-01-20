@@ -27,11 +27,9 @@ public class Launcher {
 		frame.repaint();
 		
 		//	3) Begin running physics on things
-		/*
 		controller = new UniverseController();
 		Timer t = new Timer();
-		t.schedule(controller,  0, 100);
-		*/
+		t.schedule(controller,  0, 10);
 	}
 
 	
