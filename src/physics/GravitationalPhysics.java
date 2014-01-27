@@ -16,7 +16,7 @@ import entity.BasePhysicalEntity;
  */
 public class GravitationalPhysics {
 	
-	private static final double GRAVITATIONAL_CONSTANT = 0.01;
+	private static final double GRAVITATIONAL_CONSTANT = 0.1;
 	
 	/** 
 	 * I might want to rename this to threeDimensionalGravitationalPhysics to separate it from two dimensional objects. 
@@ -49,12 +49,27 @@ public class GravitationalPhysics {
 	 * @param pullee
 	 */
 	public static void gravitationalPull(BasePhysicalEntity puller, BasePhysicalEntity pullee) {
+		// Distance between the two points
 		double distance = distance(puller, pullee);
+		
+		// Gravitational force between the two objects
 		double force = GRAVITATIONAL_CONSTANT * ((puller.getMass() * pullee.getMass()) / Math.pow(distance, 2)); 
-		double ratio = distance * force;
-		pullee.addDeltaX((puller.getX() - pullee.getX()) * ratio);
-		pullee.addDeltaY((puller.getY() - pullee.getY()) * ratio);
-		pullee.addDeltaZ((puller.getZ() - pullee.getZ()) * ratio);
+		
+		// 
+		double ratio = force / distance;
+
+		double distanceX = puller.getX() - pullee.getX();
+		double distanceY = puller.getY() - pullee.getY();
+		double distanceZ = puller.getZ() - pullee.getZ();		
+		
+		double deltaDeltaX = (distanceX * ratio) / pullee.getMass();
+		double deltaDeltaY = (distanceY * ratio) / pullee.getMass();
+		double deltaDeltaZ = (distanceZ * ratio) / pullee.getMass();
+		
+		
+		pullee.addDeltaX(deltaDeltaX);
+		pullee.addDeltaY(deltaDeltaY);
+		pullee.addDeltaZ(deltaDeltaZ);
 	}
 
 	

@@ -11,6 +11,10 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	protected double y;
 	protected double z;
 	
+	protected double prevX;
+	protected double prevY;
+	protected double prevZ;
+	
 	protected double deltaX;
 	protected double deltaY;
 	protected double deltaZ;
@@ -27,38 +31,38 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 		this.x = x;
 		this.y = y;
 		this.z = z;
+		this.prevX = x;
+		this.prevY = y;
+		this.prevZ = z;
 	}
 	
 	@Override
-	public void setX(double x) {
-		this.x = x;
-	}
+	public void setX(double x) { this.x = x; }
 	
 	@Override
-	public double getX() {
-		return x;		
-	}	
+	public double getX() { return x; }	
 	
 	@Override
-	public void setY(double y) {
-		this.y = y;
-	}
+	public void setY(double y) { this.y = y; }
 	
 	@Override
-	public double getY() {
-		return y;
-	}
+	public double getY() { return y; }
 
 	@Override
-	public void setZ(double z) {
-		this.z = z;
-	}
+	public void setZ(double z) { this.z = z; }
 
 	@Override
-	public double getZ() {
-		return z;
-	}
+	public double getZ() { return z; }
+	
+	/*********************** Previous location *******************/
+	
+	public double getPrevX() { return prevX; }
+	public double getPrevY() { return prevY; }
+	public double getPrevZ() { return prevZ; }
 
+	
+	/*********************** Delta *******************************/
+	
 	@Override
 	public void setDeltaX(double deltaX) {
 		this.deltaX = deltaX;
@@ -126,6 +130,9 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	
 	@Override
 	public void move() {
+		prevX = x;
+		prevY = y;
+		prevZ = z;
 		x += deltaX;
 		y += deltaY;
 		z += deltaZ;
