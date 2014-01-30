@@ -42,18 +42,16 @@ public class TwoDimensionalEntityDisplayPanel extends JPanel {
 	
 	@Override
 	public void paint(Graphics g) {
-		// Paint background. And yes, I'd prefer something like a super.paint() but having issues with that at the moment.
-		//g.setColor(Color.WHITE);
-		//g.fillRect(0, 0, getWidth(), getHeight());
+		super.paint(g);
 		
-		// Paint entities
-						
+		// Paint entities				
+		g.setColor(Color.BLACK);
 		double radius;
 		for (BasePhysicalEntity entity : entities) {
 			radius = entity.getRadius();
-			g.setColor(getBackground());
-			g.fillOval((int) entity.getPrevX(), (int) entity.getPrevY(), (int) radius, (int) radius);
-			g.setColor(Color.BLACK);
+			//g.setColor(getBackground());
+			//g.fillOval((int) entity.getPrevX(), (int) entity.getPrevY(), (int) radius, (int) radius);
+			//g.setColor(Color.BLACK);
 			g.fillOval((int) entity.getX(), (int) entity.getY(), (int) radius, (int) radius);
 		}		
 	}

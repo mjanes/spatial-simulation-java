@@ -38,7 +38,8 @@ public class Launcher {
 		@Override
 		public void run() {
 			// tell graphics to repaint
-			frame.repaint();			
+			//frame.repaint();
+			frame.incrementGraphics();
 			
 			// run round of physics
 			GravitationalPhysics.gravity(entities);
