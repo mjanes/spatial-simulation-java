@@ -10,7 +10,7 @@ import entity.BasePhysicalEntity;
  * can edit the objects themselves. But, some of the entities might be destroyed or new ones created.
  * 
  * Yeah, I suppose it would probably be cleaner to not have this be a separate class, but to put everything in the entities themselves. So...
- * well, makes it harder to use the same code for both this and for social netwok display, but that's probably just premature optimization.
+ * well, makes it harder to use the same code for both this and for social network display, but that's probably just premature optimization.
  * 
  * @author mjanes
  */

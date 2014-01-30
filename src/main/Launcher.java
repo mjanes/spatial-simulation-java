@@ -6,12 +6,12 @@ import java.util.TimerTask;
 
 import physics.GravitationalPhysics;
 import setup.Setup;
-import display.TwoDimensionalEntityDisplayFrame;
+import display.UIFrame;
 import entity.BasePhysicalEntity;
 
 public class Launcher {
 	
-	protected static TwoDimensionalEntityDisplayFrame frame;
+	protected static UIFrame frame;
 	protected static Collection<BasePhysicalEntity> entities;
 	protected static UniverseController controller;
 
@@ -19,12 +19,12 @@ public class Launcher {
 		// Hrm... dependency injection? 
 		// But rough idea:
 		// 	1) Launch UI
-		frame = new TwoDimensionalEntityDisplayFrame(1000, 1000);
+		frame = new UIFrame(1000, 1000);
 		
 		//	2) Initialize objects
 		entities = Setup.create();
 		frame.setEntities(entities);
-		frame.repaint();
+		//frame.repaint();
 		
 		//	3) Begin running physics on things
 		controller = new UniverseController();

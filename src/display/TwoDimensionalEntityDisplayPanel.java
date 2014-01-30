@@ -25,15 +25,15 @@ import javax.swing.*;
  * 
  * @author mjanes
  */
-public class TwoDimensionalEntityDisplayFrame extends JFrame {
+public class TwoDimensionalEntityDisplayPanel extends JPanel {
 		
 	private static final long serialVersionUID = 1L;
 	
 	ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
 	
-	public TwoDimensionalEntityDisplayFrame(int width, int height) {
-		setSize(width, height);
-		setVisible(true);
+	public TwoDimensionalEntityDisplayPanel(int width, int height) {
+		setPreferredSize(new Dimension(width, height));
+		setLayout(null);
 	}
 	
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
