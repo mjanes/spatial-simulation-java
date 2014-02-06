@@ -21,7 +21,9 @@ import javax.swing.*;
  * value, and then paint them. Now... I'm not sure how I want the display value to be done. By the objects themselves, or am I going to have the
  * objects just spit out a radius and color? Hrm...
  * 
- * And... yeah, guess this is using swing. It's been years. I should really do this in javascript or something insttead.
+ * And... yeah, guess this is using swing. It's been years. I should really do this in javascript or something instead.
+ * 
+ * TODO: We may wish to have this extend JComponent as opposed to JPanel. Look into that.
  * 
  * @author mjanes
  */
@@ -39,6 +41,11 @@ public class TwoDimensionalEntityDisplayPanel extends JPanel {
 	
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
 		this.entities = new ArrayList<BasePhysicalEntity>(entities);
+	}
+	
+	
+	public void incrementGraphics() {
+		
 	}
 	
 	@Override
