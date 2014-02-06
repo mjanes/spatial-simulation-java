@@ -32,6 +32,7 @@ public class TwoDimensionalEntityDisplayPanel extends JPanel {
 	ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
 	
 	public TwoDimensionalEntityDisplayPanel(int width, int height) {
+		super();
 		setPreferredSize(new Dimension(width, height));
 		setLayout(null);
 	}
@@ -49,9 +50,6 @@ public class TwoDimensionalEntityDisplayPanel extends JPanel {
 		double radius;
 		for (BasePhysicalEntity entity : entities) {
 			radius = entity.getRadius();
-			//g.setColor(getBackground());
-			//g.fillOval((int) entity.getPrevX(), (int) entity.getPrevY(), (int) radius, (int) radius);
-			//g.setColor(Color.BLACK);
 			g.fillOval((int) entity.getX(), (int) entity.getY(), (int) radius, (int) radius);
 		}		
 	}
