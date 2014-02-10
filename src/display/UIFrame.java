@@ -1,7 +1,5 @@
 package display;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferStrategy;
 import java.util.Collection;
 
 import javax.swing.JFrame;
@@ -39,45 +37,25 @@ public class UIFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static final int FRAME_DELAY = 10; // Milliseconds between each frame painting
 	
-	private TwoDimensionalEntityDisplayPanel displayPanel;
-	
-	private BufferStrategy strategy;
+	private TwoDimensionalEntityCanvas canvas;
 	
 	
 	public UIFrame(int width, int height) {
 		setSize(width, height);		
-		displayPanel = new TwoDimensionalEntityDisplayPanel(width, height);
-		setContentPane(displayPanel);
-		setIgnoreRepaint(true);
+		canvas = new TwoDimensionalEntityCanvas(width, height);
+		getContentPane().add(canvas);
+		
 		pack();
 		setVisible(true);		
-		
-
-		/** 
-		 * TODO: Not sure if I am not understanding Swing terms, but I would prefer the frame not care about
-		 * buffering, but instead delegate that to the displayPanel. 
-		 */
-		createBufferStrategy(2);
-		strategy = getBufferStrategy();
 	}
 	
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
-		displayPanel.setEntities(entities);
+		canvas.setEntities(entities);
+	}
+	
+	public void updateGraphics() {
+		canvas.repaint();
 	}
 	
 	
-	
-	/*************************************************************************************************************
-	 * Graphics
-	 *************************************************************************************************************/
-	
-	/*
-	public void incrementGraphics() {
-		Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
-		displayPanel.paint(g);
-		
-		g.dispose();
-		strategy.show();
-	}
-	*/
 }

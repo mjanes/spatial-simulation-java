@@ -6,8 +6,7 @@ import java.util.Collection;
 import entity.BasePhysicalEntity;
 
 import java.awt.*;
-
-import javax.swing.*;
+import java.awt.image.VolatileImage;
 
 /**
  * Initial display class. Just going to be a rectangle drawing circles that can orbit around eachother.
@@ -27,29 +26,67 @@ import javax.swing.*;
  * 
  * @author mjanes
  */
-public class TwoDimensionalEntityDisplayPanel extends JPanel {
+public class TwoDimensionalEntityCanvas extends Canvas {
 		
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;	
 	
 	ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+	private VolatileImage volatileImg;
 	
-	public TwoDimensionalEntityDisplayPanel(int width, int height) {
+	/*******************************************************************************************************
+	 * Constructors
+	 *******************************************************************************************************/
+	
+	public TwoDimensionalEntityCanvas(int width, int height) {
 		super();
 		setPreferredSize(new Dimension(width, height));
-		setLayout(null);
 	}
+	
+	
+	/*******************************************************************************************************
+	 * Utilities
+	 *******************************************************************************************************/	
 	
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
 		this.entities = new ArrayList<BasePhysicalEntity>(entities);
 	}
 	
 	
-	public void incrementGraphics() {
-		
-	}
+	/********************************************************************************************************
+	 * Graphics
+	 ********************************************************************************************************/	
+
+	@Override
+	public void update(Graphics g) {
+		paint(g);
+	}	
 	
 	@Override
 	public void paint(Graphics g) {
+		createBackBuffer();
+		
+		do {
+			GraphicsConfiguration gc = getGraphicsConfiguration();
+			int valCode = volatileImg.validate(gc);
+			
+			if (valCode==VolatileImage.IMAGE_INCOMPATIBLE) {
+				createBackBuffer();
+			}
+			
+			Graphics offscreenGraphics = volatileImg.getGraphics();
+			doPaint(offscreenGraphics);
+			
+			g.drawImage(volatileImg,  0,  0,  this);
+		} while (volatileImg.contentsLost());
+	}
+	
+	private void createBackBuffer() {
+		GraphicsConfiguration gc = getGraphicsConfiguration();
+		volatileImg = gc.createCompatibleVolatileImage(getWidth(), getHeight());
+	}
+	
+	
+	private void doPaint(Graphics g) {
 		super.paint(g);
 		
 		// Paint entities				
@@ -58,6 +95,6 @@ public class TwoDimensionalEntityDisplayPanel extends JPanel {
 		for (BasePhysicalEntity entity : entities) {
 			radius = entity.getRadius();
 			g.fillOval((int) entity.getX(), (int) entity.getY(), (int) radius, (int) radius);
-		}		
+		}
 	}
 }

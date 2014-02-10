@@ -1,8 +1,6 @@
 package main;
 
 import java.util.Collection;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import physics.GravitationalPhysics;
 import setup.Setup;
@@ -57,8 +55,7 @@ public class Main {
 				updateUniverseState();
 				
 				// tell graphics to repaint
-				frame.repaint();
-				//frame.incrementGraphics();
+				frame.updateGraphics();
 				
 				cycleTime = cycleTime + UIFrame.FRAME_DELAY;
 				long difference = cycleTime - System.currentTimeMillis();
