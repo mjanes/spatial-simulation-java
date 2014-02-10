@@ -23,6 +23,9 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 	
 	private BufferStrategy strategy;
 	
+	protected int xOffset = 0;
+	protected int yOffset = 0;
+	
 	/*******************************************************************************************************
 	 * Constructors
 	 *******************************************************************************************************/
@@ -66,7 +69,21 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 		double radius;
 		for (BasePhysicalEntity entity : entities) {
 			radius = entity.getRadius();
-			g.fillOval((int) entity.getX(), (int) entity.getY(), (int) radius, (int) radius);
+			// TODO: Perform check that entity is on screen
+			g.fillOval((int) entity.getX() + xOffset, (int) entity.getY() + yOffset, (int) radius, (int) radius);
 		}
+	}
+	
+	
+	/*********************************************************************************************************
+	 * Offset manipulation
+	 *********************************************************************************************************/
+	
+	public void incrementXOffset(int i) {
+		xOffset += i;
+	}
+	
+	public void incrementYOffset(int i) {
+		yOffset += i;
 	}
 }

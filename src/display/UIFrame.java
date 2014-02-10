@@ -1,8 +1,20 @@
 package display;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridLayout;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Collection;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.plaf.basic.BasicArrowButton;
 
 import entity.BasePhysicalEntity;
 
@@ -38,14 +50,94 @@ public class UIFrame extends JFrame {
 	public static final int FRAME_DELAY = 10; // Milliseconds between each frame painting
 	
 	private TwoDimensionalEntityCanvas canvas;
+	private JPanel controlPanel;
+	private JPanel navigationPanel;
 	
 	
-	public UIFrame(int width, int height) {
-		setSize(width, height);				
+	public UIFrame(int width, int height) {	
+
+		// Setup canvas
 		canvas = new TwoDimensionalEntityCanvas(width, height);
-		getContentPane().add(canvas);		
+		
+		
+		
+		// Set up control panel, which will have buttons to manipulate view of canvas
+		controlPanel = new JPanel(new BorderLayout()); // May wish to create a unique class for this.
+		controlPanel.setPreferredSize(new Dimension(200, height));
+		
+		// Navigation panel, with up/down/left/right buttons
+		navigationPanel = new JPanel(new GridLayout(3, 3));
+		
+		BasicArrowButton eastButton = new BasicArrowButton(BasicArrowButton.EAST);		
+		BasicArrowButton northButton = new BasicArrowButton(BasicArrowButton.NORTH);
+		BasicArrowButton southButton = new BasicArrowButton(BasicArrowButton.SOUTH);
+		BasicArrowButton westButton = new BasicArrowButton(BasicArrowButton.WEST);
+		
+		Dimension buttonDimension = new Dimension(66, 66);
+		eastButton.setPreferredSize(buttonDimension);
+		northButton.setPreferredSize(buttonDimension);
+		southButton.setPreferredSize(buttonDimension);
+		westButton.setPreferredSize(buttonDimension);
+		
+		eastButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				canvas.incrementXOffset(-10);				
+			}			
+		});
+		
+		westButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				canvas.incrementXOffset(10);
+			}
+		});
+		
+		northButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				canvas.incrementYOffset(10);				
+			}			
+		});
+		
+
+		southButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				canvas.incrementYOffset(-10);				
+			}			
+		});
+		
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(northButton);
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(westButton);
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(eastButton);	
+		navigationPanel.add(new JPanel());
+		navigationPanel.add(southButton);
+		
+		navigationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		navigationPanel.setPreferredSize(new Dimension(200, 200));
+		
+		controlPanel.add(navigationPanel, BorderLayout.NORTH);
+		controlPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		
+		// Final packing of everything into content pane and display
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new FlowLayout());
+		contentPane.add(controlPanel);
+		contentPane.add(canvas);				
 		pack();		
 		setVisible(true);	
+		
+		
+		// init the buffer of the canvas
 		canvas.initBuffer();
 	}
 	
