@@ -13,23 +13,21 @@ public class Main {
 	
 	protected static UIFrame frame;
 	protected static Collection<BasePhysicalEntity> entities;
-	protected static UniverseController controller;
+	
 
 	public static void main(String[] args) {
-		// Hrm... dependency injection? 
-		// But rough idea:
+		// Rough idea:
 		// 	1) Launch UI
 		frame = new UIFrame(1000, 1000);
 		
 		//	2) Initialize objects
 		entities = Setup.create();
 		frame.setEntities(entities);
-		//frame.repaint();
 		
 		//	3) Begin running physics on things
-		controller = new UniverseController();
-		Timer t = new Timer();
-		t.schedule(controller,  0, 10);
+		Thread universeThread = new Thread(new UniverseLoop());
+		universeThread.setPriority(Thread.MIN_PRIORITY);
+		universeThread.start();
 	}
 
 
@@ -49,20 +47,38 @@ public class Main {
 	 * 
 	 * @author mjanes
 	 */
-	private static class UniverseController extends TimerTask {
+	private static class UniverseLoop implements Runnable {
 		
 		@Override
 		public void run() {
-			// tell graphics to repaint
-			//frame.repaint();
-			frame.incrementGraphics();
-			
-			// run round of physics
-			GravitationalPhysics.gravity(entities);
-			for (BasePhysicalEntity entity : entities) {
-				entity.move();
+			long cycleTime = System.currentTimeMillis();
+						
+			while (true)  {
+				updateUniverseState();
+				
+				// tell graphics to repaint
+				frame.repaint();
+				//frame.incrementGraphics();
+				
+				cycleTime = cycleTime + UIFrame.FRAME_DELAY;
+				long difference = cycleTime - System.currentTimeMillis();
+				
+				try {
+					Thread.sleep(Math.max(0,  difference));				
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
+			
 		}
 		
+	}
+	
+	private static void updateUniverseState() {
+		// run round of physics
+		GravitationalPhysics.gravity(entities);
+		for (BasePhysicalEntity entity : entities) {
+			entity.move();
+		}		
 	}
 }

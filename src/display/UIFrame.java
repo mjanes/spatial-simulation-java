@@ -37,6 +37,7 @@ public class UIFrame extends JFrame {
 	
 	
 	private static final long serialVersionUID = 1L;
+	public static final int FRAME_DELAY = 10; // Milliseconds between each frame painting
 	
 	private TwoDimensionalEntityDisplayPanel displayPanel;
 	
@@ -70,9 +71,7 @@ public class UIFrame extends JFrame {
 	 * Graphics
 	 *************************************************************************************************************/
 	
-	/**
-	 * 
-	 */
+	/*
 	public void incrementGraphics() {
 		Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 		displayPanel.paint(g);
@@ -80,4 +79,5 @@ public class UIFrame extends JFrame {
 		g.dispose();
 		strategy.show();
 	}
+	*/
 }
