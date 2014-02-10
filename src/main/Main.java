@@ -47,9 +47,11 @@ public class Main {
 	 */
 	private static class UniverseLoop implements Runnable {
 		
+		long cycleTime;
+		
 		@Override
 		public void run() {
-			long cycleTime = System.currentTimeMillis();
+			cycleTime = System.currentTimeMillis();
 						
 			while (true)  {
 				updateUniverseState();
@@ -57,16 +59,20 @@ public class Main {
 				// tell graphics to repaint
 				frame.updateGraphics();
 				
-				cycleTime = cycleTime + UIFrame.FRAME_DELAY;
-				long difference = cycleTime - System.currentTimeMillis();
-				
-				try {
-					Thread.sleep(Math.max(0,  difference));				
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+				synchFramerate();								
 			}
 			
+		}
+		
+		private void synchFramerate() {
+			cycleTime = cycleTime + UIFrame.FRAME_DELAY;
+			long difference = cycleTime - System.currentTimeMillis();
+			
+			try {
+				Thread.sleep(Math.max(0,  difference));				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 		}
 		
 	}

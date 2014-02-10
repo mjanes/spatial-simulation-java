@@ -41,12 +41,12 @@ public class UIFrame extends JFrame {
 	
 	
 	public UIFrame(int width, int height) {
-		setSize(width, height);		
+		setSize(width, height);				
 		canvas = new TwoDimensionalEntityCanvas(width, height);
-		getContentPane().add(canvas);
-		
-		pack();
-		setVisible(true);		
+		getContentPane().add(canvas);		
+		pack();		
+		setVisible(true);	
+		canvas.initBuffer();
 	}
 	
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
@@ -54,7 +54,7 @@ public class UIFrame extends JFrame {
 	}
 	
 	public void updateGraphics() {
-		canvas.repaint();
+		canvas.updateGraphics();
 	}
 	
 	
