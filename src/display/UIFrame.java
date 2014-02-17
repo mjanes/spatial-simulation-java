@@ -6,7 +6,6 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
@@ -67,7 +66,7 @@ public class UIFrame extends JFrame {
 	
 	public UIFrame(int width, int height) {	
 		
-		camera = new TwoDimensionalViewCamera(width / 2, height / 2, -width);
+		camera = new TwoDimensionalViewCamera(width / 2, height / 2, TwoDimensionalEntityCanvas.DEFAULT_EYE_Z_DISTANCE);
 		
 		// Setup canvas
 		canvas = new TwoDimensionalEntityCanvas(width, height, camera);		
@@ -132,7 +131,7 @@ public class UIFrame extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveZ(10);
+				camera.moveZ(-10);
 			}
 		});
 		
@@ -140,7 +139,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveZ(-10);
+				camera.moveZ(10);
 			}
 		});
 		
