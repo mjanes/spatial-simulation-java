@@ -8,6 +8,8 @@ import entity.BasePhysicalEntity;
 import java.awt.*;
 import java.awt.image.BufferStrategy;
 
+import camera.TwoDimensionalViewCamera;
+
 
 /**
  * Initial display class. A canvas drawing the universe state. The class containing this component will be 
@@ -52,6 +54,7 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 		createBufferStrategy(2);
 		strategy = getBufferStrategy();
 	}
+	
 	
 	/********************************************************************************************************
 	 * Graphics

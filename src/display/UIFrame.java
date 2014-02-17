@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import camera.TwoDimensionalViewCamera;
 import entity.BasePhysicalEntity;
 
 /**
@@ -60,11 +61,15 @@ public class UIFrame extends JFrame {
 	// TODO: Change all navigation listeners to edit a camera object.
 	private JPanel navigationPanel;
 	
+	private TwoDimensionalViewCamera camera;
+	
 	
 	public UIFrame(int width, int height) {	
-
+		
+		camera = new TwoDimensionalViewCamera(width / 2, height / 2, -width);
+		
 		// Setup canvas
-		canvas = new TwoDimensionalEntityCanvas(width, height);		
+		canvas = new TwoDimensionalEntityCanvas(width, height, camera);		
 		
 		// Set up control panel, which will have buttons to manipulate view of canvas
 		controlPanel = new JPanel(new BorderLayout()); // May wish to create a unique class for this.
