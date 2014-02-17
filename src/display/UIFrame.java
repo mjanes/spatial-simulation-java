@@ -67,7 +67,7 @@ public class UIFrame extends JFrame {
 	
 	public UIFrame(int width, int height) {	
 		
-		camera = new TwoDimensionalViewCamera(0, 0, -width);
+		camera = new TwoDimensionalViewCamera(width / 2, height / 2, -width);
 		
 		// Setup canvas
 		canvas = new TwoDimensionalEntityCanvas(width, height, camera);		

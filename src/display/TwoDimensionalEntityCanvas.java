@@ -73,8 +73,19 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 		double radius;
 		for (BasePhysicalEntity entity : entities) {
 			radius = entity.getRadius();
-			// TODO: Perform check that entity is on screen
-			g.fillOval((int) (entity.getX() - camera.getX()), (int) (entity.getY() - camera.getY()), (int) radius, (int) radius);
+			// TODO: handle zooming in and out
+			// Ok... zooming is a transformation, wherein... hrm... given the coordinate system here is inverted from
+			// cartesian things...
+			// anyways, for each point... we get how far away its x value and y value is from the camera.
+			int xCameraDifference = (int) (entity.getX() - camera.getX());
+			int yCameraDifference = (int) (entity.getY() - camera.getY());
+			
+			// I want to calculate things as 0, 0 is in the center. However, in the world of java display
+			// 0, 0 is the upper left, so doing this translation.
+			int xDisplay = xCameraDifference + (getWidth() / 2);
+			int yDisplay = yCameraDifference + (getHeight() / 2);
+			
+			g.fillOval(xDisplay, yDisplay, (int) radius, (int) radius);
 		}
 	}
 		
