@@ -5,8 +5,7 @@ Intended to be a library and extensions for both gravitational simulations and g
 
 
 Immediate base/graphity physics TODO:
-- Get initial view manipulation working
-    - Moving, zooming, etc.
+- Introduce camera object for use by the canvas to determine painting.
 - Provide better initialization stuff
     - Allow ui to specify number of entities, how spread out from 'center' they are, degree of spin, variation of mass, velocity, etc.
 - Provide bounding box to eliminate entities outside of some scope

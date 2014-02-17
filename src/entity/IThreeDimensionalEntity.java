@@ -6,6 +6,7 @@ public interface IThreeDimensionalEntity extends ITwoDimensionalEntity {
 	public void setDeltaZ(double deltaZ);
 	public void addDeltaZ(double deltaDeltaZ);
 	public double getDeltaZ();
+	public void moveZ(double deltaZ);
 	
 	public double getDistance(IThreeDimensionalEntity other);
 }

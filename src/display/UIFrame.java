@@ -49,17 +49,22 @@ public class UIFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static final int FRAME_DELAY = 10; // Milliseconds between each frame painting
 	
+	// The canvas that is the display screen
 	private TwoDimensionalEntityCanvas canvas;
+	
+	// The control panel, to one side of the canvas, that is for manipulating the view and universe
 	private JPanel controlPanel;
+	
+	// The navigation panel, which is responsible for moving around the universe, ie, changing how it
+	// is displayed in the canvas.
+	// TODO: Change all navigation listeners to edit a camera object.
 	private JPanel navigationPanel;
 	
 	
 	public UIFrame(int width, int height) {	
 
 		// Setup canvas
-		canvas = new TwoDimensionalEntityCanvas(width, height);
-		
-		
+		canvas = new TwoDimensionalEntityCanvas(width, height);		
 		
 		// Set up control panel, which will have buttons to manipulate view of canvas
 		controlPanel = new JPanel(new BorderLayout()); // May wish to create a unique class for this.

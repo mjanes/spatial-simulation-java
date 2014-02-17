@@ -54,6 +54,7 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	@Override
 	public double getZ() { return z; }
 	
+	
 	/*********************** Previous location *******************/
 	
 	public double getPrevX() { return prevX; }
@@ -79,10 +80,16 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	}
 
 	@Override
+	public void moveX(double deltaX) {
+		prevX = x;
+		x += deltaX;	
+	}
+	
+	@Override
 	public void setDeltaY(double deltaY) {
 		this.deltaY = deltaY;
 	}
-
+	
 	@Override
 	public double getDeltaY() {
 		return deltaY;
@@ -92,7 +99,13 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	public void addDeltaY(double deltaDeltaY) {
 		this.deltaY += deltaDeltaY;
 	}
-
+	
+	@Override
+	public void moveY(double deltaY) {
+		prevY = y;
+		y += deltaY;
+	}
+		
 	@Override
 	public void setDeltaZ(double deltaZ) {
 		this.deltaZ = deltaZ;
@@ -109,10 +122,28 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	}
 
 	@Override
+	public void moveZ(double deltaZ) {
+		prevZ = z;
+		z += deltaZ;
+	}	
+	
+	@Override
+	public void move() {
+		moveX(deltaX);
+		moveY(deltaY);
+		moveZ(deltaZ);
+	}	
+	
+	
+	/*******************************************************************************************
+	 * Physical side fo things
+	 *******************************************************************************************/
+
+	@Override
 	public double getMass() {
 		return mass;
 	}
-
+	
 	@Override
 	public void setMass(double mass) {
 		this.mass = mass;
@@ -128,26 +159,6 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 		this.density = density;
 	}
 	
-	@Override
-	public void move() {
-		prevX = x;
-		prevY = y;
-		prevZ = z;
-		x += deltaX;
-		y += deltaY;
-		z += deltaZ;
-	}
-	
-	@Override
-	public double getDistance(IThreeDimensionalEntity other) {
-		return Math.sqrt(
-				Math.pow((x - other.getX()), 2) + 
-				Math.pow((y - other.getY()), 2) + 
-				Math.pow((z - other.getZ()), 2)
-			);
-	}
-	
-	
 	/* 
 	 * Putting this in now for simple graphics
 	 */
@@ -158,5 +169,21 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 		// r = cube root(volume / (4/3 * pi))
 		return Math.pow(((volume / (4.0/3 * Math.PI))), (1.0 / 3));
 	}
+	
+	
+	
+	/**********************************************************************************
+	 * Involving multiple objects
+	 **********************************************************************************/
+	
+	@Override
+	public double getDistance(IThreeDimensionalEntity other) {
+		return Math.sqrt(
+				Math.pow((x - other.getX()), 2) + 
+				Math.pow((y - other.getY()), 2) + 
+				Math.pow((z - other.getZ()), 2)
+			);
+	}
+	
 	
 }
