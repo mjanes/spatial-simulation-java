@@ -20,11 +20,11 @@ public class Setup {
 	
 	private static void basicOrbitCouple() {
 
-		BasePhysicalEntity entityA = new BasePhysicalEntity(100, 100, 0, 500);
+		BasePhysicalEntity entityA = new BasePhysicalEntity(200, 200, 0, 500);
 		entityA.setDeltaX(1.0);
 		entities.add(entityA);
 				
-		entities.add(new BasePhysicalEntity(300, 300, 0, 8000));
+		entities.add(new BasePhysicalEntity(500, 500, 0, 8000));
 	}
 	
 	private static void randomSet(int n) {

@@ -12,6 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicArrowButton;
@@ -66,7 +67,7 @@ public class UIFrame extends JFrame {
 	
 	public UIFrame(int width, int height) {	
 		
-		camera = new TwoDimensionalViewCamera(width / 2, height / 2, -width);
+		camera = new TwoDimensionalViewCamera(0, 0, -width);
 		
 		// Setup canvas
 		canvas = new TwoDimensionalEntityCanvas(width, height, camera);		
@@ -82,18 +83,22 @@ public class UIFrame extends JFrame {
 		BasicArrowButton northButton = new BasicArrowButton(BasicArrowButton.NORTH);
 		BasicArrowButton southButton = new BasicArrowButton(BasicArrowButton.SOUTH);
 		BasicArrowButton westButton = new BasicArrowButton(BasicArrowButton.WEST);
+		JButton zoomInButton = new JButton("+");
+		JButton zoomOutButton = new JButton("-");
 		
 		Dimension buttonDimension = new Dimension(66, 66);
 		eastButton.setPreferredSize(buttonDimension);
 		northButton.setPreferredSize(buttonDimension);
 		southButton.setPreferredSize(buttonDimension);
 		westButton.setPreferredSize(buttonDimension);
+		zoomInButton.setPreferredSize(buttonDimension);
+		zoomOutButton.setPreferredSize(buttonDimension);
 		
 		eastButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				canvas.incrementXOffset(-10);				
+				camera.moveX(10);			
 			}			
 		});
 		
@@ -101,7 +106,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				canvas.incrementXOffset(10);
+				camera.moveX(-10);
 			}
 		});
 		
@@ -109,7 +114,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				canvas.incrementYOffset(10);				
+				camera.moveY(-10);			
 			}			
 		});
 		
@@ -118,8 +123,25 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				canvas.incrementYOffset(-10);				
+				camera.moveY(10);			
 			}			
+		});
+		
+		
+		zoomInButton.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.moveZ(10);
+			}
+		});
+		
+		zoomOutButton.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.moveZ(-10);
+			}
 		});
 		
 		navigationPanel.add(new JPanel());
@@ -128,8 +150,9 @@ public class UIFrame extends JFrame {
 		navigationPanel.add(westButton);
 		navigationPanel.add(new JPanel());
 		navigationPanel.add(eastButton);	
-		navigationPanel.add(new JPanel());
+		navigationPanel.add(zoomOutButton);
 		navigationPanel.add(southButton);
+		navigationPanel.add(zoomInButton);
 		
 		navigationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		navigationPanel.setPreferredSize(new Dimension(200, 200));
