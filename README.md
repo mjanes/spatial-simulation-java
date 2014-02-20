@@ -6,7 +6,7 @@ Intended to be a base library for anything from gravitational simulations to gam
 
 Immediate base/graphity physics TODO:
 - Combine Main and UIFrame, 
-    - Give UIFrame ability to alter speed of simulation
+    - Give UIFrame ability to pause simulation
     - Give UIFrame ability to restart simulation
 - Provide better initialization functionality
     - Allow user to specify number of entities, how spread out from 'center' they are, degree of spin, variation of mass, velocity, etc.
