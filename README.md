@@ -1,21 +1,23 @@
-java-simulation
-===============
+spatial-simulation-java
+========================
 
-Intended to be a library and extensions for both gravitational simulations and graphs. Starting with gravitational physics simulation.
+Intended to be a base library for anything from gravitational simulations to games to graph display. Starting with gravitational physics simulation.
 
 
 Immediate base/graphity physics TODO:
-- Introduce camera object for use by the canvas to determine painting.
-- Provide better initialization stuff
-    - Allow ui to specify number of entities, how spread out from 'center' they are, degree of spin, variation of mass, velocity, etc.
-- Provide bounding box to eliminate entities outside of some scope
-- Get 3d viewing to work
+- Combine Main and UIFrame, 
+    - Give UIFrame ability to alter speed of simulation
+    - Give UIFrame ability to restart simulation
+- Provide better initialization functionality
+    - Allow user to specify number of entities, how spread out from 'center' they are, degree of spin, variation of mass, velocity, etc.
+- Make 3d camera that can rotate view
+- Model collisions
 
-Wide spectrum architecture TODO:
-- Make it work as a social network viewer
+Expansion TODO:
+- Make it work as a social network viewer, change gravity physics to spring embedded physics
 - Make it work as alife simulator
-    - There are a number of ways we can make it work as an alife simulator. First... is probably just 2d or 3d simple bacterial like sim. If we're going to do movement... well, I'd like to have something of a physics model backing it, not sure how complex that will be.
+    - There are a number of ways we can make it work as an alife simulator. First... is probably just 2d or 3d simple bacterial like sim.
 
-General TODO:
+Broader TODO:
 - Translate to javascript, in different repo
 - Potentially translate to Python, in different repo
