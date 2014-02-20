@@ -16,6 +16,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import physics.GravitationalPhysics;
 import camera.TwoDimensionalViewCamera;
 import entity.BasePhysicalEntity;
 
@@ -50,6 +51,8 @@ public class UIFrame extends JFrame {
 	private static final long serialVersionUID = 1L;
 	public static final int FRAME_DELAY = 10; // Milliseconds between each frame painting
 	
+	private Collection<BasePhysicalEntity> entities;
+	
 	// The canvas that is the display screen
 	private TwoDimensionalEntityCanvas canvas;
 	
@@ -58,12 +61,18 @@ public class UIFrame extends JFrame {
 	
 	// The navigation panel, which is responsible for moving around the universe, ie, changing how it
 	// is displayed in the canvas.
-	// TODO: Change all navigation listeners to edit a camera object.
 	private JPanel navigationPanel;
 	
-	private TwoDimensionalViewCamera camera;
+	// Check if volatile is appropriate. Will affect the universe loop thread.
+	private volatile TwoDimensionalViewCamera camera; 
 	
 	
+	/**
+	 * UI setup
+	 * 
+	 * @param width
+	 * @param height
+	 */
 	public UIFrame(int width, int height) {	
 		
 		camera = new TwoDimensionalViewCamera(width / 2, height / 2, TwoDimensionalEntityCanvas.DEFAULT_EYE_Z_DISTANCE);
@@ -173,13 +182,84 @@ public class UIFrame extends JFrame {
 		canvas.initBuffer();
 	}
 	
+	
+	/***************************************************************************************************
+	 * Utility/General
+	 **************************************************************************************************/
+	
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
+		this.entities = entities;
 		canvas.setEntities(entities);
 	}
 	
-	public void updateGraphics() {
-		canvas.updateGraphics();
+	public void start() {
+		//	3) Begin running physics on things
+		Thread universeThread = new Thread(new UniverseLoop(canvas, entities));
+		universeThread.setPriority(Thread.MIN_PRIORITY);
+		universeThread.start();
 	}
 	
+	
+	/**************************************************************************************************
+	 * Running the universe
+	 **************************************************************************************************/
+	
+	/**
+	 * Learning about this from: http://www.javalobby.org/forums/thread.jspa?threadID=16867&tstart=0
+	 * 
+	 * Pieces/threads we need:
+	 * 1) Simulation logic of a given phase of the universe. Currently, that is applying gravity and moving the entities.
+	 * 2) Render the universe state. Does not have to be phase that was just simulated. Can be the previous phase, so 
+	 * 	that those two phase have occurred on separate threads.
+	 * 3) Sleep until a certain amount of time has passed, and then draw the graphics rendered in phase 2,
+	 * thus ensuring a consistent frame rate. 
+	 * 
+	 * @author mjanes
+	 */
+	private static class UniverseLoop implements Runnable {
+		
+		long cycleTime;
+		private TwoDimensionalEntityCanvas canvas;
+		private Collection<BasePhysicalEntity> entities;
+		
+		public UniverseLoop(TwoDimensionalEntityCanvas canvas, Collection<BasePhysicalEntity> entities) {
+			this.canvas = canvas;
+			this.entities = entities;
+		}
+		
+		@Override
+		public void run() {
+			cycleTime = System.currentTimeMillis();
+						
+			while (true)  {
+				updateUniverseState();
+				
+				// tell graphics to repaint
+				canvas.updateGraphics();
+				
+				synchFramerate();								
+			}
+			
+		}
+		
+		private void synchFramerate() {
+			cycleTime = cycleTime + UIFrame.FRAME_DELAY;
+			long difference = cycleTime - System.currentTimeMillis();
+			
+			try {
+				Thread.sleep(Math.max(0,  difference));				
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	
+		private void updateUniverseState() {
+			// run round of physics
+			GravitationalPhysics.gravity(entities);
+			for (BasePhysicalEntity entity : entities) {
+				entity.move();
+			}		
+		}
+	}
 	
 }
