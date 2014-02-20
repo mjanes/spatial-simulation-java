@@ -49,7 +49,8 @@ public class UIFrame extends JFrame {
 	
 	
 	private static final long serialVersionUID = 1L;
-	public static final int FRAME_DELAY = 10; // Milliseconds between each frame painting
+	
+	private static volatile int frameDelay = 10; // Milliseconds between each frame painting
 	
 	private Collection<BasePhysicalEntity> entities;
 	
@@ -63,6 +64,9 @@ public class UIFrame extends JFrame {
 	// is displayed in the canvas.
 	private JPanel navigationPanel;
 	
+	// This panel contains buttons for changing the speed of the simulation
+	private JPanel timePanel;
+	
 	// Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile TwoDimensionalViewCamera camera; 
 	
@@ -70,12 +74,17 @@ public class UIFrame extends JFrame {
 	/**
 	 * UI setup
 	 * 
+	 * TODO: Break this into a set of differentt initialization functions, getting too big and clumsy.
+	 * 
 	 * @param width
 	 * @param height
 	 */
 	public UIFrame(int width, int height) {	
-		
+
+		// Initiate the camera
 		camera = new TwoDimensionalViewCamera(width / 2, height / 2, TwoDimensionalEntityCanvas.DEFAULT_EYE_Z_DISTANCE);
+		
+		
 		
 		// Setup canvas
 		canvas = new TwoDimensionalEntityCanvas(width, height, camera);		
@@ -84,6 +93,9 @@ public class UIFrame extends JFrame {
 		controlPanel = new JPanel(new BorderLayout()); // May wish to create a unique class for this.
 		controlPanel.setPreferredSize(new Dimension(200, height));
 		
+		
+		
+		
 		// Navigation panel, with up/down/left/right buttons
 		navigationPanel = new JPanel(new GridLayout(3, 3));
 		
@@ -91,8 +103,8 @@ public class UIFrame extends JFrame {
 		BasicArrowButton northButton = new BasicArrowButton(BasicArrowButton.NORTH);
 		BasicArrowButton southButton = new BasicArrowButton(BasicArrowButton.SOUTH);
 		BasicArrowButton westButton = new BasicArrowButton(BasicArrowButton.WEST);
-		JButton zoomInButton = new JButton("+");
-		JButton zoomOutButton = new JButton("-");
+		JButton zoomInButton = new JButton("Zoom in");
+		JButton zoomOutButton = new JButton("Zoom out");
 		
 		Dimension buttonDimension = new Dimension(66, 66);
 		eastButton.setPreferredSize(buttonDimension);
@@ -165,8 +177,45 @@ public class UIFrame extends JFrame {
 		navigationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		navigationPanel.setPreferredSize(new Dimension(200, 200));
 		
+		
+		// Initialize time control panel
+		timePanel = new JPanel(new FlowLayout());
+		JButton pauseButton = new JButton("Pause"); // Still need to implement
+		JButton increaseSpeedButton = new JButton("Increase Speed");
+		JButton decreaseSpeedButton = new JButton("Decrease Speed");
+		
+		increaseSpeedButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				frameDelay--;
+			}
+			
+		});
+		
+		decreaseSpeedButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				frameDelay++;
+			}
+			
+		});
+		
+		timePanel.add(decreaseSpeedButton);
+		timePanel.add(increaseSpeedButton);
+		
+		
+		timePanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		timePanel.setPreferredSize(new Dimension(200, 50));
+		
+		
+		
+		// Add different panels to control panel
 		controlPanel.add(navigationPanel, BorderLayout.NORTH);
+		controlPanel.add(timePanel, BorderLayout.SOUTH);
 		controlPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		
 		
 		
 		// Final packing of everything into content pane and display
@@ -243,7 +292,7 @@ public class UIFrame extends JFrame {
 		}
 		
 		private void synchFramerate() {
-			cycleTime = cycleTime + UIFrame.FRAME_DELAY;
+			cycleTime = cycleTime + frameDelay;
 			long difference = cycleTime - System.currentTimeMillis();
 			
 			try {
