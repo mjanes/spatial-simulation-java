@@ -16,7 +16,7 @@ import entity.BasePhysicalEntity;
  */
 public class GravitationalPhysics {
 	
-	private static final double GRAVITATIONAL_CONSTANT = 0.1;
+	private static final double GRAVITATIONAL_CONSTANT = 100;
 	
 	/** 
 	 * I might want to rename this to threeDimensionalGravitationalPhysics to separate it from two dimensional objects. 
@@ -41,9 +41,15 @@ public class GravitationalPhysics {
 	}
 
 	/**
-	 * Ah great, I have to do math.
+	 * This calculates amount of force the puller object imparts on the pullee.
+	 *  
+	 * F = G ((m1 * m2) / r ^ 2)
 	 * 
-	 * So F = G ((m1 * m2) / r ^ 2)
+	 * However, it is not quite that simple. As we have not yet implemented collisions, and do not
+	 * want to depend upon collisions, we need to account for how the gravitation force exerted by
+	 * an object is reduced if you are inside that object.
+	 * 
+	 * Reference: https://en.wikipedia.org/wiki/Shell_theorem
 	 * 
 	 * @param puller
 	 * @param pullee
@@ -52,19 +58,29 @@ public class GravitationalPhysics {
 		// Distance between the two points
 		double distance = distance(puller, pullee);
 		
-		// Gravitational force between the two objects
-		double force = GRAVITATIONAL_CONSTANT * ((puller.getMass() * pullee.getMass()) / Math.pow(distance, 2)); 
+		// Gravitational force that the puller will impart on the pullee
+		double force = GRAVITATIONAL_CONSTANT * puller.getMass() / Math.pow(distance, 2); 
 		
-		// 
+		// Check for whether or not the pullee object's center is within the sphere of the puller, and vary
+		// the force appropriately, via the Shell theorem
+		if (distance < puller.getRadius()) {
+			force = force * (distance / puller.getRadius());
+		}
+		
+		// Not sure ratio is the proper term here, but the next block of lines is arrive at how the one dimensional 
+		// force is translated into x, y, and z forces.
 		double ratio = force / distance;
 
-		double distanceX = puller.getX() - pullee.getX();
-		double distanceY = puller.getY() - pullee.getY();
-		double distanceZ = puller.getZ() - pullee.getZ();		
+		double forceX = (puller.getX() - pullee.getX()) * ratio;
+		double forceY = (puller.getY() - pullee.getY()) * ratio;
+		double forceZ = (puller.getZ() - pullee.getZ()) * ratio;		
 		
-		double deltaDeltaX = (distanceX * ratio) / pullee.getMass();
-		double deltaDeltaY = (distanceY * ratio) / pullee.getMass();
-		double deltaDeltaZ = (distanceZ * ratio) / pullee.getMass();
+		// Divided by pullee's mass, as the greater its mass, the harder it is to move.
+		// TODO: Get rid of addDeltaX functions, and replace with a forceX function?
+		// TODO: Learn physics terminology...
+		double deltaDeltaX = (forceX) / pullee.getMass();
+		double deltaDeltaY = (forceY) / pullee.getMass();
+		double deltaDeltaZ = (forceZ) / pullee.getMass();
 		
 		
 		pullee.addDeltaX(deltaDeltaX);

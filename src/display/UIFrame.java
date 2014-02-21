@@ -227,7 +227,7 @@ public class UIFrame extends JFrame {
 		setVisible(true);	
 		
 		
-		// init the buffer of the canvas
+		// initialize the buffer of the canvas
 		canvas.initBuffer();
 	}
 	

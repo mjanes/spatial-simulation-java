@@ -17,7 +17,7 @@ import camera.TwoDimensionalViewCamera;
  * 
  * @author mjanes
  */
-public class TwoDimensionalEntityCanvas extends Canvas {
+public class TwoDimensionalEntityCanvas extends Canvas implements EntityCanvas {
 		
 	private static final long serialVersionUID = 1L;	
 	
@@ -37,7 +37,7 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 	public TwoDimensionalEntityCanvas(int width, int height, TwoDimensionalViewCamera camera) {
 		super();
 		setPreferredSize(new Dimension(width, height));
-		this.camera = camera;
+		this.camera = camera;		
 	}
 	
 	
@@ -45,10 +45,18 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 	 * Utilities
 	 *******************************************************************************************************/	
 	
+	@Override
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
 		this.entities = new ArrayList<BasePhysicalEntity>(entities);
 	}
 
+	/**
+	 * This must be in a separate method, and not the constructor, because this component must be laid out
+	 * before creating the buffer strategy.
+	 * 
+	 * I would like it if there were different lifecyle methods, akin to Android's onLayout, onCreateView, etc
+	 * that this could be put in, but, well, not sure those exist with swing and awt.
+	 */
 	public void initBuffer() {
 		createBufferStrategy(2);
 		strategy = getBufferStrategy();
@@ -59,6 +67,7 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 	 * Graphics
 	 ********************************************************************************************************/	
 
+	@Override
 	public void updateGraphics() {
 		Graphics g = strategy.getDrawGraphics();
 		
@@ -72,12 +81,24 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 		
 		// Paint entities				
 		g.setColor(Color.BLACK);
-		double radius;
+		
+		
+		/* 
+		 * DEFAULT_EYE_Z_DISTANCE is the assumed default distance of the eye from the monitor
+		 * zRatio is the ratio of the camera z position to that default distance, this is used
+		 * so that if the camera is moved closer or farther away from the entities, that they are
+		 * displayed larger or smaller, and closer to or farther away from the screen.
+		 */
+		double zRatio = DEFAULT_EYE_Z_DISTANCE / camera.getZ();
+
+		
 		for (BasePhysicalEntity entity : entities) {
 
 			// Now, for every difference from z
 			// Let's see, the greater the camera z is, that means, lets see, the camera is farther back
-			// So... the greater the zCamera difference, then the more we subtract the x and y value.
+			// The greater the zCamera difference, then the more we subtract the x and y value.
+			// TODO: This is not using the distance of the entity from the camera to change the position of the
+			// entity on the screen. Which, at the moment, makes sense because this is a 'TwoDimensionalEntityCanvas'
 			int zCameraDifference = (int) (camera.getZ() - entity.getZ());
 			if (zCameraDifference < 0) continue; // In this case the object is behind the camera
 			
@@ -86,12 +107,7 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 			// anyways, for each point... we get how far away its x value and y value is from the camera.
 			int xCameraDifference = (int) (entity.getX() - camera.getX());
 			int yCameraDifference = (int) (entity.getY() - camera.getY());
-			
-			// Now... we have to have some trigonometry to do!
-			// Also, first question, hmm... let's see, we're already putting a positive z on the camera. This is to
-			// represent how far the eyes are away from the monitor.
-			
-			double zRatio = DEFAULT_EYE_Z_DISTANCE / camera.getZ();
+						
 			
 			
 			// I want to calculate things as 0, 0 is in the center. However, in the world of java display
@@ -100,7 +116,7 @@ public class TwoDimensionalEntityCanvas extends Canvas {
 			int yDisplay = (int) (yCameraDifference * zRatio) + (getHeight() / 2);
 			
 
-			radius = entity.getRadius();
+			double radius = entity.getRadius();
 			
 			g.fillOval(xDisplay, yDisplay, (int) (radius * zRatio), (int) (radius * zRatio));
 		}
