@@ -50,7 +50,9 @@ public class UIFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private static volatile int frameDelay = 10; // Milliseconds between each frame painting
+	// Ideally, we don't want these static, but for convenience at the moment
+	private static volatile int frameDelay = 10; // Milliseconds between each frame painting	
+	private static volatile boolean running = true;
 	
 	private Collection<BasePhysicalEntity> entities;
 	
@@ -180,9 +182,28 @@ public class UIFrame extends JFrame {
 		
 		// Initialize time control panel
 		timePanel = new JPanel(new FlowLayout());
-		JButton pauseButton = new JButton("Pause"); // Still need to implement
+		JButton pauseButton = new JButton("Pause");
+		JButton playButton = new JButton("Play");
 		JButton increaseSpeedButton = new JButton("Increase Speed");
 		JButton decreaseSpeedButton = new JButton("Decrease Speed");
+		
+		pauseButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				running = false;
+			}
+			
+		});
+		
+		playButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				running = true;
+			}
+			
+		});
 		
 		increaseSpeedButton.addActionListener(new ActionListener() {
 
@@ -202,12 +223,14 @@ public class UIFrame extends JFrame {
 			
 		});
 		
+		timePanel.add(pauseButton);
+		timePanel.add(playButton);
 		timePanel.add(decreaseSpeedButton);
 		timePanel.add(increaseSpeedButton);
 		
 		
 		timePanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		timePanel.setPreferredSize(new Dimension(200, 50));
+		timePanel.setPreferredSize(new Dimension(200, 100));
 		
 		
 		
@@ -278,25 +301,33 @@ public class UIFrame extends JFrame {
 		
 		@Override
 		public void run() {
-			cycleTime = System.currentTimeMillis();
 						
 			while (true)  {
-				updateUniverseState();
+
+				// Wait an appropriate amount of time, so that the frame rate is progressing constantly.
+				synchFramerate();
 				
 				// tell graphics to repaint
 				canvas.updateGraphics();
-				
-				synchFramerate();								
+
+				if (running) {
+					
+					// Perform physics simulations
+					updateUniverseState();					
+				}
 			}
 			
 		}
 		
 		private void synchFramerate() {
+			// Check for initialization.
+			if (cycleTime == 0) cycleTime = System.currentTimeMillis();
+			
 			cycleTime = cycleTime + frameDelay;
 			long difference = cycleTime - System.currentTimeMillis();
 			
 			try {
-				Thread.sleep(Math.max(0,  difference));				
+				Thread.sleep(Math.max(0,  difference));
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
