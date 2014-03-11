@@ -36,4 +36,19 @@ public class Setup {
 		}
 	}
 	
+	
+	/**
+	 * Experiment with creating a parametized function for setting things up.
+	 * 
+	 * Will create entities, with some sort of spiral motion. Beyond that... probably a lot of variables I haven't
+	 * thought of yet.
+	 * 
+	 * @param numEntities
+	 * @param massDistribution
+	 * @param spatial
+	 */
+	public static ArrayList<BasePhysicalEntity> setup(int numEntities, double massDistribution, double spatialDistribution, double speedDistribution) {
+		return null;
+	}
+	
 }
