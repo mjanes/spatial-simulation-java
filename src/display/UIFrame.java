@@ -27,10 +27,7 @@ import entity.BasePhysicalEntity;
  * every other UI element is going to be attached to or inside of this one.
  * 
  * Current TODO:
- * 1) Various buttons!
- * 	a) moving the display panel
- * 	b) zooming in and out
- * 2) Menu options
+ * Menu options
  * 	a) saving
  * 	b) loading
  * 	c) restarting the simulation
