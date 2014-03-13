@@ -17,7 +17,7 @@ import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicArrowButton;
 
 import physics.GravitationalPhysics;
-import camera.TwoDimensionalViewCamera;
+import camera.ThreeDimensionalViewCamera;
 import entity.BasePhysicalEntity;
 
 /**
@@ -36,8 +36,6 @@ import entity.BasePhysicalEntity;
  * deal with that later.
  * 
  * This is intended to be the controller in the MVP model.
- * TODO: I am running into issues with that, given how Swing defines buffer strategies for frames and windows, but not for
- * individual panels. Need to research.
  * 
  * @author mjanes
  *
@@ -54,7 +52,7 @@ public class UIFrame extends JFrame {
 	private Collection<BasePhysicalEntity> entities;
 	
 	// The canvas that is the display screen
-	private TwoDimensionalEntityCanvas canvas;
+	private ThreeDimensionalEntityCanvas canvas;
 	
 	// The control panel, to one side of the canvas, that is for manipulating the view and universe
 	private JPanel controlPanel;
@@ -67,7 +65,7 @@ public class UIFrame extends JFrame {
 	private JPanel timePanel;
 	
 	// Check if volatile is appropriate. Will affect the universe loop thread.
-	private volatile TwoDimensionalViewCamera camera; 
+	private volatile ThreeDimensionalViewCamera camera; 
 	
 	
 	/**
@@ -81,12 +79,12 @@ public class UIFrame extends JFrame {
 	public UIFrame(int width, int height) {	
 
 		// Initiate the camera
-		camera = new TwoDimensionalViewCamera(width / 2, height / 2, TwoDimensionalEntityCanvas.DEFAULT_EYE_Z_DISTANCE);
+		camera = new ThreeDimensionalViewCamera(width / 2, height / 2, ThreeDimensionalEntityCanvas.EYE_Z_DISTANCE);
 		
 		
 		
 		// Setup canvas
-		canvas = new TwoDimensionalEntityCanvas(width, height, camera);		
+		canvas = new ThreeDimensionalEntityCanvas(width, height, camera);		
 		
 		// Set up control panel, which will have buttons to manipulate view of canvas
 		controlPanel = new JPanel(new BorderLayout()); // May wish to create a unique class for this.
@@ -288,10 +286,10 @@ public class UIFrame extends JFrame {
 	private static class UniverseLoop implements Runnable {
 		
 		long cycleTime;
-		private TwoDimensionalEntityCanvas canvas;
+		private IEntityCanvas canvas;
 		private Collection<BasePhysicalEntity> entities;
 		
-		public UniverseLoop(TwoDimensionalEntityCanvas canvas, Collection<BasePhysicalEntity> entities) {
+		public UniverseLoop(IEntityCanvas canvas, Collection<BasePhysicalEntity> entities) {
 			this.canvas = canvas;
 			this.entities = entities;
 		}

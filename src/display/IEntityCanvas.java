@@ -4,7 +4,7 @@ import java.util.Collection;
 
 import entity.BasePhysicalEntity;
 
-public interface EntityCanvas {
+public interface IEntityCanvas {
 	
 	public void setEntities(Collection<BasePhysicalEntity> entities);
 	

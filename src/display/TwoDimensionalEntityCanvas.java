@@ -17,7 +17,7 @@ import camera.TwoDimensionalViewCamera;
  * 
  * @author mjanes
  */
-public class TwoDimensionalEntityCanvas extends Canvas implements EntityCanvas {
+public class TwoDimensionalEntityCanvas extends Canvas implements IEntityCanvas {
 		
 	private static final long serialVersionUID = 1L;	
 	
@@ -27,7 +27,7 @@ public class TwoDimensionalEntityCanvas extends Canvas implements EntityCanvas {
 	
 	private TwoDimensionalViewCamera camera;
 	
-	public static final int DEFAULT_EYE_Z_DISTANCE = 400;
+	public static final int EYE_Z_DISTANCE = 400;
 	
 	
 	/*******************************************************************************************************
@@ -79,7 +79,7 @@ public class TwoDimensionalEntityCanvas extends Canvas implements EntityCanvas {
 	private void doPaint(Graphics g) {
 		super.paint(g);
 		
-		// Paint entities				
+		// Entity color			
 		g.setColor(Color.BLACK);
 		
 		
@@ -89,7 +89,7 @@ public class TwoDimensionalEntityCanvas extends Canvas implements EntityCanvas {
 		 * so that if the camera is moved closer or farther away from the entities, that they are
 		 * displayed larger or smaller, and closer to or farther away from the screen.
 		 */
-		double zRatio = DEFAULT_EYE_Z_DISTANCE / camera.getZ();
+		double zRatio = EYE_Z_DISTANCE / camera.getZ();
 
 		
 		for (BasePhysicalEntity entity : entities) {
@@ -99,26 +99,23 @@ public class TwoDimensionalEntityCanvas extends Canvas implements EntityCanvas {
 			// The greater the zCamera difference, then the more we subtract the x and y value.
 			// TODO: This is not using the distance of the entity from the camera to change the position of the
 			// entity on the screen. Which, at the moment, makes sense because this is a 'TwoDimensionalEntityCanvas'
-			int zCameraDifference = (int) (camera.getZ() - entity.getZ());
-			if (zCameraDifference < 0) continue; // In this case the object is behind the camera
+			int zOffset = (int) (camera.getZ() - entity.getZ());
+			if (zOffset < 0) continue; // In this case the object is behind the camera
 			
 			// Ok... zooming is a transformation, wherein... hrm... given the coordinate system here is inverted from
-			// cartesian things...
-			// anyways, for each point... we get how far away its x value and y value is from the camera.
-			int xCameraDifference = (int) (entity.getX() - camera.getX());
-			int yCameraDifference = (int) (entity.getY() - camera.getY());
+			// cartesian coordinates for each point... we get how far away its x value and y value is from the camera.
+			int xOffset = (int) (entity.getX() - camera.getX());
+			int yOffset = (int) (entity.getY() - camera.getY());
 						
 			
 			
 			// I want to calculate things as 0, 0 is in the center. However, in the world of java display
 			// 0, 0 is the upper left, so doing this translation.
-			int xDisplay = (int) (xCameraDifference * zRatio) + (getWidth() / 2);
-			int yDisplay = (int) (yCameraDifference * zRatio) + (getHeight() / 2);
+			int xProjection = (int) (xOffset * zRatio) + (getWidth() / 2);
+			int yProjection = (int) (yOffset * zRatio) + (getHeight() / 2);
 			
-
-			double radius = entity.getRadius();
 			
-			g.fillOval(xDisplay, yDisplay, (int) (radius * zRatio), (int) (radius * zRatio));
+			g.fillOval(xProjection, yProjection, (int) (entity.getRadius() * zRatio), (int) (entity.getRadius() * zRatio));
 		}
 	}
 		
