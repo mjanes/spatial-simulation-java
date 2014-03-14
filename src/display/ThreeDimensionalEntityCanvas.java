@@ -30,7 +30,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 	
 	public ThreeDimensionalEntityCanvas(int width, int height, ThreeDimensionalViewCamera camera) {
 		super();
-		setPreferredSize(new Dimension(width, height));
+		setPreferredSize(new Dimension(width, height));		
 		this.camera = camera;
 	}
 	
@@ -112,8 +112,6 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			// Getting offset from camera
 			int xOffset = (int) (entity.getX() - camera.getX());
 			int yOffset = (int) (entity.getY() - camera.getY());
-			
-			// TODO: Replace with proper trigonometry
 			
 			// yProjection / EYE_Z_DISTANCE = yOffset / zOffset
 			// yProjection = (yOffset / zOffset) * EYE_Z_DISTANCE

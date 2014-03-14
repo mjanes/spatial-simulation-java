@@ -7,26 +7,31 @@ import entity.BasePhysicalEntity;
 
 public class Setup {
 	
-	private static ArrayList<BasePhysicalEntity> entities;
-
 	public static Collection<BasePhysicalEntity> create() {
-		entities = new ArrayList<BasePhysicalEntity>();
-		basicOrbitCouple();
-		randomSet(3);
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		entities.addAll(basicOrbitCouple());
+		entities.addAll(randomSet(3));
 		
-		//randomSet(10);
+		//entities = grid(10);
 		
 		return entities;
 	}
 	
-	private static void basicOrbitCouple() {
+	private static ArrayList<BasePhysicalEntity> basicOrbitCouple() {
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		
 		BasePhysicalEntity entityA = new BasePhysicalEntity(200, 200, 0, 500);
 		entityA.setDeltaX(1.0);
 		entities.add(entityA);				
+		
 		entities.add(new BasePhysicalEntity(500, 500, 0, 8000));
+		
+		return entities;
 	}
 	
-	private static void randomSet(int n) {
+	private static ArrayList<BasePhysicalEntity> randomSet(int n) {
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		
 		BasePhysicalEntity newEntity;
 		for (int i = 0; i < n; ++i) {
 			newEntity = new BasePhysicalEntity(Math.random() * 800, Math.random() * 800, 0, Math.random() * 400);
@@ -34,8 +39,22 @@ public class Setup {
 			newEntity.setDeltaY(Math.random() / 10);
 			entities.add(newEntity);
 		}
+		
+		return entities;
 	}
 	
+	
+	private static ArrayList<BasePhysicalEntity> grid(int x) {
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < x; j++) {
+				entities.add(new BasePhysicalEntity(i * 100, j * 100, 0, 200));
+			}
+		}
+
+		return entities;
+	}
 	
 	/**
 	 * Experiment with creating a parametized function for setting things up.

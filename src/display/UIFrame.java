@@ -51,7 +51,7 @@ public class UIFrame extends JFrame {
 	
 	private Collection<BasePhysicalEntity> entities;
 	
-	// The canvas that is the display screen
+	// The canvas that is the display screen and JPanel that holds it	
 	private ThreeDimensionalEntityCanvas canvas;
 	
 	// The control panel, to one side of the canvas, that is for manipulating the view and universe
@@ -82,9 +82,9 @@ public class UIFrame extends JFrame {
 		camera = new ThreeDimensionalViewCamera(width / 2, height / 2, ThreeDimensionalEntityCanvas.EYE_Z_DISTANCE);
 		
 		
-		
 		// Setup canvas
-		canvas = new ThreeDimensionalEntityCanvas(width, height, camera);		
+		canvas = new ThreeDimensionalEntityCanvas(width, height, camera);
+		
 		
 		// Set up control panel, which will have buttons to manipulate view of canvas
 		controlPanel = new JPanel(new BorderLayout()); // May wish to create a unique class for this.
@@ -238,9 +238,9 @@ public class UIFrame extends JFrame {
 		
 		// Final packing of everything into content pane and display
 		Container contentPane = getContentPane();
-		contentPane.setLayout(new FlowLayout());
-		contentPane.add(controlPanel);
-		contentPane.add(canvas);				
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(controlPanel, BorderLayout.WEST);
+		contentPane.add(canvas, BorderLayout.CENTER);				
 		pack();		
 		setVisible(true);	
 		
