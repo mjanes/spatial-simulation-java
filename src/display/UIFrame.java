@@ -57,12 +57,7 @@ public class UIFrame extends JFrame {
 	// The control panel, to one side of the canvas, that is for manipulating the view and universe
 	private JPanel controlPanel;
 	
-	// The navigation panel, which is responsible for moving around the universe, ie, changing how it
-	// is displayed in the canvas.
-	private JPanel navigationPanel;
-	
-	// This panel contains buttons for changing the speed of the simulation
-	private JPanel timePanel;
+
 	
 	// Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile ThreeDimensionalViewCamera camera; 
@@ -91,10 +86,43 @@ public class UIFrame extends JFrame {
 		controlPanel.setPreferredSize(new Dimension(200, height));
 		
 		
+		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
+		// is displayed in the canvas.
+		JPanel navigationPanel = setupNavigationPanel();
+		
+
+		// This panel contains buttons for changing the speed of the simulation
+		JPanel timePanel = setupTimePanel();
 		
 		
-		// Navigation panel, with up/down/left/right buttons
-		navigationPanel = new JPanel(new GridLayout(3, 3));
+		// Add different panels to control panel
+		controlPanel.add(navigationPanel, BorderLayout.NORTH);
+		controlPanel.add(timePanel, BorderLayout.SOUTH);
+		controlPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		
+		
+		
+		// Final packing of everything into content pane and display
+		Container contentPane = getContentPane();
+		contentPane.setLayout(new BorderLayout());
+		contentPane.add(controlPanel, BorderLayout.WEST);
+		contentPane.add(canvas, BorderLayout.CENTER);				
+		pack();		
+		setVisible(true);	
+		
+		
+		// initialize the buffer of the canvas
+		canvas.initBuffer();
+	}
+	
+	
+	/**
+	 * Navigation panel, with up/down/left/right buttons
+	 *
+	 * @return
+	 */
+	private JPanel setupNavigationPanel() {
+		JPanel navigationPanel = new JPanel(new GridLayout(3, 3));
 		
 		BasicArrowButton eastButton = new BasicArrowButton(BasicArrowButton.EAST);		
 		BasicArrowButton northButton = new BasicArrowButton(BasicArrowButton.NORTH);
@@ -174,9 +202,16 @@ public class UIFrame extends JFrame {
 		navigationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		navigationPanel.setPreferredSize(new Dimension(200, 200));
 		
-		
-		// Initialize time control panel
-		timePanel = new JPanel(new FlowLayout());
+		return navigationPanel;
+	}
+	
+	/**
+	 * Initialize time control panel
+	 * 
+	 * @return
+	 */
+	private JPanel setupTimePanel() {
+		JPanel timePanel = new JPanel(new FlowLayout());
 		JButton pauseButton = new JButton("Pause");
 		JButton playButton = new JButton("Play");
 		JButton increaseSpeedButton = new JButton("Increase Speed");
@@ -227,26 +262,7 @@ public class UIFrame extends JFrame {
 		timePanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		timePanel.setPreferredSize(new Dimension(200, 100));
 		
-		
-		
-		// Add different panels to control panel
-		controlPanel.add(navigationPanel, BorderLayout.NORTH);
-		controlPanel.add(timePanel, BorderLayout.SOUTH);
-		controlPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		
-		
-		
-		// Final packing of everything into content pane and display
-		Container contentPane = getContentPane();
-		contentPane.setLayout(new BorderLayout());
-		contentPane.add(controlPanel, BorderLayout.WEST);
-		contentPane.add(canvas, BorderLayout.CENTER);				
-		pack();		
-		setVisible(true);	
-		
-		
-		// initialize the buffer of the canvas
-		canvas.initBuffer();
+		return timePanel;
 	}
 	
 	

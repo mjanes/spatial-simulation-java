@@ -81,6 +81,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 	 *  https://en.wikipedia.org/wiki/3D_projection#Perspective_projection
 	 *  https://en.wikipedia.org/wiki/Camera_matrix
 	 *  http://ogldev.atspace.co.uk/www/tutorial12/tutorial12.html
+	 *  https://en.wikipedia.org/wiki/Pinhole_camera_model
 	 *  
 	 * @param g
 	 */
