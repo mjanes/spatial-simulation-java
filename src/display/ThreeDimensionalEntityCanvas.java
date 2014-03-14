@@ -11,6 +11,26 @@ import java.util.Collection;
 import camera.ThreeDimensionalViewCamera;
 import entity.BasePhysicalEntity;
 
+/**
+ * Canvas for displaying Entity objects in three dimensional space. 
+ * 
+ * The canvas is the projection plane, as seen from the ThreeDimensionalViewCamera object.
+ * The projection plane is assumed to be EYE_Z_DISTANCE units from the camera, as, I assumed that
+ * was how far the an eye would be from the monitor, though as it is currently 400, it is not exactly 
+ * accurate.
+ * 
+ * NOTE: I am not using a standard three dimensional coordinate system: 
+ * https://en.wikipedia.org/wiki/Cartesian_coordinate_system
+ * I am having the x dimension be the left and right, y dimension being up and down, and z dimension 
+ * being in and out.
+ * Why on earth the standard three dimensional Cartesian coordinate system didn't take the two dimensional 
+ * coordinate system and append a z axis to it, I have no idea, but that's the way I'm doing it for
+ * now. May revise later, when I get fully away from the two dimensional entity canvas.
+ * 
+ * 
+ * @author mjanes
+ *
+ */
 public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanvas {
 
 	private static final long serialVersionUID = 1L;

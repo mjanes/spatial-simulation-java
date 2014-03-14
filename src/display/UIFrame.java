@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.Collection;
 
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -57,11 +58,11 @@ public class UIFrame extends JFrame {
 	// The control panel, to one side of the canvas, that is for manipulating the view and universe
 	private JPanel controlPanel;
 	
-
 	
 	// Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile ThreeDimensionalViewCamera camera; 
 	
+	private static final int ANGLE_INCREMENT = 5;
 	
 	/**
 	 * UI setup
@@ -81,23 +82,29 @@ public class UIFrame extends JFrame {
 		canvas = new ThreeDimensionalEntityCanvas(width, height, camera);
 		
 		
-		// Set up control panel, which will have buttons to manipulate view of canvas
-		controlPanel = new JPanel(new BorderLayout()); // May wish to create a unique class for this.
-		controlPanel.setPreferredSize(new Dimension(200, height));
 		
 		
 		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
 		// is displayed in the canvas.
-		JPanel navigationPanel = setupNavigationPanel();
+		JPanel navigationPanel = setupNavigationPanel();		
 		
+		// Panel for controlling the orientation of the camera
+		JPanel orientationPanel = setupOrientationPanel();
 
 		// This panel contains buttons for changing the speed of the simulation
 		JPanel timePanel = setupTimePanel();
 		
+
+		// Set up control panel, which will have buttons to manipulate view of canvas
+		controlPanel = new JPanel();
+		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
+		controlPanel.setPreferredSize(new Dimension(200, height));
+
 		
 		// Add different panels to control panel
-		controlPanel.add(navigationPanel, BorderLayout.NORTH);
-		controlPanel.add(timePanel, BorderLayout.SOUTH);
+		controlPanel.add(navigationPanel);
+		controlPanel.add(orientationPanel);
+		controlPanel.add(timePanel);
 		controlPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		
 		
@@ -117,7 +124,7 @@ public class UIFrame extends JFrame {
 	
 	
 	/**
-	 * Navigation panel, with up/down/left/right buttons
+	 * Navigation panel, for moving the location of the camera, with up/down/left/right buttons
 	 *
 	 * @return
 	 */
@@ -203,6 +210,91 @@ public class UIFrame extends JFrame {
 		navigationPanel.setPreferredSize(new Dimension(200, 200));
 		
 		return navigationPanel;
+	}
+	
+	private JPanel setupOrientationPanel() {
+		JPanel orientationPanel = new JPanel(new GridLayout(3, 3));
+		
+		// TODO: Better names for these
+		JButton yAngleMinus = new JButton("yAngle minus");		
+		JButton xAnglePlus = new JButton("xAngle plus");
+		JButton xAngleMinus = new JButton("xAngle minus");
+		JButton yAnglePlus = new JButton("yAngle plus");
+		JButton zAngleMinus = new JButton("zAngle minus");
+		JButton zAnglePlus = new JButton("zAngle Plus");
+		
+		Dimension buttonDimension = new Dimension(66, 66);
+		yAngleMinus.setPreferredSize(buttonDimension);
+		xAnglePlus.setPreferredSize(buttonDimension);
+		xAngleMinus.setPreferredSize(buttonDimension);
+		yAnglePlus.setPreferredSize(buttonDimension);
+		zAngleMinus.setPreferredSize(buttonDimension);
+		zAnglePlus.setPreferredSize(buttonDimension);
+		
+		xAnglePlus.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.incrementXAngle(ANGLE_INCREMENT);			
+			}			
+		});
+		
+		xAngleMinus.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.incrementXAngle(-ANGLE_INCREMENT);
+			}
+		});
+		
+		yAngleMinus.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.incrementYAngle(-ANGLE_INCREMENT);			
+			}			
+		});
+		
+
+		yAnglePlus.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.incrementYAngle(ANGLE_INCREMENT);			
+			}			
+		});
+		
+		
+		zAngleMinus.addActionListener(new ActionListener() {
+		
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.incrementZAngle(-ANGLE_INCREMENT);
+			}
+		});
+		
+		zAnglePlus.addActionListener(new ActionListener() {
+			
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				camera.incrementZAngle(ANGLE_INCREMENT);
+			}
+		});
+		
+		orientationPanel.add(new JPanel());
+		orientationPanel.add(yAngleMinus);
+		orientationPanel.add(new JPanel());
+		orientationPanel.add(xAnglePlus);
+		orientationPanel.add(new JPanel());
+		orientationPanel.add(xAngleMinus);	
+		orientationPanel.add(zAnglePlus);
+		orientationPanel.add(yAnglePlus);
+		orientationPanel.add(zAngleMinus);
+		
+		orientationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
+		orientationPanel.setPreferredSize(new Dimension(200, 200));
+		
+		return orientationPanel;
 	}
 	
 	/**

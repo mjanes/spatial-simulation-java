@@ -56,6 +56,22 @@ public class Setup {
 		return entities;
 	}
 	
+	private static ArrayList<BasePhysicalEntity> cube() {
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		entities.add(new BasePhysicalEntity(200, 200, 0, 200));
+		entities.add(new BasePhysicalEntity(400, 200, 0, 200));
+		entities.add(new BasePhysicalEntity(200, 400, 0, 200));
+		entities.add(new BasePhysicalEntity(400, 400, 0, 200));
+		entities.add(new BasePhysicalEntity(200, 200, 200, 200));
+		entities.add(new BasePhysicalEntity(400, 200, 200, 200));
+		entities.add(new BasePhysicalEntity(200, 400, 200, 200));
+		entities.add(new BasePhysicalEntity(400, 400, 200, 200));
+		
+		
+		
+		return entities;
+	}
+	
 	/**
 	 * Experiment with creating a parametized function for setting things up.
 	 * 
