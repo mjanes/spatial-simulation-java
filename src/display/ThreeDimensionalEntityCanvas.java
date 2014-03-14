@@ -122,9 +122,9 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			double distanceRatio = EYE_Z_DISTANCE / camera.getDistance(entity); // The ratio of that distance to default distance. Used for resizing objects.
 			
 			// Getting offset from camera
-			int xOffset = (int) (entity.getX() - camera.getX());
-			int yOffset = (int) (entity.getY() - camera.getY());
-			double zOffset = camera.getZ() - entity.getZ(); // How far, in depth, the z dimension, the camera is from the entity.
+			double xOffset = entity.getX() - camera.getX();
+			double yOffset = entity.getY() - camera.getY();
+			double zOffset = camera.getZ() - entity.getZ();
 			
 			
 			int xProjection = (int) ((xOffset / zOffset) * EYE_Z_DISTANCE);
