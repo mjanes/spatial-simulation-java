@@ -114,28 +114,18 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 		// View plane height, width, and aspect ratio.
 		double width = getWidth();
 		double height = getHeight();
-		//double aspectRatio = width / height;
 		
-		// Ok, we're not going to deal with rotation of the camera immediately...
-
 		// Distance from camera to view plane is DEFAULT_EYE_Z_DISTANCE
-		// alpha is is the angle of he camera to the view plane 
 		
-		// tan A = opposite/adjacent
-		// tan A = (height/2) / DEFAULT_EYE_Z_DISTANCE
-		//double oa = (height / 2) / EYE_Z_DISTANCE;
-		//double alpha = Math.toDegrees(Math.atan(oa));
 		
 		for (BasePhysicalEntity entity : entities) {
-			double zOffset = camera.getZ() - entity.getZ(); // How far, in depth, the z dimension, the camera is from the entity.
-			double zRatio = EYE_Z_DISTANCE / zOffset; // The ratio of that distance to default distance. Used for resizing objects.
+			double distanceRatio = EYE_Z_DISTANCE / camera.getDistance(entity); // The ratio of that distance to default distance. Used for resizing objects.
 			
 			// Getting offset from camera
 			int xOffset = (int) (entity.getX() - camera.getX());
 			int yOffset = (int) (entity.getY() - camera.getY());
+			double zOffset = camera.getZ() - entity.getZ(); // How far, in depth, the z dimension, the camera is from the entity.
 			
-			// yProjection / EYE_Z_DISTANCE = yOffset / zOffset
-			// yProjection = (yOffset / zOffset) * EYE_Z_DISTANCE
 			
 			int xProjection = (int) ((xOffset / zOffset) * EYE_Z_DISTANCE);
 			int yProjection = (int) ((yOffset / zOffset) * EYE_Z_DISTANCE);
@@ -144,7 +134,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			xProjection += (width / 2);
 			yProjection += (height / 2);
 			
-			g.fillOval(xProjection, yProjection, (int) (entity.getRadius() * zRatio), (int) (entity.getRadius() * zRatio));
+			g.fillOval(xProjection, yProjection, (int) (entity.getRadius() * distanceRatio), (int) (entity.getRadius() * distanceRatio));
 		}
 	
 	}
