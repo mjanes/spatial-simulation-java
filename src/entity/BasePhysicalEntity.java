@@ -1,11 +1,16 @@
 package entity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Base physical entity for the physics sim. A sphereoid in three dimensional space. 
  * 
+ * It has mass, velocity, spatial location, and potentially connections to other entities. 
+ * 
  * @author mjanes
  */
-public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEntity {
+public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEntity, IConnectedEntity {
 	
 	protected double x;
 	protected double y;
@@ -21,6 +26,8 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	
 	protected double mass = 1;
 	protected double density = 1;
+	
+	protected ArrayList<IConnectedEntity> connections = new ArrayList<IConnectedEntity>();
 	
 	public BasePhysicalEntity(double x, double y, double z, double mass) {
 		this(x, y, z);
@@ -183,6 +190,26 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 				Math.pow((y - other.getY()), 2) + 
 				Math.pow((z - other.getZ()), 2)
 			);
+	}
+
+	
+	/**********************************************************************************
+	 * Connections
+	 **********************************************************************************/
+	
+	@Override
+	public void addConnection(IConnectedEntity entity) {
+		connections.add(entity);
+	}
+
+	@Override
+	public void removeConnection(IConnectedEntity entity) {
+		connections.remove(entity);
+	}
+
+	@Override
+	public List<IConnectedEntity> getConnections() {
+		return connections;
 	}
 	
 	

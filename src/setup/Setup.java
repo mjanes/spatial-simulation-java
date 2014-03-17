@@ -14,6 +14,8 @@ public class Setup {
 		
 		//entities = grid(10);
 		
+		//entities = cube();
+		
 		return entities;
 	}
 	
@@ -58,16 +60,28 @@ public class Setup {
 	
 	private static ArrayList<BasePhysicalEntity> cube() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		entities.add(new BasePhysicalEntity(200, 200, 0, 200));
-		entities.add(new BasePhysicalEntity(400, 200, 0, 200));
-		entities.add(new BasePhysicalEntity(200, 400, 0, 200));
-		entities.add(new BasePhysicalEntity(400, 400, 0, 200));
-		entities.add(new BasePhysicalEntity(200, 200, 200, 200));
-		entities.add(new BasePhysicalEntity(400, 200, 200, 200));
-		entities.add(new BasePhysicalEntity(200, 400, 200, 200));
-		entities.add(new BasePhysicalEntity(400, 400, 200, 200));
 		
+		BasePhysicalEntity a = new BasePhysicalEntity(200, 200, 0, 200);
+		BasePhysicalEntity b = new BasePhysicalEntity(400, 200, 0, 200);
+		BasePhysicalEntity c = new BasePhysicalEntity(200, 400, 0, 200); 
+		BasePhysicalEntity d = new BasePhysicalEntity(400, 400, 0, 200); 		
+		BasePhysicalEntity e = new BasePhysicalEntity(200, 200, 200, 200); 
+		BasePhysicalEntity f = new BasePhysicalEntity(400, 200, 200, 200); 
+		BasePhysicalEntity g = new BasePhysicalEntity(200, 400, 200, 200); 
+		BasePhysicalEntity h = new BasePhysicalEntity(400, 400, 200, 200);
 		
+		a.addConnection(b);
+		a.addConnection(c);
+		a.addConnection(e);
+		
+		entities.add(a);
+		entities.add(b);
+		entities.add(c);
+		entities.add(d);
+		entities.add(e);
+		entities.add(f);
+		entities.add(g);
+		entities.add(h);
 		
 		return entities;
 	}

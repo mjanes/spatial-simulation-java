@@ -48,14 +48,26 @@ public class ThreeDimensionalViewCamera extends TwoDimensionalViewCamera {
 		this.zAngle = zAngle;
 	}
 	
+	public double getXAngle() {
+		return xAngle;
+	}
+	
 	public void incrementXAngle(double increment) {
 		xAngle += increment;
 		xAngle = xAngle % 360;
 	}
 	
+	public double getYAngle() {
+		return yAngle;
+	}
+	
 	public void incrementYAngle(double increment) {
 		yAngle += increment;
 		yAngle = yAngle % 360;
+	}
+	
+	public double getZAngle() {
+		return zAngle;
 	}
 	
 	public void incrementZAngle(double increment) {

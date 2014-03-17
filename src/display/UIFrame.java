@@ -75,7 +75,7 @@ public class UIFrame extends JFrame {
 	public UIFrame(int width, int height) {	
 
 		// Initiate the camera
-		camera = new ThreeDimensionalViewCamera(width / 2, height / 2, ThreeDimensionalEntityCanvas.EYE_Z_DISTANCE);
+		camera = new ThreeDimensionalViewCamera(width / 2, height / 2, ThreeDimensionalEntityCanvas.EYE_DISTANCE);
 		
 		
 		// Setup canvas

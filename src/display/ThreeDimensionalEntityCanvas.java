@@ -41,7 +41,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 	
 	private ThreeDimensionalViewCamera camera;
 	
-	public static final double EYE_Z_DISTANCE = 400;
+	public static final double EYE_DISTANCE = 400;
 	
 	
 	/*******************************************************************************************************
@@ -102,6 +102,8 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 	 *  https://en.wikipedia.org/wiki/Camera_matrix
 	 *  http://ogldev.atspace.co.uk/www/tutorial12/tutorial12.html
 	 *  https://en.wikipedia.org/wiki/Pinhole_camera_model
+	 *  https://en.wikipedia.org/wiki/Rotation_(mathematics)
+	 *  http://www.gamedev.net/topic/286454-simple-2d-point-rotation/
 	 *  
 	 * @param g
 	 */
@@ -119,16 +121,26 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 		
 		
 		for (BasePhysicalEntity entity : entities) {
-			double distanceRatio = EYE_Z_DISTANCE / camera.getDistance(entity); // The ratio of that distance to default distance. Used for resizing objects.
+			double distance = camera.getDistance(entity);
+			double distanceRatio = EYE_DISTANCE / distance; // The ratio of that distance to default distance. Used for resizing objects.
 			
 			// Getting offset from camera
 			double xOffset = entity.getX() - camera.getX();
 			double yOffset = entity.getY() - camera.getY();
 			double zOffset = camera.getZ() - entity.getZ();
 			
+			// Perform the rotation
+			//double cZAngle = Math.toDegrees(Math.atan(yOffset / xOffset));
+			//double nZAngle = cZAngle + camera.getZAngle();
+			double beta = Math.toRadians(camera.getZAngle());
+			double cosBeta = Math.cos(beta);
+			double sinBeta = Math.sin(beta);
+			double xAfterZRotation = xOffset * cosBeta - yOffset * sinBeta;
+			double yAfterZRotation = xOffset * sinBeta + yOffset * cosBeta; 
 			
-			int xProjection = (int) ((xOffset / zOffset) * EYE_Z_DISTANCE);
-			int yProjection = (int) ((yOffset / zOffset) * EYE_Z_DISTANCE);
+			
+			int xProjection = (int) ((xAfterZRotation / distance) * EYE_DISTANCE);
+			int yProjection = (int) ((yAfterZRotation / distance) * EYE_DISTANCE);
 			
 			// Adding width / 2 and height / 2 to the x and y projects, so that 0,0 appears in the middle of the screen
 			xProjection += (width / 2);
@@ -136,6 +148,11 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			
 			g.fillOval(xProjection, yProjection, (int) (entity.getRadius() * distanceRatio), (int) (entity.getRadius() * distanceRatio));
 		}
+		
+		// Temp: For debugging the 3d stuff, going to draw a red x in the center of the field of view
+		//g.setColor(Color.RED);
+		//g.drawLine(0, 0, (int) width,  (int) height);
+		//g.drawLine(0, (int) height, (int) width, 0);
 	
 	}
 }
