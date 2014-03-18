@@ -62,6 +62,7 @@ public class UIFrame extends JFrame {
 	// Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile ThreeDimensionalViewCamera camera; 
 	
+	private static final double CAMERA_ACCELERATION = 0.1;
 	private static final int ANGLE_INCREMENT = 5;
 	
 	/**
@@ -150,7 +151,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveX(10);			
+				camera.addDeltaX(CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -158,7 +159,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveX(-10);
+				camera.addDeltaX(-CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -166,7 +167,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveY(-10);			
+				camera.addDeltaY(-CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -175,7 +176,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveY(10);			
+				camera.addDeltaY(CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -184,7 +185,7 @@ public class UIFrame extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveZ(-10);
+				camera.addDeltaZ(-CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -192,7 +193,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.moveZ(10);
+				camera.addDeltaZ(CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -369,7 +370,7 @@ public class UIFrame extends JFrame {
 	
 	public void start() {
 		//	3) Begin running physics on things
-		Thread universeThread = new Thread(new UniverseLoop(canvas, entities));
+		Thread universeThread = new Thread(new UniverseLoop(canvas, entities, camera));
 		universeThread.setPriority(Thread.MIN_PRIORITY);
 		universeThread.start();
 	}
@@ -396,10 +397,12 @@ public class UIFrame extends JFrame {
 		long cycleTime;
 		private IEntityCanvas canvas;
 		private Collection<BasePhysicalEntity> entities;
+		private ThreeDimensionalViewCamera camera;
 		
-		public UniverseLoop(IEntityCanvas canvas, Collection<BasePhysicalEntity> entities) {
+		public UniverseLoop(IEntityCanvas canvas, Collection<BasePhysicalEntity> entities, ThreeDimensionalViewCamera camera) {
 			this.canvas = canvas;
 			this.entities = entities;
+			this.camera = camera;
 		}
 		
 		@Override
@@ -442,6 +445,8 @@ public class UIFrame extends JFrame {
 			for (BasePhysicalEntity entity : entities) {
 				entity.move();
 			}		
+			
+			camera.move();
 		}
 	}
 	
