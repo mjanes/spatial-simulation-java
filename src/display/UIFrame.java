@@ -282,13 +282,13 @@ public class UIFrame extends JFrame {
 		});
 		
 		orientationPanel.add(new JPanel());
-		orientationPanel.add(yAngleMinus);
+		orientationPanel.add(xAngleMinus);
 		orientationPanel.add(new JPanel());
-		orientationPanel.add(xAnglePlus);
-		orientationPanel.add(new JPanel());
-		orientationPanel.add(xAngleMinus);	
-		orientationPanel.add(zAnglePlus);
 		orientationPanel.add(yAnglePlus);
+		orientationPanel.add(new JPanel());
+		orientationPanel.add(yAngleMinus);	
+		orientationPanel.add(zAnglePlus);
+		orientationPanel.add(xAnglePlus);
 		orientationPanel.add(zAngleMinus);
 		
 		orientationPanel.setBorder(BorderFactory.createLineBorder(Color.black));

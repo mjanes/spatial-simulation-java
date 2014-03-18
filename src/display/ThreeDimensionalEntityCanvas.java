@@ -41,7 +41,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 	
 	private ThreeDimensionalViewCamera camera;
 	
-	public static final double EYE_DISTANCE = 400;
+	public static final double EYE_DISTANCE = 3000;
 	
 	
 	/*******************************************************************************************************
@@ -124,29 +124,52 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			double distance = camera.getDistance(entity);
 			double distanceRatio = EYE_DISTANCE / distance; // The ratio of that distance to default distance. Used for resizing objects.
 			
-			// Getting offset from camera
-			double xOffset = entity.getX() - camera.getX();
-			double yOffset = entity.getY() - camera.getY();
-			double zOffset = camera.getZ() - entity.getZ();
+			// Starting offset from camera
+			double xP = entity.getX() - camera.getX();
+			double yP = entity.getY() - camera.getY();
+			double zP = camera.getZ() - entity.getZ();
 			
 			// Perform the rotation
-			//double cZAngle = Math.toDegrees(Math.atan(yOffset / xOffset));
-			//double nZAngle = cZAngle + camera.getZAngle();
-			double beta = Math.toRadians(camera.getZAngle());
-			double cosBeta = Math.cos(beta);
-			double sinBeta = Math.sin(beta);
-			double xAfterZRotation = xOffset * cosBeta - yOffset * sinBeta;
-			double yAfterZRotation = xOffset * sinBeta + yOffset * cosBeta; 
+			
+			double beta; 	// angle to rotate
+			double cosBeta; // cos
+			double sinBeta; // sin
 			
 			
-			int xProjection = (int) ((xAfterZRotation / distance) * EYE_DISTANCE);
-			int yProjection = (int) ((yAfterZRotation / distance) * EYE_DISTANCE);
+			// Z axis rotation first
+			beta = Math.toRadians(camera.getZAngle());
+			cosBeta = Math.cos(beta);
+			sinBeta = Math.sin(beta);
+			xP = xP * cosBeta - yP * sinBeta;
+			yP = xP * sinBeta + yP * cosBeta; 
+
 			
-			// Adding width / 2 and height / 2 to the x and y projects, so that 0,0 appears in the middle of the screen
-			xProjection += (width / 2);
-			yProjection += (height / 2);
+			// Y axis rotation
+			beta = Math.toRadians(camera.getYAngle());
+			cosBeta = Math.cos(beta);
+			sinBeta = Math.sin(beta);
+			xP = xP * cosBeta - zP * sinBeta;
+			zP = xP * sinBeta - zP * cosBeta;
+
 			
-			g.fillOval(xProjection, yProjection, (int) (entity.getRadius() * distanceRatio), (int) (entity.getRadius() * distanceRatio));
+			// X axis rotation
+			beta = Math.toRadians(camera.getXAngle());
+			cosBeta = Math.cos(beta);
+			sinBeta = Math.sin(beta);
+			yP = yP * cosBeta - zP * sinBeta;
+			zP = yP * sinBeta - zP * cosBeta;
+			
+			
+			// Project onto viewing plane, ie the further away it is, the more it will appear towards the center
+			xP = ((xP / distance) * EYE_DISTANCE);
+			yP = ((yP / distance) * EYE_DISTANCE);
+			
+			
+			// Adding width / 2 and height / 2 to the x and y projections, so that 0,0 appears in the middle of the screen
+			xP += (width / 2);
+			yP += (height / 2);
+			
+			g.fillOval((int) xP, (int) yP, (int) (entity.getRadius() * distanceRatio), (int) (entity.getRadius() * distanceRatio));
 		}
 		
 		// Temp: For debugging the 3d stuff, going to draw a red x in the center of the field of view

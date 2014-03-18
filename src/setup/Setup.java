@@ -14,7 +14,7 @@ public class Setup {
 		
 		//entities = grid(10);
 		
-		//entities = cube();
+		//entities.addAll(cube());
 		
 		return entities;
 	}
@@ -70,6 +70,8 @@ public class Setup {
 		BasePhysicalEntity g = new BasePhysicalEntity(200, 400, 200, 200); 
 		BasePhysicalEntity h = new BasePhysicalEntity(400, 400, 200, 200);
 		
+		// TODO: Had been planning to connect certain points in order to make a cube,
+		// but realized the graphics are going to require a reworking.
 		a.addConnection(b);
 		a.addConnection(c);
 		a.addConnection(e);
