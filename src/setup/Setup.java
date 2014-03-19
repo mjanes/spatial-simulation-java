@@ -9,12 +9,12 @@ public class Setup {
 	
 	public static Collection<BasePhysicalEntity> create() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		entities.addAll(basicOrbitCouple());
-		entities.addAll(randomSet(3));
+		//entities.addAll(basicOrbitCouple());
+		//entities.addAll(randomSet(3));
 		
 		//entities = grid(10);
 		
-		//entities.addAll(cube());
+		entities.addAll(cube());
 		
 		return entities;
 	}

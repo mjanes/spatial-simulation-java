@@ -74,5 +74,72 @@ public class ThreeDimensionalViewCamera extends TwoDimensionalViewCamera {
 		zAngle += increment;
 		zAngle = zAngle % 360;
 	}
+	
+	/********************************************************************************
+	 * Movement functions relative to the direction the camera is facing in.
+	 ********************************************************************************/
+	
+	public void addDeltaLeftRight(double delta) {
+		double deltaX;
+		double deltaY;
+		double deltaZ;
+		double angle;
+		
+		
+		// Handle rotation on Z axis
+		angle = Math.toRadians(getZAngle());
+		deltaX = delta * Math.cos(angle);
+		deltaY = delta * Math.sin(angle);
+		addDeltaX(deltaX);
+		addDeltaY(deltaY);
+		
+		// Handle rotation on Y axis
+
+		
+		//addDeltaZ(deltaZ);
+	}
+
+	public void addDeltaUpDown(double delta) {
+		double deltaX;
+		double deltaY;
+		double deltaZ;
+		double angle;
+		
+
+		
+		// Handle rotation on X axis
+		
+		
+		// Handle rotation on Z axis
+		angle = Math.toRadians(getZAngle() + 90);
+		deltaX = -1 * delta * Math.cos(angle);
+		deltaY = delta * Math.sin(angle);
+		addDeltaX(deltaX);
+		addDeltaY(deltaY);
+		
+		
+		
+		
+	}
+	
+	public void addDeltaForwardBackwards(double delta) {
+		double deltaX;
+		double deltaY;
+		double deltaZ;
+		double angle;
+
+		
+		// Handle rotation on Y axis
+		
+		// Handle rotation on X axis
+		angle = Math.toRadians(getXAngle());
+		deltaZ = delta * Math.cos(angle);
+		deltaY = delta * Math.sin(angle);
+		addDeltaZ(deltaZ);
+		addDeltaY(deltaY);
+		
+		
+	}
+	
 
 }

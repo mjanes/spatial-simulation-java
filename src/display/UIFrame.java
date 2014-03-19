@@ -136,22 +136,22 @@ public class UIFrame extends JFrame {
 		BasicArrowButton northButton = new BasicArrowButton(BasicArrowButton.NORTH);
 		BasicArrowButton southButton = new BasicArrowButton(BasicArrowButton.SOUTH);
 		BasicArrowButton westButton = new BasicArrowButton(BasicArrowButton.WEST);
-		JButton zoomInButton = new JButton("Zoom in");
-		JButton zoomOutButton = new JButton("Zoom out");
+		JButton forwardButton = new JButton("Forward");
+		JButton backwardsButton = new JButton("Backwards");
 		
 		Dimension buttonDimension = new Dimension(66, 66);
 		eastButton.setPreferredSize(buttonDimension);
 		northButton.setPreferredSize(buttonDimension);
 		southButton.setPreferredSize(buttonDimension);
 		westButton.setPreferredSize(buttonDimension);
-		zoomInButton.setPreferredSize(buttonDimension);
-		zoomOutButton.setPreferredSize(buttonDimension);
+		forwardButton.setPreferredSize(buttonDimension);
+		backwardsButton.setPreferredSize(buttonDimension);
 		
 		eastButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaX(CAMERA_ACCELERATION);			
+				camera.addDeltaLeftRight(CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -159,7 +159,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaX(-CAMERA_ACCELERATION);
+				camera.addDeltaLeftRight(-CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -167,7 +167,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaY(-CAMERA_ACCELERATION);			
+				camera.addDeltaUpDown(-CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -176,24 +176,24 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaY(CAMERA_ACCELERATION);			
+				camera.addDeltaUpDown(CAMERA_ACCELERATION);			
 			}			
 		});
 		
 		
-		zoomInButton.addActionListener(new ActionListener() {
+		forwardButton.addActionListener(new ActionListener() {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaZ(-CAMERA_ACCELERATION);
+				camera.addDeltaForwardBackwards(-CAMERA_ACCELERATION);
 			}
 		});
 		
-		zoomOutButton.addActionListener(new ActionListener() {
+		backwardsButton.addActionListener(new ActionListener() {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaZ(CAMERA_ACCELERATION);
+				camera.addDeltaForwardBackwards(CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -203,9 +203,9 @@ public class UIFrame extends JFrame {
 		navigationPanel.add(westButton);
 		navigationPanel.add(new JPanel());
 		navigationPanel.add(eastButton);	
-		navigationPanel.add(zoomOutButton);
+		navigationPanel.add(backwardsButton);
 		navigationPanel.add(southButton);
-		navigationPanel.add(zoomInButton);
+		navigationPanel.add(forwardButton);
 		
 		navigationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		navigationPanel.setPreferredSize(new Dimension(200, 200));
@@ -419,7 +419,8 @@ public class UIFrame extends JFrame {
 				if (running) {
 					
 					// Perform physics simulations
-					updateUniverseState();					
+					//updateUniverseState();
+					updateCameraState();
 				}
 			}
 			
@@ -445,8 +446,10 @@ public class UIFrame extends JFrame {
 			for (BasePhysicalEntity entity : entities) {
 				entity.move();
 			}		
-			
-			camera.move();
+		}
+		
+		private void updateCameraState() {
+			camera.move();			
 		}
 	}
 	
