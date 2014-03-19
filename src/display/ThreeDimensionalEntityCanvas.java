@@ -118,64 +118,90 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 		double height = getHeight();
 		
 		// Distance from camera to view plane is DEFAULT_EYE_Z_DISTANCE
-		
+		// Misc variables used for calculating rotations and projections
+		double xP;
+		double yP;
+		double zP;
+		double angle;
+		double cos;
+		double sin;
+		double tempX;		
+		double tempY;
+		double tempZ;
+
 		
 		for (BasePhysicalEntity entity : entities) {
-			double distance = camera.getDistance(entity);
-			double distanceRatio = EYE_DISTANCE / distance; // The ratio of that distance to default distance. Used for resizing objects.
+			/* Starting offset from camera
+			 * This is to set the camera at the center of things
+			 * 0, 0 is now the location of the camera.
+			 * 
+			 * Bear in mind that we are still using the coordinate system of the display,
+			 * so something at 1, 1 would not be in the upper right quadrant, but would 
+			 * be in the lower right quadrant. 1, -1 would be in the upper right.
+			 * May want to undo that later...
+			 */
+			xP = entity.getX() - camera.getX();
+			yP = entity.getY() - camera.getY(); 	
+			zP = entity.getZ() - camera.getZ();
 			
-			// Starting offset from camera
-			double xP = entity.getX() - camera.getX();
-			double yP = entity.getY() - camera.getY();
-			double zP = camera.getZ() - entity.getZ();
 			
-			// Perform the rotation
-			
-			double beta; 	// angle to rotate
-			double cosBeta; // cos
-			double sinBeta; // sin
-			
+			// Perform the rotations on the various axes			
 			
 			// Z axis rotation first
-			beta = Math.toRadians(camera.getZAngle());
-			cosBeta = Math.cos(beta);
-			sinBeta = Math.sin(beta);
-			xP = xP * cosBeta - yP * sinBeta;
-			yP = xP * sinBeta + yP * cosBeta; 
-
+			// If zAngle is 0, then there should be no rotation, and xP and xY should
+			// be the same going out as coming in.
+			angle = Math.toRadians(camera.getZAngle());
+			cos = Math.cos(angle);
+			sin = Math.sin(angle);
+			tempX = xP * cos - yP * sin;
+			tempY = xP * sin + yP * cos; 
+			xP = tempX;
+			yP = tempY;
 			
 			// Y axis rotation
-			beta = Math.toRadians(camera.getYAngle());
-			cosBeta = Math.cos(beta);
-			sinBeta = Math.sin(beta);
-			xP = xP * cosBeta - zP * sinBeta;
-			zP = xP * sinBeta - zP * cosBeta;
-
+			angle = Math.toRadians(camera.getYAngle());
+			cos = Math.cos(angle);
+			sin = Math.sin(angle);
+			tempX = xP * cos - zP * sin;
+			tempZ = xP * sin + zP * cos;
+			xP = tempX;
+			zP = tempZ;
+			
 			
 			// X axis rotation
-			beta = Math.toRadians(camera.getXAngle());
-			cosBeta = Math.cos(beta);
-			sinBeta = Math.sin(beta);
-			yP = yP * cosBeta - zP * sinBeta;
-			zP = yP * sinBeta - zP * cosBeta;
+			angle = Math.toRadians(camera.getXAngle());
+			cos = Math.cos(angle);
+			sin = Math.sin(angle);
+			tempY = yP * cos - zP * sin;
+			tempZ = yP * sin + zP * cos;
+			yP = tempY;
+			zP = tempZ;
 			
 			
+			// Rotation is complete
+			
+			// Objects with a negative zP will not be displayed.
+			// Objects with a 0 zP are assumed to be on the camera, covering the screen essentially			
+			if (zP < 0) continue;
+						
 			// Project onto viewing plane, ie the further away it is, the more it will appear towards the center
-			xP = ((xP / distance) * EYE_DISTANCE);
-			yP = ((yP / distance) * EYE_DISTANCE);
+			xP = ((xP / zP) * EYE_DISTANCE);
+			yP = ((yP / zP) * EYE_DISTANCE);
 			
 			
 			// Adding width / 2 and height / 2 to the x and y projections, so that 0,0 appears in the middle of the screen
-			xP += (width / 2);
-			yP += (height / 2);
+			// Resizing the radius, so that if an object's zP is equal to EYE_DISTANCE, it is shown at its default
+			// radius, otherwise smaller if further away, larger if closer.
+			double radius = (int) (entity.getRadius() * (EYE_DISTANCE / zP)); 
+			// Also subtracting half the radius from the projection point, as that is needed to have xP, yP be the center
+			// of the circle.
+			xP += (width / 2) - radius / 2;
+			yP += (height / 2) - radius / 2;
 			
-			g.fillOval((int) xP, (int) yP, (int) (entity.getRadius() * distanceRatio), (int) (entity.getRadius() * distanceRatio));
-		}
-		
-		// Temp: For debugging the 3d stuff, going to draw a red x in the center of the field of view
-		//g.setColor(Color.RED);
-		//g.drawLine(0, 0, (int) width,  (int) height);
-		//g.drawLine(0, (int) height, (int) width, 0);
+			g.fillOval((int) xP, (int) yP, (int) radius, (int) radius);
+			//g.drawString(entity.getLabel(), (int) xP + 5, (int) yP - 20);
+			//g.drawString("xP: " + xP + ", yP: " + yP, (int) xP + 5, (int) yP - 10);
+		}		
 	
 	}
 }

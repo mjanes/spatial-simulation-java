@@ -43,7 +43,6 @@ import entity.BasePhysicalEntity;
  */
 public class UIFrame extends JFrame {
 	
-	
 	private static final long serialVersionUID = 1L;
 	
 	// Ideally, we don't want these static, but for convenience at the moment
@@ -63,12 +62,10 @@ public class UIFrame extends JFrame {
 	private volatile ThreeDimensionalViewCamera camera; 
 	
 	private static final double CAMERA_ACCELERATION = 0.1;
-	private static final int ANGLE_INCREMENT = 5;
+	private static final int ANGLE_INCREMENT = 2;
 	
 	/**
 	 * UI setup
-	 * 
-	 * TODO: Break this into a set of differentt initialization functions, getting too big and clumsy.
 	 * 
 	 * @param width
 	 * @param height
@@ -76,7 +73,7 @@ public class UIFrame extends JFrame {
 	public UIFrame(int width, int height) {	
 
 		// Initiate the camera
-		camera = new ThreeDimensionalViewCamera(width / 2, height / 2, ThreeDimensionalEntityCanvas.EYE_DISTANCE);
+		camera = new ThreeDimensionalViewCamera(0, 0, 0);
 		
 		
 		// Setup canvas
@@ -167,7 +164,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaUpDown(-CAMERA_ACCELERATION);			
+				camera.addDeltaUpDown(CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -176,7 +173,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaUpDown(CAMERA_ACCELERATION);			
+				camera.addDeltaUpDown(-CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -185,7 +182,7 @@ public class UIFrame extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaForwardBackwards(-CAMERA_ACCELERATION);
+				camera.addDeltaForwardBackwards(CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -193,7 +190,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaForwardBackwards(CAMERA_ACCELERATION);
+				camera.addDeltaForwardBackwards(-CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -216,7 +213,6 @@ public class UIFrame extends JFrame {
 	private JPanel setupOrientationPanel() {
 		JPanel orientationPanel = new JPanel(new GridLayout(3, 3));
 		
-		// TODO: Better names for these
 		JButton yAngleMinus = new JButton("yAngle minus");		
 		JButton xAnglePlus = new JButton("xAngle plus");
 		JButton xAngleMinus = new JButton("xAngle minus");
@@ -283,13 +279,13 @@ public class UIFrame extends JFrame {
 		});
 		
 		orientationPanel.add(new JPanel());
-		orientationPanel.add(xAngleMinus);
-		orientationPanel.add(new JPanel());
-		orientationPanel.add(yAnglePlus);
-		orientationPanel.add(new JPanel());
-		orientationPanel.add(yAngleMinus);	
-		orientationPanel.add(zAnglePlus);
 		orientationPanel.add(xAnglePlus);
+		orientationPanel.add(new JPanel());
+		orientationPanel.add(yAngleMinus);
+		orientationPanel.add(new JPanel());
+		orientationPanel.add(yAnglePlus);	
+		orientationPanel.add(zAnglePlus);
+		orientationPanel.add(xAngleMinus);
 		orientationPanel.add(zAngleMinus);
 		
 		orientationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -402,12 +398,15 @@ public class UIFrame extends JFrame {
 		public UniverseLoop(IEntityCanvas canvas, Collection<BasePhysicalEntity> entities, ThreeDimensionalViewCamera camera) {
 			this.canvas = canvas;
 			this.entities = entities;
-			this.camera = camera;
+			this.camera = camera;					
 		}
 		
 		@Override
 		public void run() {
-						
+			cycleTime = System.currentTimeMillis();
+			
+			long time;
+			
 			while (true)  {
 
 				// Wait an appropriate amount of time, so that the frame rate is progressing constantly.
@@ -416,24 +415,22 @@ public class UIFrame extends JFrame {
 				// tell graphics to repaint
 				canvas.updateGraphics();
 
-				if (running) {
-					
-					// Perform physics simulations
-					//updateUniverseState();
-					updateCameraState();
-				}
+				// Perform physics simulations
+				if (running) updateUniverseState();					
+				
+				// TODO: Perhaps create a separate pause camera button?
+				updateCameraState();
 			}
 			
 		}
 		
 		private void synchFramerate() {
-			// Check for initialization.
-			if (cycleTime == 0) cycleTime = System.currentTimeMillis();
 			
 			cycleTime = cycleTime + frameDelay;
 			long difference = cycleTime - System.currentTimeMillis();
-			
+		
 			try {
+				// if frameDelay has already occurred since last cycle time, do not sleep.
 				Thread.sleep(Math.max(0,  difference));
 			} catch (InterruptedException e) {
 				e.printStackTrace();

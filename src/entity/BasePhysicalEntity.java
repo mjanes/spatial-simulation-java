@@ -10,7 +10,7 @@ import java.util.List;
  * 
  * @author mjanes
  */
-public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEntity, IConnectedEntity {
+public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
 	
 	protected double x;
 	protected double y;
@@ -210,6 +210,22 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	@Override
 	public List<IConnectedEntity> getConnections() {
 		return connections;
+	}
+	
+	
+	/********************************************************************************
+	 * Label interface. Givving the entities labels for the moment to aid 
+	 * 3d debugging.
+	 ********************************************************************************/
+
+	@Override
+	public boolean hasLabel() {
+		return true;
+	}
+
+	@Override
+	public String getLabel() {
+		return "x: " + x + ", y: " + y + ", z: " + z;
 	}
 	
 	

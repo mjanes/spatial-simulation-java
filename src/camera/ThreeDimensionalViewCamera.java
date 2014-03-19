@@ -75,6 +75,7 @@ public class ThreeDimensionalViewCamera extends TwoDimensionalViewCamera {
 		zAngle = zAngle % 360;
 	}
 	
+	
 	/********************************************************************************
 	 * Movement functions relative to the direction the camera is facing in.
 	 ********************************************************************************/
@@ -92,11 +93,14 @@ public class ThreeDimensionalViewCamera extends TwoDimensionalViewCamera {
 		deltaY = delta * Math.sin(angle);
 		addDeltaX(deltaX);
 		addDeltaY(deltaY);
-		
-		// Handle rotation on Y axis
 
 		
-		//addDeltaZ(deltaZ);
+		// Handle rotation on Y axis
+		angle = Math.toRadians(getYAngle());
+		deltaX = delta * Math.cos(angle);
+		deltaZ = delta * Math.sin(angle);
+		addDeltaX(deltaX);
+		addDeltaZ(deltaZ);
 	}
 
 	public void addDeltaUpDown(double delta) {
@@ -105,22 +109,24 @@ public class ThreeDimensionalViewCamera extends TwoDimensionalViewCamera {
 		double deltaZ;
 		double angle;
 		
-
 		
 		// Handle rotation on X axis
+		angle = Math.toRadians(getZAngle());
+		deltaZ = delta * Math.cos(angle);
+		deltaY = delta * Math.sin(angle);
+		addDeltaZ(deltaZ);
+		addDeltaY(deltaY);
 		
 		
 		// Handle rotation on Z axis
+		// TODO: Why is this different from everything else?
 		angle = Math.toRadians(getZAngle() + 90);
 		deltaX = -1 * delta * Math.cos(angle);
 		deltaY = delta * Math.sin(angle);
 		addDeltaX(deltaX);
 		addDeltaY(deltaY);
-		
-		
-		
-		
 	}
+	
 	
 	public void addDeltaForwardBackwards(double delta) {
 		double deltaX;
@@ -130,6 +136,12 @@ public class ThreeDimensionalViewCamera extends TwoDimensionalViewCamera {
 
 		
 		// Handle rotation on Y axis
+		angle = Math.toRadians(getYAngle());
+		deltaX = delta * Math.sin(angle);
+		deltaZ = delta * Math.cos(angle);		
+		addDeltaX(deltaX);
+		addDeltaZ(deltaZ);
+		
 		
 		// Handle rotation on X axis
 		angle = Math.toRadians(getXAngle());
@@ -137,8 +149,6 @@ public class ThreeDimensionalViewCamera extends TwoDimensionalViewCamera {
 		deltaY = delta * Math.sin(angle);
 		addDeltaZ(deltaZ);
 		addDeltaY(deltaY);
-		
-		
 	}
 	
 

@@ -9,6 +9,5 @@ public interface IEntityCanvas {
 	public void setEntities(Collection<BasePhysicalEntity> entities);
 	
 	public void updateGraphics();
-	
 
 }

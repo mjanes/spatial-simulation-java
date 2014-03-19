@@ -3,18 +3,21 @@ package setup;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import display.ThreeDimensionalEntityCanvas;
 import entity.BasePhysicalEntity;
 
 public class Setup {
 	
 	public static Collection<BasePhysicalEntity> create() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		//entities.addAll(basicOrbitCouple());
+		entities.addAll(basicOrbitCouple());
 		//entities.addAll(randomSet(3));
 		
-		//entities = grid(10);
+		//entities.addAll(grid(10));
 		
-		entities.addAll(cube());
+		//entities.addAll(cube());
+		
+		//entities.addAll(point());
 		
 		return entities;
 	}
@@ -22,11 +25,11 @@ public class Setup {
 	private static ArrayList<BasePhysicalEntity> basicOrbitCouple() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
 		
-		BasePhysicalEntity entityA = new BasePhysicalEntity(200, 200, 0, 500);
+		BasePhysicalEntity entityA = new BasePhysicalEntity(-200, -200, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 500);
 		entityA.setDeltaX(1.0);
 		entities.add(entityA);				
 		
-		entities.add(new BasePhysicalEntity(500, 500, 0, 8000));
+		entities.add(new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 8000));
 		
 		return entities;
 	}
@@ -36,7 +39,7 @@ public class Setup {
 		
 		BasePhysicalEntity newEntity;
 		for (int i = 0; i < n; ++i) {
-			newEntity = new BasePhysicalEntity(Math.random() * 800, Math.random() * 800, 0, Math.random() * 400);
+			newEntity = new BasePhysicalEntity((Math.random() * 800) - 400, (Math.random() * 800) - 400, ThreeDimensionalEntityCanvas.EYE_DISTANCE, Math.random() * 400);
 			newEntity.setDeltaX(Math.random() / 10);
 			newEntity.setDeltaY(Math.random() / 10);
 			entities.add(newEntity);
@@ -51,30 +54,36 @@ public class Setup {
 		
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < x; j++) {
-				entities.add(new BasePhysicalEntity(i * 100, j * 100, 0, 200));
+				entities.add(new BasePhysicalEntity(i * 100, j * 100, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 200));
 			}
 		}
 
 		return entities;
 	}
 	
+	private static ArrayList<BasePhysicalEntity> point() {
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		entities.add(new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
+		return entities;
+	}
+	
 	private static ArrayList<BasePhysicalEntity> cube() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
 		
-		BasePhysicalEntity a = new BasePhysicalEntity(200, 200, 0, 200);
-		BasePhysicalEntity b = new BasePhysicalEntity(400, 200, 0, 200);
-		BasePhysicalEntity c = new BasePhysicalEntity(200, 400, 0, 200); 
-		BasePhysicalEntity d = new BasePhysicalEntity(400, 400, 0, 200); 		
-		BasePhysicalEntity e = new BasePhysicalEntity(200, 200, 200, 200); 
-		BasePhysicalEntity f = new BasePhysicalEntity(400, 200, 200, 200); 
-		BasePhysicalEntity g = new BasePhysicalEntity(200, 400, 200, 200); 
-		BasePhysicalEntity h = new BasePhysicalEntity(400, 400, 200, 200);
+		BasePhysicalEntity a = new BasePhysicalEntity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200);		
+		BasePhysicalEntity b = new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200);
+		BasePhysicalEntity c = new BasePhysicalEntity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200); 
+		BasePhysicalEntity d = new BasePhysicalEntity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200); 		
+		BasePhysicalEntity e = new BasePhysicalEntity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200); 
+		BasePhysicalEntity f = new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200); 
+		BasePhysicalEntity g = new BasePhysicalEntity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200); 
+		BasePhysicalEntity h = new BasePhysicalEntity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200);
 		
 		// TODO: Had been planning to connect certain points in order to make a cube,
 		// but realized the graphics are going to require a reworking.
-		a.addConnection(b);
-		a.addConnection(c);
-		a.addConnection(e);
+		//a.addConnection(b);
+		//a.addConnection(c);
+		//a.addConnection(e);
 		
 		entities.add(a);
 		entities.add(b);
