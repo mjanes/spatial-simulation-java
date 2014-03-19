@@ -31,7 +31,7 @@ import entity.BasePhysicalEntity;
  * @author mjanes
  *
  */
-public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanvas {
+public class ThreeDimensionalEntityCanvas extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
@@ -80,7 +80,6 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 	 * Graphics
 	 ********************************************************************************************************/	
 
-	@Override
 	public void updateGraphics() {
 		Graphics g = strategy.getDrawGraphics();
 		
@@ -128,6 +127,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 		double tempX;		
 		double tempY;
 		double tempZ;
+		double distanceRatio;
 
 		
 		for (BasePhysicalEntity entity : entities) {
@@ -147,6 +147,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			
 			// Perform the rotations on the various axes			
 			
+			/*
 			// Z axis rotation first
 			// If zAngle is 0, then there should be no rotation, and xP and xY should
 			// be the same going out as coming in.
@@ -176,7 +177,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			tempZ = yP * sin + zP * cos;
 			yP = tempY;
 			zP = tempZ;
-			
+			*/
 			
 			// Rotation is complete
 			
@@ -185,14 +186,15 @@ public class ThreeDimensionalEntityCanvas extends Canvas implements IEntityCanva
 			if (zP < 0) continue;
 						
 			// Project onto viewing plane, ie the further away it is, the more it will appear towards the center
-			xP = ((xP / zP) * EYE_DISTANCE);
-			yP = ((yP / zP) * EYE_DISTANCE);
+			distanceRatio = EYE_DISTANCE / zP;
+			xP = xP * distanceRatio;
+			yP = yP * distanceRatio;
 			
 			
 			// Adding width / 2 and height / 2 to the x and y projections, so that 0,0 appears in the middle of the screen
 			// Resizing the radius, so that if an object's zP is equal to EYE_DISTANCE, it is shown at its default
 			// radius, otherwise smaller if further away, larger if closer.
-			double radius = (int) (entity.getRadius() * (EYE_DISTANCE / zP)); 
+			double radius = (int) (entity.getRadius() * distanceRatio); 
 			// Also subtracting half the radius from the projection point, as that is needed to have xP, yP be the center
 			// of the circle.
 			xP += (width / 2) - radius / 2;

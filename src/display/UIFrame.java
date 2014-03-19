@@ -391,11 +391,11 @@ public class UIFrame extends JFrame {
 	private static class UniverseLoop implements Runnable {
 		
 		long cycleTime;
-		private IEntityCanvas canvas;
+		private ThreeDimensionalEntityCanvas canvas;
 		private Collection<BasePhysicalEntity> entities;
 		private ThreeDimensionalViewCamera camera;
 		
-		public UniverseLoop(IEntityCanvas canvas, Collection<BasePhysicalEntity> entities, ThreeDimensionalViewCamera camera) {
+		public UniverseLoop(ThreeDimensionalEntityCanvas canvas, Collection<BasePhysicalEntity> entities, ThreeDimensionalViewCamera camera) {
 			this.canvas = canvas;
 			this.entities = entities;
 			this.camera = camera;					
@@ -404,8 +404,6 @@ public class UIFrame extends JFrame {
 		@Override
 		public void run() {
 			cycleTime = System.currentTimeMillis();
-			
-			long time;
 			
 			while (true)  {
 
