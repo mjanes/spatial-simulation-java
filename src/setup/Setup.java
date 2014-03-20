@@ -11,7 +11,7 @@ public class Setup {
 	public static Collection<BasePhysicalEntity> create() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
 		entities.addAll(basicOrbitCouple());
-		//entities.addAll(randomSet(3));
+		entities.addAll(randomSet(3));
 		
 		//entities.addAll(grid(10));
 		

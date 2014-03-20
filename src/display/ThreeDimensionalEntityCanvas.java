@@ -147,7 +147,6 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			
 			// Perform the rotations on the various axes			
 			
-			/*
 			// Z axis rotation first
 			// If zAngle is 0, then there should be no rotation, and xP and xY should
 			// be the same going out as coming in.
@@ -177,7 +176,6 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			tempZ = yP * sin + zP * cos;
 			yP = tempY;
 			zP = tempZ;
-			*/
 			
 			// Rotation is complete
 			

@@ -164,7 +164,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaUpDown(CAMERA_ACCELERATION);			
+				camera.addDeltaUpDown(-CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -173,7 +173,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaUpDown(-CAMERA_ACCELERATION);			
+				camera.addDeltaUpDown(CAMERA_ACCELERATION);			
 			}			
 		});
 		
