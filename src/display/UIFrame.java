@@ -414,7 +414,7 @@ public class UIFrame extends JFrame {
 				canvas.updateGraphics();
 
 				// Perform physics simulations
-				if (running) updateUniverseState();					
+				//if (running) updateUniverseState();					
 				
 				// TODO: Perhaps create a separate pause camera button?
 				updateCameraState();

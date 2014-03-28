@@ -166,10 +166,10 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			tempZ = xP * sin + zP * cos;
 			xP = tempX;
 			zP = tempZ;
-			
+		
 			
 			// X axis rotation
-			angle = Math.toRadians(camera.getXAngle());
+			angle = Math.toRadians(camera.getXAngle());			
 			cos = Math.cos(angle);
 			sin = Math.sin(angle);
 			tempY = yP * cos - zP * sin;
@@ -199,8 +199,8 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			yP += (height / 2) - radius / 2;
 			
 			g.fillOval((int) xP, (int) yP, (int) radius, (int) radius);
-			//g.drawString(entity.getLabel(), (int) xP + 5, (int) yP - 20);
-			//g.drawString("xP: " + xP + ", yP: " + yP, (int) xP + 5, (int) yP - 10);
+			g.drawString(entity.getLabel(), (int) xP + 5, (int) yP - 20);
+			g.drawString("xP: " + xP + ", yP: " + yP, (int) xP + 5, (int) yP - 10);
 		}		
 	
 	}

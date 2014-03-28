@@ -206,81 +206,83 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 		zAngle += increment;
 		zAngle = zAngle % 360;
 	}
-	
+		
 	
 	/********************************************************************************
 	 * Movement functions relative to the direction the camera is facing in.
+	 * 
+	 * After some initial math on this was broken, turning towards references:
+	 * http://www.mathsisfun.com/polar-cartesian-coordinates.html
+	 * https://en.wikipedia.org/wiki/Spherical_coordinate_system
+	 * https://en.wikipedia.org/wiki/List_of_common_coordinate_transformations#To_Cartesian_coordinates
 	 ********************************************************************************/
 	
 	public void addDeltaLeftRight(double delta) {
-		double deltaX;
-		double deltaY;
-		double deltaZ;
+		double deltaX = 0;
+		double deltaY = 0;
+		double deltaZ = 0;
 		double angle;
-		
-		
+				
 		// Handle rotation on Z axis
 		angle = Math.toRadians(getZAngle());
-		deltaX = delta * Math.cos(angle);
-		deltaY = delta * Math.sin(angle);
-		addDeltaX(deltaX);
-		addDeltaY(deltaY);
-
+		deltaX += delta * Math.cos(angle);
+		deltaY += delta * Math.sin(angle);
 		
 		// Handle rotation on Y axis
 		angle = Math.toRadians(getYAngle());
-		deltaX = delta * Math.cos(angle);
-		deltaZ = delta * Math.sin(angle);
-		addDeltaX(deltaX);
+		deltaX += delta * Math.cos(angle);
+		deltaZ += delta * Math.sin(angle);
+			
+		// Apply the motion
+		addDeltaX(deltaX);		
+		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);
 	}
 
 	public void addDeltaUpDown(double delta) {
-		double deltaX;
-		double deltaY;
-		double deltaZ;
+		double deltaX = 0;
+		double deltaY = 0;
+		double deltaZ = 0;
 		double angle;
 		
-		
 		// Handle rotation on X axis
-		angle = Math.toRadians(getZAngle());
-		deltaZ = delta * Math.cos(angle);
-		deltaY = delta * Math.sin(angle);
-		addDeltaZ(deltaZ);
-		addDeltaY(deltaY);
-		
+		angle = Math.toRadians(getXAngle());
+		deltaY += delta * Math.cos(angle);
+		deltaZ += delta * Math.sin(angle);
 		
 		// Handle rotation on Z axis
-		// TODO: Why is this different from everything else?
-		angle = Math.toRadians(getZAngle() + 90);
-		deltaX = -1 * delta * Math.cos(angle);
-		deltaY = delta * Math.sin(angle);
+		angle = Math.toRadians(getZAngle());
+		deltaY += delta * Math.cos(angle);
+		deltaX += delta * Math.sin(angle);
+		
+		// Apply the new motion
 		addDeltaX(deltaX);
 		addDeltaY(deltaY);
+		addDeltaZ(deltaZ);
 	}
 	
 	
 	public void addDeltaForwardBackwards(double delta) {
-		double deltaX;
-		double deltaY;
-		double deltaZ;
+		double deltaX = 0;
+		double deltaY = 0;
+		double deltaZ = 0;
 		double angle;
 
 		
 		// Handle rotation on Y axis
 		angle = Math.toRadians(getYAngle());
-		deltaX = delta * Math.sin(angle);
-		deltaZ = delta * Math.cos(angle);		
-		addDeltaX(deltaX);
-		addDeltaZ(deltaZ);
-		
+		deltaX += delta * Math.sin(angle);
+		deltaZ += delta * Math.cos(angle);		
 		
 		// Handle rotation on X axis
 		angle = Math.toRadians(getXAngle());
-		deltaZ = delta * Math.cos(angle);
-		deltaY = delta * Math.sin(angle);
-		addDeltaZ(deltaZ);
+		deltaZ += delta * Math.cos(angle);
+		deltaY += delta * Math.sin(angle);
+		
+		// Apply the new motion
+		addDeltaX(deltaX);
 		addDeltaY(deltaY);
+		addDeltaZ(deltaZ);		
 	}
 	
 
