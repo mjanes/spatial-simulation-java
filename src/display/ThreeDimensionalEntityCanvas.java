@@ -137,6 +137,11 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 
 		
 		for (BasePhysicalEntity entity : entities) {
+			// Optimization, continue if the entity is too small and far away from the camera
+			// so as to avoid all the expensive trig operations.
+			int radius = (int) (entity.getRadius() * EYE_DISTANCE / camera.getDistance(entity)); 
+			if (radius < 1) continue;
+			
 			/* Starting offset from camera
 			 * This is to set the camera at the center of things
 			 * 0, 0 is now the location of the camera.
@@ -152,6 +157,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			
 			
 			// Perform the rotations on the various axes
+			// Note: Apparently order matters here, which I am somewhwat confused by.
 
 			// X axis rotation
 			angle = Math.toRadians(camera.getXAngle());			
@@ -196,7 +202,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			// Adding width / 2 and height / 2 to the x and y projections, so that 0,0 appears in the middle of the screen
 			// Resizing the radius, so that if an object's zP is equal to EYE_DISTANCE, it is shown at its default
 			// radius, otherwise smaller if further away, larger if closer.
-			int radius = (int) (entity.getRadius() * distanceRatio); 
+			
 			// Also subtracting half the radius from the projection point, as that is needed to have xP, yP be the center
 			// of the circle.
 			xP += (width / 2) - radius / 2;

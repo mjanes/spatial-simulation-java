@@ -11,7 +11,7 @@ public class Setup {
 	public static Collection<BasePhysicalEntity> create() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
 		entities.addAll(basicOrbitCouple());
-		entities.addAll(randomSet(3));
+		entities.addAll(randomSet(8));
 		
 		//entities.addAll(grid(10));
 		
@@ -40,8 +40,8 @@ public class Setup {
 		BasePhysicalEntity newEntity;
 		for (int i = 0; i < n; ++i) {
 			newEntity = new BasePhysicalEntity((Math.random() * 800) - 400, (Math.random() * 800) - 400, ThreeDimensionalEntityCanvas.EYE_DISTANCE, Math.random() * 400);
-			newEntity.setDeltaX(Math.random() / 10);
-			newEntity.setDeltaY(Math.random() / 10);
+			newEntity.setDeltaX(Math.random() / 2);
+			newEntity.setDeltaY(Math.random() / 2);
 			entities.add(newEntity);
 		}
 		
