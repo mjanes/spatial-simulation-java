@@ -213,12 +213,6 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 	 * http://www.mathsisfun.com/polar-cartesian-coordinates.html
 	 * https://en.wikipedia.org/wiki/Spherical_coordinate_system
 	 * https://en.wikipedia.org/wiki/List_of_common_coordinate_transformations#To_Cartesian_coordinates
-	 * 
-	 * So, I'm going to rewrite this.
-	 * 
-	 * First thing is to get an xyz coordinate, from delta and the three angles.
-	 * Then we convert it to left/right up/down backwards/forwards by inverting
-	 * whatever xyz.
 	 ********************************************************************************/
 	
 	public void addDeltaSelfX(final double delta) {
@@ -240,8 +234,6 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 		addDeltaX(deltaX);		
 		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);
-		
-		assert(delta == Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)));
 	}
 
 	public void addDeltaSelfY(final double delta) {
@@ -262,8 +254,6 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 		addDeltaX(deltaX);
 		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);
-		
-		assert(delta == Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)));
 	}
 	
 	
@@ -285,8 +275,6 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 		addDeltaX(deltaX);
 		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);		
-		
-		assert(delta == Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)));
 	}
 
 }
