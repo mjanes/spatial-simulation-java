@@ -80,8 +80,6 @@ public class UIFrame extends JFrame {
 		canvas = new ThreeDimensionalEntityCanvas(width, height, camera);
 		
 		
-		
-		
 		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
 		// is displayed in the canvas.
 		JPanel navigationPanel = setupNavigationPanel();		
@@ -232,7 +230,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementXAngle(ANGLE_INCREMENT);			
+				camera.incrementRelativeXAngle(-ANGLE_INCREMENT);			
 			}			
 		});
 		
@@ -240,7 +238,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementXAngle(-ANGLE_INCREMENT);
+				camera.incrementRelativeXAngle(ANGLE_INCREMENT);
 			}
 		});
 		
@@ -248,7 +246,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementYAngle(-ANGLE_INCREMENT);			
+				camera.incrementRelativeYAngle(-ANGLE_INCREMENT);			
 			}			
 		});
 		
@@ -257,7 +255,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementYAngle(ANGLE_INCREMENT);			
+				camera.incrementRelativeYAngle(ANGLE_INCREMENT);			
 			}			
 		});
 		
@@ -266,7 +264,7 @@ public class UIFrame extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementZAngle(-ANGLE_INCREMENT);
+				camera.incrementRelativeZAngle(-ANGLE_INCREMENT);
 			}
 		});
 		
@@ -274,7 +272,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementZAngle(ANGLE_INCREMENT);
+				camera.incrementRelativeZAngle(ANGLE_INCREMENT);
 			}
 		});
 		
@@ -414,7 +412,7 @@ public class UIFrame extends JFrame {
 				canvas.updateGraphics();
 
 				// Perform physics simulations
-				//if (running) updateUniverseState();					
+				if (running) updateUniverseState();					
 				
 				// TODO: Perhaps create a separate pause camera button?
 				updateCameraState();

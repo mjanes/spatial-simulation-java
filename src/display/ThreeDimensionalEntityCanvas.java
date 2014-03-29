@@ -103,6 +103,12 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 *  https://en.wikipedia.org/wiki/Pinhole_camera_model
 	 *  https://en.wikipedia.org/wiki/Rotation_(mathematics)
 	 *  http://www.gamedev.net/topic/286454-simple-2d-point-rotation/
+	 *  https://stackoverflow.com/questions/7576263/simple-3d-projection-and-orientation-handling
+	 *  http://www.epixea.com/research/multi-view-coding-thesisse8.html
+	 *  http://www.csc.villanova.edu/~mdamian/Past/graphicsF10/notes/Projection.pdf
+	 *  https://en.wikipedia.org/wiki/Rotation_matrix
+	 *  https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions
+	 *  https://en.wikipedia.org/wiki/Euclidean_vector
 	 *  
 	 * @param g
 	 */
@@ -145,11 +151,27 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			zP = entity.getZ() - camera.getZ();
 			
 			
-			// Perform the rotations on the various axes			
-			
-			// Z axis rotation first
-			// If zAngle is 0, then there should be no rotation, and xP and xY should
-			// be the same going out as coming in.
+			// Perform the rotations on the various axes
+
+			// X axis rotation
+			angle = Math.toRadians(camera.getXAngle());			
+			cos = Math.cos(angle);
+			sin = Math.sin(angle);
+			tempY = yP * cos - zP * sin;
+			tempZ = yP * sin + zP * cos;			
+			yP = tempY;
+			zP = tempZ;			
+						
+			// Y axis rotation
+			angle = Math.toRadians(camera.getYAngle());
+			cos = Math.cos(angle);
+			sin = Math.sin(angle);
+			tempX = xP * cos - zP * sin;
+			tempZ = xP * sin + zP * cos;			
+			xP = tempX;
+			zP = tempZ;
+
+			// Z axis rotation
 			angle = Math.toRadians(camera.getZAngle());
 			cos = Math.cos(angle);
 			sin = Math.sin(angle);
@@ -158,24 +180,6 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			xP = tempX;
 			yP = tempY;
 			
-			// Y axis rotation
-			angle = Math.toRadians(camera.getYAngle());
-			cos = Math.cos(angle);
-			sin = Math.sin(angle);
-			tempX = xP * cos - zP * sin;
-			tempZ = xP * sin + zP * cos;
-			xP = tempX;
-			zP = tempZ;
-		
-			
-			// X axis rotation
-			angle = Math.toRadians(camera.getXAngle());			
-			cos = Math.cos(angle);
-			sin = Math.sin(angle);
-			tempY = yP * cos - zP * sin;
-			tempZ = yP * sin + zP * cos;
-			yP = tempY;
-			zP = tempZ;
 			
 			// Rotation is complete
 			
@@ -192,16 +196,15 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 			// Adding width / 2 and height / 2 to the x and y projections, so that 0,0 appears in the middle of the screen
 			// Resizing the radius, so that if an object's zP is equal to EYE_DISTANCE, it is shown at its default
 			// radius, otherwise smaller if further away, larger if closer.
-			double radius = (int) (entity.getRadius() * distanceRatio); 
+			int radius = (int) (entity.getRadius() * distanceRatio); 
 			// Also subtracting half the radius from the projection point, as that is needed to have xP, yP be the center
 			// of the circle.
 			xP += (width / 2) - radius / 2;
 			yP += (height / 2) - radius / 2;
 			
-			g.fillOval((int) xP, (int) yP, (int) radius, (int) radius);
-			g.drawString(entity.getLabel(), (int) xP + 5, (int) yP - 20);
-			g.drawString("xP: " + xP + ", yP: " + yP, (int) xP + 5, (int) yP - 10);
+			g.fillOval((int) xP, (int) yP, radius, radius);
+			//g.drawString(entity.getLabel(), (int) xP + 5, (int) yP - 20);
+			//g.drawString("xP: " + xP + ", yP: " + yP, (int) xP + 5, (int) yP - 10);
 		}		
-	
 	}
 }

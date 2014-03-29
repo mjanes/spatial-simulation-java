@@ -204,7 +204,45 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 		zAngle += increment;
 		zAngle = zAngle % 360;
 	}
-		
+	
+	
+	
+	/********************************************************************************
+	 * Incrementing angles relative to the orientation of the screen
+	 ********************************************************************************/
+	
+	/**
+	 * Incrementing the relative x angle, meaning, moving the camera angle up and 
+	 * down relative to the monitor. If the z angle is 90 degrees, then incrementing
+	 * the x angle 1 degree would instead increment the y angle 1 degree 
+	 * 
+	 * 
+	 * @param increment
+	 */
+	public void incrementRelativeXAngle(double increment) {
+		double angle = Math.toRadians(getZAngle());
+		double cos = Math.cos(angle);
+		double sin = Math.sin(angle);
+		double xAngle = increment * cos;
+		double yAngle = increment * sin;
+		incrementXAngle(xAngle);
+		incrementYAngle(yAngle);
+	}
+
+	public void incrementRelativeYAngle(double increment) {
+		double angle = Math.toRadians((90 + getZAngle()) % 360);
+		double cos = Math.cos(angle);
+		double sin = Math.sin(angle);
+		double xAngle = increment * cos;
+		double yAngle = increment * sin;
+		incrementXAngle(xAngle);
+		incrementYAngle(yAngle);		
+	}
+
+	public void incrementRelativeZAngle(double increment) {
+		incrementZAngle(increment);
+	}
+	
 	
 	/********************************************************************************
 	 * Movement functions relative to the direction the camera is facing in.
@@ -219,7 +257,6 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 		double deltaX;
 		double angle;
 		
-
 		// Handle rotation on Y axis
 		angle = Math.toRadians(getYAngle());
 		deltaX = delta * Math.cos(angle);

@@ -10,12 +10,12 @@ public class Setup {
 	
 	public static Collection<BasePhysicalEntity> create() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		//entities.addAll(basicOrbitCouple());
-		//entities.addAll(randomSet(3));
+		entities.addAll(basicOrbitCouple());
+		entities.addAll(randomSet(3));
 		
 		//entities.addAll(grid(10));
 		
-		entities.addAll(cube());
+		//entities.addAll(cube());
 		
 		//entities.addAll(point());
 		
@@ -54,7 +54,7 @@ public class Setup {
 		
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < x; j++) {
-				entities.add(new BasePhysicalEntity(i * 100, j * 100, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 200));
+				entities.add(new BasePhysicalEntity((i - x / 2) * 100, (j - x / 2) * 100, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 200));
 			}
 		}
 
@@ -63,27 +63,21 @@ public class Setup {
 	
 	private static ArrayList<BasePhysicalEntity> point() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		entities.add(new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
+		entities.add(new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
 		return entities;
 	}
 	
 	private static ArrayList<BasePhysicalEntity> cube() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
 		
-		BasePhysicalEntity a = new BasePhysicalEntity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200);		
-		BasePhysicalEntity b = new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200);
-		BasePhysicalEntity c = new BasePhysicalEntity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200); 
-		BasePhysicalEntity d = new BasePhysicalEntity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 200); 		
-		BasePhysicalEntity e = new BasePhysicalEntity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200); 
-		BasePhysicalEntity f = new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200); 
-		BasePhysicalEntity g = new BasePhysicalEntity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200); 
-		BasePhysicalEntity h = new BasePhysicalEntity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 200);
-		
-		// TODO: Had been planning to connect certain points in order to make a cube,
-		// but realized the graphics are going to require a reworking.
-		//a.addConnection(b);
-		//a.addConnection(c);
-		//a.addConnection(e);
+		BasePhysicalEntity a = new BasePhysicalEntity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);		
+		BasePhysicalEntity b = new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);
+		BasePhysicalEntity c = new BasePhysicalEntity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500); 
+		BasePhysicalEntity d = new BasePhysicalEntity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500); 		
+		BasePhysicalEntity e = new BasePhysicalEntity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500); 
+		BasePhysicalEntity f = new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500); 
+		BasePhysicalEntity g = new BasePhysicalEntity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500); 
+		BasePhysicalEntity h = new BasePhysicalEntity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500);		
 		
 		entities.add(a);
 		entities.add(b);
