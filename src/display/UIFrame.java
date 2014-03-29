@@ -148,7 +148,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaLeftRight(CAMERA_ACCELERATION);			
+				camera.addDeltaSelfX(CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -156,7 +156,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaLeftRight(-CAMERA_ACCELERATION);
+				camera.addDeltaSelfX(-CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -164,7 +164,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaUpDown(-CAMERA_ACCELERATION);			
+				camera.addDeltaSelfY(-CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -173,7 +173,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaUpDown(CAMERA_ACCELERATION);			
+				camera.addDeltaSelfY(CAMERA_ACCELERATION);			
 			}			
 		});
 		
@@ -182,7 +182,7 @@ public class UIFrame extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaForwardBackwards(CAMERA_ACCELERATION);
+				camera.addDeltaSelfZ(CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -190,7 +190,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaForwardBackwards(-CAMERA_ACCELERATION);
+				camera.addDeltaSelfZ(-CAMERA_ACCELERATION);
 			}
 		});
 		

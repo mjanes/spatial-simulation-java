@@ -20,8 +20,6 @@ import entity.IThreeDimensionalEntity;
  */
 public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 	
-	
-
 	protected double x;
 	protected double y;
 	protected double z;
@@ -215,75 +213,80 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 	 * http://www.mathsisfun.com/polar-cartesian-coordinates.html
 	 * https://en.wikipedia.org/wiki/Spherical_coordinate_system
 	 * https://en.wikipedia.org/wiki/List_of_common_coordinate_transformations#To_Cartesian_coordinates
+	 * 
+	 * So, I'm going to rewrite this.
+	 * 
+	 * First thing is to get an xyz coordinate, from delta and the three angles.
+	 * Then we convert it to left/right up/down backwards/forwards by inverting
+	 * whatever xyz.
 	 ********************************************************************************/
 	
-	public void addDeltaLeftRight(double delta) {
-		double deltaX = 0;
-		double deltaY = 0;
-		double deltaZ = 0;
+	public void addDeltaSelfX(final double delta) {
+		double deltaX;
 		double angle;
-				
-		// Handle rotation on Z axis
-		angle = Math.toRadians(getZAngle());
-		deltaX += delta * Math.cos(angle);
-		deltaY += delta * Math.sin(angle);
 		
+
 		// Handle rotation on Y axis
 		angle = Math.toRadians(getYAngle());
-		deltaX += delta * Math.cos(angle);
-		deltaZ += delta * Math.sin(angle);
+		deltaX = delta * Math.cos(angle);
+		final double deltaZ = delta * Math.sin(angle);		
+		
+		// Handle rotation on Z axis
+		angle = Math.toRadians(getZAngle());
+		deltaX = deltaX * Math.cos(angle);
+		final double deltaY = deltaX * Math.sin(angle);
 			
 		// Apply the motion
 		addDeltaX(deltaX);		
 		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);
+		
+		assert(delta == Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)));
 	}
 
-	public void addDeltaUpDown(double delta) {
-		double deltaX = 0;
-		double deltaY = 0;
-		double deltaZ = 0;
+	public void addDeltaSelfY(final double delta) {
+		double deltaY;
 		double angle;
-		
+
 		// Handle rotation on X axis
 		angle = Math.toRadians(getXAngle());
-		deltaY += delta * Math.cos(angle);
-		deltaZ += delta * Math.sin(angle);
-		
+		deltaY = delta * Math.cos(angle);
+		final double deltaZ = delta * Math.sin(angle);
+
 		// Handle rotation on Z axis
 		angle = Math.toRadians(getZAngle());
-		deltaY += delta * Math.cos(angle);
-		deltaX += delta * Math.sin(angle);
+		deltaY = deltaY * Math.cos(angle);
+		final double deltaX = deltaY * Math.sin(angle);		
 		
 		// Apply the new motion
 		addDeltaX(deltaX);
 		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);
+		
+		assert(delta == Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)));
 	}
 	
 	
-	public void addDeltaForwardBackwards(double delta) {
-		double deltaX = 0;
-		double deltaY = 0;
-		double deltaZ = 0;
+	public void addDeltaSelfZ(final double delta) {
+		double deltaZ;
 		double angle;
 
-		
 		// Handle rotation on Y axis
 		angle = Math.toRadians(getYAngle());
-		deltaX += delta * Math.sin(angle);
-		deltaZ += delta * Math.cos(angle);		
+		final double deltaX = delta * Math.sin(angle);
+		deltaZ = delta * Math.cos(angle);		
 		
 		// Handle rotation on X axis
 		angle = Math.toRadians(getXAngle());
-		deltaZ += delta * Math.cos(angle);
-		deltaY += delta * Math.sin(angle);
+		deltaZ = deltaZ * Math.cos(angle);
+		final double deltaY = deltaZ * Math.sin(angle);
 		
 		// Apply the new motion
 		addDeltaX(deltaX);
 		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);		
+		
+		assert(delta == Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2) + Math.pow(deltaZ, 2)));
 	}
-	
 
 }
