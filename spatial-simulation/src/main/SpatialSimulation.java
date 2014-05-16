@@ -6,11 +6,9 @@ import setup.Setup;
 import display.UIFrame;
 import entity.BasePhysicalEntity;
 
-public class Main {
+public class SpatialSimulation {
 	
 	protected static UIFrame frame;
-	
-	
 
 	public static void main(String[] args) {
 		// Rough idea:
