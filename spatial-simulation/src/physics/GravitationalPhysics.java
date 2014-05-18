@@ -1,6 +1,7 @@
 package physics;
 
 import java.util.Collection;
+import java.util.List;
 
 import entity.BasePhysicalEntity;
 
@@ -16,93 +17,82 @@ import entity.BasePhysicalEntity;
  */
 public class GravitationalPhysics {
 	
-	private static final double GRAVITATIONAL_CONSTANT = 100;
-	
+	public static final double GRAVITATIONAL_CONSTANT = .01;
+
+    /**
+     * Run round of physics
+     *
+     * @param entities
+     */
+    public static synchronized void updateUniverseState(List<BasePhysicalEntity> entities) {
+        GravitationalPhysics.gravity(entities);
+        for (BasePhysicalEntity entity : entities) {
+            entity.move();
+        }
+    }
+
 	/** 
 	 * I might want to rename this to threeDimensionalGravitationalPhysics to separate it from two dimensional objects. 
 	 * Might just have both in here for now.
-	 * 
-	 * Another question, can we depend upon this being sorted when it is giving to us? 
-	 * Well, for this one, it's not going to matter, as it's always going to be O(n^2)
-	 * 
+	 *
 	 * @param entities
-	 * @return
 	 */
-	public static Collection<BasePhysicalEntity> gravity(Collection<BasePhysicalEntity> entities) {
-		// At the moment this is not allowing for 
-		for (BasePhysicalEntity puller : entities) {
-			for (BasePhysicalEntity pullee : entities) {
-				if (puller != pullee) {
-					gravitationalPull(puller, pullee);
-				}
-			}
-		}
-		return entities;
+	public static void gravity(List<BasePhysicalEntity> entities) {
+
+        int count = entities.size();
+        for (int i = 0; i < count; i++) {
+            for (int j = i + 1; j < count; j++) {
+                gravitationallyAttract(entities.get(i), entities.get(j));
+            }
+        }
 	}
 
-	/**
-	 * This calculates amount of force the puller object imparts on the pullee.
-	 *  
-	 * F = G ((m1 * m2) / r ^ 2)
-	 * 
-	 * However, it is not quite that simple. As we have not yet implemented collisions, and do not
-	 * want to depend upon collisions, we need to account for how the gravitation force exerted by
-	 * an object is reduced if you are inside that object.
-	 * 
-	 * Reference: https://en.wikipedia.org/wiki/Shell_theorem
-	 * 
-	 * @param puller
-	 * @param pullee
-	 */
-	public static void gravitationalPull(BasePhysicalEntity puller, BasePhysicalEntity pullee) {
-		// Distance between the two points
-		double distance = distance(puller, pullee);
-		
-		// Gravitational force that the puller will impart on the pullee
-		double force = GRAVITATIONAL_CONSTANT * puller.getMass() / Math.pow(distance, 2); 
-		
-		// Check for whether or not the pullee object's center is within the sphere of the puller, and vary
-		// the force appropriately, via the Shell theorem
-		if (distance < puller.getRadius()) {
-			force = force * (distance / puller.getRadius());
-		}
-		
-		// Not sure ratio is the proper term here, but the next block of lines is arrive at how the one dimensional 
-		// force is translated into x, y, and z forces.
-		double ratio = force / distance;
+    /**
+     * This calculates amount of force the puller object imparts on the pullee.
+     *
+     * F = G ((m1 * m2) / r ^ 2)
+     *
+     */
+    public static void gravitationallyAttract(BasePhysicalEntity object1, BasePhysicalEntity object2) {
+        // Distance between the two points
+        double distance = BasePhysicalEntity.getDistance(object1, object2);
 
-		double forceX = (puller.getX() - pullee.getX()) * ratio;
-		double forceY = (puller.getY() - pullee.getY()) * ratio;
-		double forceZ = (puller.getZ() - pullee.getZ()) * ratio;		
-		
-		// Divided by pullee's mass, as the greater its mass, the harder it is to move.
-		// TODO: Get rid of addDeltaX functions, and replace with a forceX function?
-		// TODO: Learn physics terminology...
-		double deltaDeltaX = (forceX) / pullee.getMass();
-		double deltaDeltaY = (forceY) / pullee.getMass();
-		double deltaDeltaZ = (forceZ) / pullee.getMass();
-		
-		
-		pullee.addDeltaX(deltaDeltaX);
-		pullee.addDeltaY(deltaDeltaY);
-		pullee.addDeltaZ(deltaDeltaZ);
-	}
+        // Gravitational force that the two objects will impart on eachother
+        // apply Shell theorem
+        double effectiveObject1Mass = getEffectiveMass(distance, object1.getRadius(), object1.getMass());
+        double effectiveObject2Mass = getEffectiveMass(distance, object2.getRadius(), object2.getMass());
 
-	
-	
-	/******************************************************************************************************
-	 *  Distance
-	 *  
-	 *  This should be perhaps put in a root physics class. Hrm... Still need to determine how to organize 
-	 *  all this.
-	 ******************************************************************************************************/
-	
-	public static double distance(BasePhysicalEntity a, BasePhysicalEntity b) {
-		return Math.sqrt(
-					Math.pow((a.getX() - b.getX()), 2) + 
-					Math.pow((a.getY() - b.getY()), 2) + 
-					Math.pow((a.getZ() - b.getZ()), 2)
-				);
-	}
-	
+        double force = (GRAVITATIONAL_CONSTANT * effectiveObject1Mass * effectiveObject2Mass) / Math.pow(distance, 2);
+
+        // Not sure ratio is the proper term here, but the next block of lines is arrive at how the one dimensional
+        // force is translated into x, y, and z forces.
+        double ratio = force / distance;
+
+        double forceX = (object1.getX() - object2.getX()) * ratio;
+        double forceY = (object1.getY() - object2.getY()) * ratio;
+        double forceZ = (object1.getZ() - object2.getZ()) * ratio;
+
+        object1.applyForceX(-forceX);
+        object1.applyForceY(-forceY);
+        object1.applyForceZ(-forceZ);
+
+        object2.applyForceX(forceX);
+        object2.applyForceY(forceY);
+        object2.applyForceZ(forceZ);
+    }
+
+    /**
+     *
+     * However, it is not quite that simple. As we have not yet implemented collisions, and do not
+     * want to depend upon collisions, we need to account for how the gravitation force exerted by
+     * an object is reduced if you are inside that object.
+     *
+     * Reference: https://en.wikipedia.org/wiki/Shell_theorem
+     */
+    private static double getEffectiveMass(double distance, double radius, double mass) {
+        if (distance > radius) return mass;
+        double radiusRatio = distance / radius;
+        return mass * Math.pow(radiusRatio, 3);
+    }
+
 }

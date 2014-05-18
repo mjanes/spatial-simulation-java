@@ -1,5 +1,7 @@
 package entity;
 
+import camera.ThreeDimensionalViewCamera;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,10 +30,13 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	protected double density = 1;
 	
 	protected ArrayList<IConnectedEntity> connections = new ArrayList<IConnectedEntity>();
-	
+
+    private static final double DEFAULT_DENSITY = 200;
+
 	public BasePhysicalEntity(double x, double y, double z, double mass) {
 		this(x, y, z);
 		this.mass = mass;
+        this.density = Math.sqrt(mass / DEFAULT_DENSITY);
 	}
 	
 	public BasePhysicalEntity(double x, double y, double z) {
@@ -86,6 +91,10 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 		this.deltaX += deltaDeltaX;
 	}
 
+    public void applyForceX(double forceX) {
+        addDeltaX(forceX / mass);
+    }
+
 	@Override
 	public void moveX(double deltaX) {
 		prevX = x;
@@ -106,7 +115,11 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	public void addDeltaY(double deltaDeltaY) {
 		this.deltaY += deltaDeltaY;
 	}
-	
+
+    public void applyForceY(double forceY) {
+        addDeltaY(forceY / mass);
+    }
+
 	@Override
 	public void moveY(double deltaY) {
 		prevY = y;
@@ -128,7 +141,11 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 		this.deltaZ += deltaDeltaZ;
 	}
 
-	@Override
+    public void applyForceZ(double forceZ) {
+        addDeltaZ(forceZ / mass);
+    }
+
+    @Override
 	public void moveZ(double deltaZ) {
 		prevZ = z;
 		z += deltaZ;
@@ -170,7 +187,7 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	 * Putting this in now for simple graphics
 	 */
 	public double getRadius() {
-		double volume = mass * density;
+		double volume = mass / density;
 		// volume = 4/3 * pi * r ^ 3
 		// r ^ 3 = volume / (4/3 * pi)
 		// r = cube root(volume / (4/3 * pi))
@@ -185,15 +202,19 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	
 	@Override
 	public double getDistance(IThreeDimensionalEntity other) {
-		return Math.sqrt(
-				Math.pow((x - other.getX()), 2) + 
-				Math.pow((y - other.getY()), 2) + 
-				Math.pow((z - other.getZ()), 2)
-			);
-	}
+		return getDistance(this, other);
+    }
 
-	
-	/**********************************************************************************
+    public static double getDistance(IThreeDimensionalEntity a, IThreeDimensionalEntity b) {
+        return Math.sqrt(
+                Math.pow((a.getX() - b.getX()), 2) +
+                        Math.pow((a.getY() - b.getY()), 2) +
+                        Math.pow((a.getZ() - b.getZ()), 2)
+        );
+    }
+
+
+    /**********************************************************************************
 	 * Connections
 	 **********************************************************************************/
 	

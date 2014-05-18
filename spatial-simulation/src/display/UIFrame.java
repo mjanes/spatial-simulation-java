@@ -9,6 +9,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -20,6 +21,7 @@ import javax.swing.plaf.basic.BasicArrowButton;
 import physics.GravitationalPhysics;
 import camera.ThreeDimensionalViewCamera;
 import entity.BasePhysicalEntity;
+import setup.Setup;
 
 /**
  * Aside from me hating Swing, how am I going to make this work?
@@ -41,29 +43,29 @@ import entity.BasePhysicalEntity;
  * @author mjanes
  *
  */
-public class UIFrame extends JFrame {
+public class UIFrame extends JFrame implements SimulationRunnable.ISimulationContainer {
 	
 	private static final long serialVersionUID = 1L;
 	
 	// Ideally, we don't want these static, but for convenience at the moment
-	private static volatile int frameDelay = 10; // Milliseconds between each frame painting	
-	private static volatile boolean running = true;
+	private int mFrameDelay = 10; // Milliseconds between each frame painting
+
+    // Whether or not the universe is running
+	private boolean mRunning = true;
 	
-	private Collection<BasePhysicalEntity> entities;
+	private List<BasePhysicalEntity> mEntities;
 	
 	// The canvas that is the display screen and JPanel that holds it	
-	private ThreeDimensionalEntityCanvas canvas;
-	
-	// The control panel, to one side of the canvas, that is for manipulating the view and universe
-	private JPanel controlPanel;
-	
-	
-	// Check if volatile is appropriate. Will affect the universe loop thread.
-	private volatile ThreeDimensionalViewCamera camera; 
+	private ThreeDimensionalEntityCanvas mCanvas;
+
+    // Check if volatile is appropriate. Will affect the universe loop thread.
+	private volatile ThreeDimensionalViewCamera mCamera;
 	
 	private static final double CAMERA_ACCELERATION = 0.1;
 	private static final int ANGLE_INCREMENT = 2;
-	
+
+    private Thread mUniverseThread;
+
 	/**
 	 * UI setup
 	 * 
@@ -72,27 +74,29 @@ public class UIFrame extends JFrame {
 	 */
 	public UIFrame(int width, int height) {	
 
-		// Initiate the camera
-		camera = new ThreeDimensionalViewCamera(0, 0, 0);
+		// Initiate the mCamera
+		mCamera = new ThreeDimensionalViewCamera(0, 0, 0);
 		
 		
 		// Setup canvas
-		canvas = new ThreeDimensionalEntityCanvas(width, height, camera);
+		mCanvas = new ThreeDimensionalEntityCanvas(width, height, mCamera);
 		
 		
 		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
 		// is displayed in the canvas.
 		JPanel navigationPanel = setupNavigationPanel();		
 		
-		// Panel for controlling the orientation of the camera
+		// Panel for controlling the orientation of the mCamera
 		JPanel orientationPanel = setupOrientationPanel();
 
 		// This panel contains buttons for changing the speed of the simulation
 		JPanel timePanel = setupTimePanel();
-		
+
+        JPanel setupPanel = setupSetupPanel();
+
 
 		// Set up control panel, which will have buttons to manipulate view of canvas
-		controlPanel = new JPanel();
+        JPanel controlPanel = new JPanel();
 		controlPanel.setLayout(new BoxLayout(controlPanel, BoxLayout.Y_AXIS));
 		controlPanel.setPreferredSize(new Dimension(200, height));
 
@@ -101,21 +105,25 @@ public class UIFrame extends JFrame {
 		controlPanel.add(navigationPanel);
 		controlPanel.add(orientationPanel);
 		controlPanel.add(timePanel);
+        controlPanel.add(setupPanel);
 		controlPanel.setBorder(BorderFactory.createLineBorder(Color.black));
-		
-		
+
 		
 		// Final packing of everything into content pane and display
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(controlPanel, BorderLayout.WEST);
-		contentPane.add(canvas, BorderLayout.CENTER);				
+		contentPane.add(mCanvas, BorderLayout.CENTER);
 		pack();		
 		setVisible(true);	
-		
-		
+
 		// initialize the buffer of the canvas
-		canvas.initBuffer();
+		mCanvas.initBuffer();
+
+        // Start the mCamera thread
+        Thread cameraThread = new Thread(new CameraRunnable(this, mCanvas, mCamera));
+        cameraThread.setPriority(Thread.MIN_PRIORITY);
+        cameraThread.start();
 	}
 	
 	
@@ -146,7 +154,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaSelfX(CAMERA_ACCELERATION);			
+				mCamera.addDeltaSelfX(CAMERA_ACCELERATION);
 			}			
 		});
 		
@@ -154,7 +162,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaSelfX(-CAMERA_ACCELERATION);
+				mCamera.addDeltaSelfX(-CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -162,7 +170,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaSelfY(-CAMERA_ACCELERATION);			
+				mCamera.addDeltaSelfY(-CAMERA_ACCELERATION);
 			}			
 		});
 		
@@ -171,7 +179,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaSelfY(CAMERA_ACCELERATION);			
+				mCamera.addDeltaSelfY(CAMERA_ACCELERATION);
 			}			
 		});
 		
@@ -180,7 +188,7 @@ public class UIFrame extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaSelfZ(CAMERA_ACCELERATION);
+				mCamera.addDeltaSelfZ(CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -188,7 +196,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.addDeltaSelfZ(-CAMERA_ACCELERATION);
+				mCamera.addDeltaSelfZ(-CAMERA_ACCELERATION);
 			}
 		});
 		
@@ -230,7 +238,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementRelativeXAngle(-ANGLE_INCREMENT);			
+				mCamera.incrementRelativeXAngle(-ANGLE_INCREMENT);
 			}			
 		});
 		
@@ -238,7 +246,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementRelativeXAngle(ANGLE_INCREMENT);
+				mCamera.incrementRelativeXAngle(ANGLE_INCREMENT);
 			}
 		});
 		
@@ -246,7 +254,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementRelativeYAngle(-ANGLE_INCREMENT);			
+				mCamera.incrementRelativeYAngle(-ANGLE_INCREMENT);
 			}			
 		});
 		
@@ -255,7 +263,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementRelativeYAngle(ANGLE_INCREMENT);			
+				mCamera.incrementRelativeYAngle(ANGLE_INCREMENT);
 			}			
 		});
 		
@@ -264,7 +272,7 @@ public class UIFrame extends JFrame {
 		
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementRelativeZAngle(-ANGLE_INCREMENT);
+				mCamera.incrementRelativeZAngle(-ANGLE_INCREMENT);
 			}
 		});
 		
@@ -272,7 +280,7 @@ public class UIFrame extends JFrame {
 			
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				camera.incrementRelativeZAngle(ANGLE_INCREMENT);
+				mCamera.incrementRelativeZAngle(ANGLE_INCREMENT);
 			}
 		});
 		
@@ -300,6 +308,7 @@ public class UIFrame extends JFrame {
 	private JPanel setupTimePanel() {
 		JPanel timePanel = new JPanel(new FlowLayout());
 		JButton pauseButton = new JButton("Pause");
+        JButton incrementButton = new JButton("Increment");
 		JButton playButton = new JButton("Play");
 		JButton increaseSpeedButton = new JButton("Increase Speed");
 		JButton decreaseSpeedButton = new JButton("Decrease Speed");
@@ -308,16 +317,23 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				running = false;
+				setRunning(false);
 			}
 			
 		});
-		
+
+        incrementButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                GravitationalPhysics.updateUniverseState(mEntities);
+            }
+        });
+
 		playButton.addActionListener(new ActionListener() {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				running = true;
+				setRunning(true);
 			}
 			
 		});
@@ -326,7 +342,7 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				frameDelay--;
+				incrementFrameDelay(-1);
 			}
 			
 		});
@@ -335,13 +351,15 @@ public class UIFrame extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				frameDelay++;
+				incrementFrameDelay(1);
 			}
 			
 		});
 		
 		timePanel.add(pauseButton);
+        timePanel.add(incrementButton);
 		timePanel.add(playButton);
+        // TODO: Display current speed.
 		timePanel.add(decreaseSpeedButton);
 		timePanel.add(increaseSpeedButton);
 		
@@ -351,99 +369,66 @@ public class UIFrame extends JFrame {
 		
 		return timePanel;
 	}
-	
-	
+
+
+    public JPanel setupSetupPanel() {
+        JPanel setupPanel = new JPanel(new FlowLayout());
+
+        JButton setupButton = new JButton("Setup");
+        setupButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                setEntities(Setup.create());
+            }
+        });
+
+        JButton startButton = new JButton("Start");
+        startButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                start();
+            }
+        });
+
+        setupPanel.add(setupButton);
+        setupPanel.add(startButton);
+
+        return setupPanel;
+    }
+
+
 	/***************************************************************************************************
 	 * Utility/General
 	 **************************************************************************************************/
 	
-	public void setEntities(Collection<BasePhysicalEntity> entities) {
-		this.entities = entities;
-		canvas.setEntities(entities);
+	public void setEntities(List<BasePhysicalEntity> entities) {
+		mEntities = entities;
+		mCanvas.setEntities(mEntities);
 	}
 	
 	public void start() {
-		//	3) Begin running physics on things
-		Thread universeThread = new Thread(new UniverseLoop(canvas, entities, camera));
-		universeThread.setPriority(Thread.MIN_PRIORITY);
-		universeThread.start();
+        if (mUniverseThread != null) mUniverseThread.interrupt();
+        mUniverseThread = new Thread(new PhysicsRunnable(this, mEntities));
+		mUniverseThread.setPriority(Thread.MIN_PRIORITY);
+		mUniverseThread.start();
 	}
-	
-	
-	/**************************************************************************************************
-	 * Running the universe
-	 **************************************************************************************************/
-	
-	/**
-	 * Learning about this from: http://www.javalobby.org/forums/thread.jspa?threadID=16867&tstart=0
-	 * 
-	 * Pieces/threads we need:
-	 * 1) Simulation logic of a given phase of the universe. Currently, that is applying gravity and moving the entities.
-	 * 2) Render the universe state. Does not have to be phase that was just simulated. Can be the previous phase, so 
-	 * 	that those two phase have occurred on separate threads.
-	 * 3) Sleep until a certain amount of time has passed, and then draw the graphics rendered in phase 2,
-	 * thus ensuring a consistent frame rate. 
-	 * 
-	 * @author mjanes
-	 */
-	private static class UniverseLoop implements Runnable {
-		
-		long cycleTime;
-		private ThreeDimensionalEntityCanvas canvas;
-		private Collection<BasePhysicalEntity> entities;
-		private ThreeDimensionalViewCamera camera;
-		
-		public UniverseLoop(ThreeDimensionalEntityCanvas canvas, Collection<BasePhysicalEntity> entities, ThreeDimensionalViewCamera camera) {
-			this.canvas = canvas;
-			this.entities = entities;
-			this.camera = camera;					
-		}
-		
-		@Override
-		public void run() {
-			cycleTime = System.currentTimeMillis();
-			
-			while (true)  {
 
-				// Wait an appropriate amount of time, so that the frame rate is progressing constantly.
-				synchFramerate();
-				
-				// tell graphics to repaint
-				canvas.updateGraphics();
+    @Override
+    public synchronized int getFrameDelay() {
+        return mFrameDelay;
+    }
 
-				// Perform physics simulations
-				if (running) updateUniverseState();					
-				
-				// TODO: Perhaps create a separate pause camera button?
-				updateCameraState();
-			}
-			
-		}
-		
-		private void synchFramerate() {
-			
-			cycleTime = cycleTime + frameDelay;
-			long difference = cycleTime - System.currentTimeMillis();
-		
-			try {
-				// if frameDelay has already occurred since last cycle time, do not sleep.
-				Thread.sleep(Math.max(0,  difference));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-	
-		private void updateUniverseState() {
-			// run round of physics
-			GravitationalPhysics.gravity(entities);
-			for (BasePhysicalEntity entity : entities) {
-				entity.move();
-			}		
-		}
-		
-		private void updateCameraState() {
-			camera.move();			
-		}
-	}
-	
+    public synchronized void incrementFrameDelay(int increment) {
+        mFrameDelay += increment;
+    }
+
+    @Override
+    public synchronized boolean isRunning() {
+        return mRunning;
+    }
+
+    public synchronized void setRunning(boolean running) {
+        mRunning = running;
+    }
+
 }

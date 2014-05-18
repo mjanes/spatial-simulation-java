@@ -1,22 +1,22 @@
 package setup;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import display.ThreeDimensionalEntityCanvas;
 import entity.BasePhysicalEntity;
+import physics.GravitationalPhysics;
 
 public class Setup {
 	
-	public static Collection<BasePhysicalEntity> create() {
+	public static List<BasePhysicalEntity> create() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		entities.addAll(basicOrbitCouple());
-		entities.addAll(randomSet(8));
+		//entities.addAll(basicOrbitCouple());
+
+		entities.addAll(randomRotatingSetWithCenter(350));
 		
 		//entities.addAll(grid(10));
-		
 		//entities.addAll(cube());
-		
 		//entities.addAll(point());
 		
 		return entities;
@@ -24,24 +24,45 @@ public class Setup {
 	
 	private static ArrayList<BasePhysicalEntity> basicOrbitCouple() {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		
-		BasePhysicalEntity entityA = new BasePhysicalEntity(-200, -200, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 500);
-		entityA.setDeltaX(1.0);
-		entities.add(entityA);				
-		
-		entities.add(new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 8000));
-		
-		return entities;
+
+        BasePhysicalEntity entityLarger = new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 10000);
+		entityLarger.applyForceX(-4000);
+        entities.add(entityLarger);
+
+        BasePhysicalEntity entitySmaller = new BasePhysicalEntity(-200, -200, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 500);
+        entitySmaller.applyForceX(4000);
+        entities.add(entitySmaller);
+
+        return entities;
 	}
 	
-	private static ArrayList<BasePhysicalEntity> randomSet(int n) {
+	private static ArrayList<BasePhysicalEntity> randomRotatingSetWithCenter(int n) {
 		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
-		
+
+        BasePhysicalEntity center = new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000000);
+        entities.add(center);
+
+        final double rotationConstant = 1.0/200;
+		final double rotationFactor = GravitationalPhysics.GRAVITATIONAL_CONSTANT * Math.sqrt(center.getMass()) * rotationConstant;
+
 		BasePhysicalEntity newEntity;
+        double mass;
+        double x;
+        double y;
+        double z;
+        double forceX;
+        double forceY;
 		for (int i = 0; i < n; ++i) {
-			newEntity = new BasePhysicalEntity((Math.random() * 800) - 400, (Math.random() * 800) - 400, ThreeDimensionalEntityCanvas.EYE_DISTANCE, Math.random() * 400);
-			newEntity.setDeltaX(Math.random() / 2);
-			newEntity.setDeltaY(Math.random() / 2);
+            x = (Math.random() * 800) - 400;
+            y = (Math.random() * 800) - 400;
+            z = ThreeDimensionalEntityCanvas.EYE_DISTANCE + (Math.random() * 10) - 5;
+            mass = Math.random() * 1000;
+            forceX = -y * mass * Math.random() * rotationFactor;
+            forceY = x * mass * Math.random() * rotationFactor;
+
+			newEntity = new BasePhysicalEntity(x, y, z, mass);
+			newEntity.applyForceX(forceX);
+			newEntity.applyForceY(forceY);
 			entities.add(newEntity);
 		}
 		
@@ -96,13 +117,10 @@ public class Setup {
 	 * 
 	 * Will create entities, with some sort of spiral motion. Beyond that... probably a lot of variables I haven't
 	 * thought of yet.
-	 * 
-	 * @param numEntities
-	 * @param massDistribution
-	 * @param spatial
+	 *
 	 */
-	public static ArrayList<BasePhysicalEntity> setup(int numEntities, double massDistribution, double spatialDistribution, double speedDistribution) {
-		return null;
-	}
-	
+//	public static ArrayList<BasePhysicalEntity> setup(int numEntities, double massDistribution, double spatialDistribution, double speedDistribution) {
+//		return null;
+//	}
+
 }
