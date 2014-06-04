@@ -38,6 +38,7 @@ public class GravitationalPhysics {
 	 * @param entities
 	 */
 	public static void gravity(List<BasePhysicalEntity> entities) {
+        if (entities == null) return;
 
         int count = entities.size();
         for (int i = 0; i < count; i++) {
