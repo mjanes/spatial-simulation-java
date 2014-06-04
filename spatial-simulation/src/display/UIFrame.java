@@ -6,8 +6,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -52,7 +51,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     // Whether or not the universe is running
 	private boolean mRunning = true;
 	
-	private List<BasePhysicalEntity> mEntities;
+	private List<BasePhysicalEntity> mEntities = new ArrayList<>();
 	
 	// The canvas that is the display screen and JPanel that holds it	
 	private ThreeDimensionalEntityCanvas mCanvas;
@@ -68,8 +67,8 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	/**
 	 * UI setup
 	 * 
-	 * @param width
-	 * @param height
+	 * @param width width of panel
+	 * @param height height of panel
 	 */
 	public UIFrame(int width, int height) {	
 
@@ -128,8 +127,6 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	
 	/**
 	 * Navigation panel, for moving the location of the camera, with up/down/left/right buttons
-	 *
-	 * @return
 	 */
 	private JPanel setupNavigationPanel() {
 		JPanel navigationPanel = new JPanel(new GridLayout(3, 3));
@@ -149,55 +146,12 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		forwardButton.setPreferredSize(buttonDimension);
 		backwardsButton.setPreferredSize(buttonDimension);
 		
-		eastButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.addDeltaSelfX(CAMERA_ACCELERATION);
-			}			
-		});
-		
-		westButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.addDeltaSelfX(-CAMERA_ACCELERATION);
-			}
-		});
-		
-		northButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.addDeltaSelfY(-CAMERA_ACCELERATION);
-			}			
-		});
-		
-
-		southButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.addDeltaSelfY(CAMERA_ACCELERATION);
-			}			
-		});
-		
-		
-		forwardButton.addActionListener(new ActionListener() {
-		
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.addDeltaSelfZ(CAMERA_ACCELERATION);
-			}
-		});
-		
-		backwardsButton.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.addDeltaSelfZ(-CAMERA_ACCELERATION);
-			}
-		});
+        eastButton.addActionListener(e -> mCamera.addDeltaSelfX(CAMERA_ACCELERATION));
+        westButton.addActionListener(e -> mCamera.addDeltaSelfX(-CAMERA_ACCELERATION));
+		northButton.addActionListener(e -> mCamera.addDeltaSelfY(-CAMERA_ACCELERATION));
+		southButton.addActionListener(e -> mCamera.addDeltaSelfY(CAMERA_ACCELERATION));
+		forwardButton.addActionListener(e -> mCamera.addDeltaSelfZ(CAMERA_ACCELERATION));
+		backwardsButton.addActionListener(e -> mCamera.addDeltaSelfZ(-CAMERA_ACCELERATION));
 		
 		navigationPanel.add(new JPanel());
 		navigationPanel.add(northButton);
@@ -219,78 +173,35 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		JPanel orientationPanel = new JPanel(new GridLayout(3, 3));
 		
 		JButton yAngleMinus = new JButton("yAngle minus");		
-		JButton xAnglePlus = new JButton("xAngle plus");
-		JButton xAngleMinus = new JButton("xAngle minus");
+		JButton xAngleMinus = new JButton("xAngle plus");
+		JButton xAnglePlus = new JButton("xAngle minus");
 		JButton yAnglePlus = new JButton("yAngle plus");
 		JButton zAngleMinus = new JButton("zAngle minus");
 		JButton zAnglePlus = new JButton("zAngle Plus");
 		
 		Dimension buttonDimension = new Dimension(66, 66);
 		yAngleMinus.setPreferredSize(buttonDimension);
-		xAnglePlus.setPreferredSize(buttonDimension);
 		xAngleMinus.setPreferredSize(buttonDimension);
+		xAnglePlus.setPreferredSize(buttonDimension);
 		yAnglePlus.setPreferredSize(buttonDimension);
 		zAngleMinus.setPreferredSize(buttonDimension);
 		zAnglePlus.setPreferredSize(buttonDimension);
 		
-		xAnglePlus.addActionListener(new ActionListener() {
+		xAngleMinus.addActionListener(e -> mCamera.incrementRelativeXAngle(-ANGLE_INCREMENT));
+		xAnglePlus.addActionListener(e -> mCamera.incrementRelativeXAngle(ANGLE_INCREMENT));
+		yAngleMinus.addActionListener(e -> mCamera.incrementRelativeYAngle(-ANGLE_INCREMENT));
+		yAnglePlus.addActionListener(e -> mCamera.incrementRelativeYAngle(ANGLE_INCREMENT));
+		zAngleMinus.addActionListener(e -> mCamera.incrementRelativeZAngle(-ANGLE_INCREMENT));
+		zAnglePlus.addActionListener(e -> mCamera.incrementRelativeZAngle(ANGLE_INCREMENT));
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.incrementRelativeXAngle(-ANGLE_INCREMENT);
-			}			
-		});
-		
-		xAngleMinus.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.incrementRelativeXAngle(ANGLE_INCREMENT);
-			}
-		});
-		
-		yAngleMinus.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.incrementRelativeYAngle(-ANGLE_INCREMENT);
-			}			
-		});
-		
-
-		yAnglePlus.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.incrementRelativeYAngle(ANGLE_INCREMENT);
-			}			
-		});
-		
-		
-		zAngleMinus.addActionListener(new ActionListener() {
-		
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.incrementRelativeZAngle(-ANGLE_INCREMENT);
-			}
-		});
-		
-		zAnglePlus.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				mCamera.incrementRelativeZAngle(ANGLE_INCREMENT);
-			}
-		});
-		
 		orientationPanel.add(new JPanel());
-		orientationPanel.add(xAnglePlus);
+		orientationPanel.add(xAngleMinus);
 		orientationPanel.add(new JPanel());
 		orientationPanel.add(yAngleMinus);
 		orientationPanel.add(new JPanel());
 		orientationPanel.add(yAnglePlus);	
 		orientationPanel.add(zAnglePlus);
-		orientationPanel.add(xAngleMinus);
+		orientationPanel.add(xAnglePlus);
 		orientationPanel.add(zAngleMinus);
 		
 		orientationPanel.setBorder(BorderFactory.createLineBorder(Color.black));
@@ -301,8 +212,6 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	
 	/**
 	 * Initialize time control panel
-	 * 
-	 * @return
 	 */
 	private JPanel setupTimePanel() {
 		JPanel timePanel = new JPanel(new FlowLayout());
@@ -312,49 +221,12 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		JButton increaseSpeedButton = new JButton("Increase Speed");
 		JButton decreaseSpeedButton = new JButton("Decrease Speed");
 		
-		pauseButton.addActionListener(new ActionListener() {
+		pauseButton.addActionListener(e -> setRunning(false));
+        incrementButton.addActionListener(e -> GravitationalPhysics.updateUniverseState(mEntities));
+		playButton.addActionListener(e -> setRunning(true));
+		increaseSpeedButton.addActionListener(e -> incrementFrameDelay(-1));
+		decreaseSpeedButton.addActionListener(e -> incrementFrameDelay(1));
 
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				setRunning(false);
-			}
-			
-		});
-
-        incrementButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GravitationalPhysics.updateUniverseState(mEntities);
-            }
-        });
-
-		playButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				setRunning(true);
-			}
-			
-		});
-		
-		increaseSpeedButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				incrementFrameDelay(-1);
-			}
-			
-		});
-		
-		decreaseSpeedButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				incrementFrameDelay(1);
-			}
-			
-		});
-		
 		timePanel.add(pauseButton);
         timePanel.add(incrementButton);
 		timePanel.add(playButton);
@@ -374,21 +246,9 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
         JPanel setupPanel = new JPanel(new FlowLayout());
 
         JButton setupButton = new JButton("Setup");
-        setupButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                setEntities(Setup.create());
-            }
-        });
-
+        setupButton.addActionListener(e -> setEntities(Setup.create()));
         JButton startButton = new JButton("Start");
-        startButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                start();
-            }
-        });
-
+        startButton.addActionListener(e -> start());
         setupPanel.add(setupButton);
         setupPanel.add(startButton);
 
