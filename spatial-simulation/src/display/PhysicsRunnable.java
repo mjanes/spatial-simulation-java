@@ -1,6 +1,6 @@
 package display;
 
-import entity.BasePhysicalEntity;
+import entity.Entity;
 import physics.GravitationalPhysics;
 
 import java.util.List;
@@ -10,9 +10,9 @@ import java.util.List;
  */
 public class PhysicsRunnable extends SimulationRunnable {
 
-    private List<BasePhysicalEntity> mEntities;
+    private List<Entity> mEntities;
 
-    public PhysicsRunnable(ISimulationContainer container, List<BasePhysicalEntity> entities) {
+    public PhysicsRunnable(ISimulationContainer container, List<Entity> entities) {
         super(container);
         if (entities == null) throw new IllegalArgumentException();
         mEntities = entities;

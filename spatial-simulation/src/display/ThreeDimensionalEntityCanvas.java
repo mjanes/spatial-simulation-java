@@ -9,13 +9,13 @@ import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import camera.ThreeDimensionalViewCamera;
-import entity.BasePhysicalEntity;
+import camera.Camera;
+import entity.Entity;
 
 /**
  * Canvas for displaying Entity objects in three dimensional space. 
  * 
- * The canvas is the projection plane, as seen from the ThreeDimensionalViewCamera object.
+ * The canvas is the projection plane, as seen from the Camera object.
  * The projection plane is assumed to be EYE_Z_DISTANCE units from the camera, as, I assumed that
  * was how far the an eye would be from the monitor, though as it is currently 400, it is not exactly 
  * accurate.
@@ -36,11 +36,11 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
-	ArrayList<BasePhysicalEntity> mEntities = new ArrayList<>();
+	ArrayList<Entity> mEntities = new ArrayList<>();
 
 	private BufferStrategy mStrategy;
 	
-	private ThreeDimensionalViewCamera mCamera;
+	private Camera mCamera;
 	
 	public static final double EYE_DISTANCE = 3000;
 	
@@ -49,7 +49,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 * Constructors
 	 *******************************************************************************************************/
 	
-	public ThreeDimensionalEntityCanvas(int width, int height, ThreeDimensionalViewCamera camera) {
+	public ThreeDimensionalEntityCanvas(int width, int height, Camera camera) {
 		super();
 		setPreferredSize(new Dimension(width, height));		
 	    mCamera = camera;
@@ -60,7 +60,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 * Utilities
 	 *******************************************************************************************************/	
 
-	public void setEntities(Collection<BasePhysicalEntity> entities) {
+	public void setEntities(Collection<Entity> entities) {
 		mEntities = new ArrayList<>(entities);
 	}
 
@@ -120,12 +120,12 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 		double canvasWidth = getWidth();
 		double canvasHeight = getHeight();
 
-        for (BasePhysicalEntity entity : mEntities) {
+        for (Entity entity : mEntities) {
 			paintEntity(g, mCamera, entity, canvasWidth, canvasHeight);
 		}		
 	}
 
-    private void paintEntity(Graphics g, ThreeDimensionalViewCamera camera, BasePhysicalEntity entity, double canvasWidth, double canvasHeight) {
+    private void paintEntity(Graphics g, Camera camera, Entity entity, double canvasWidth, double canvasHeight) {
         // Distance from camera to view plane is DEFAULT_EYE_Z_DISTANCE
         // Optimization, continue if the entity is too small and far away from the camera
         // so as to avoid all the expensive trig operations.
@@ -166,7 +166,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
      * @param z
      * @return
      */
-    private static Point2D.Double getCanvasLocation(ThreeDimensionalViewCamera camera, double canvasWidth, double canvasHeight, double x, double y, double z) {
+    private static Point2D.Double getCanvasLocation(Camera camera, double canvasWidth, double canvasHeight, double x, double y, double z) {
         // Misc variables used for calculating rotations and projections
         double xP;
         double yP;

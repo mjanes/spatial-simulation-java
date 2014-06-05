@@ -1,6 +1,6 @@
 package display;
 
-import camera.ThreeDimensionalViewCamera;
+import camera.Camera;
 
 /**
  * Created by mjanes on 5/17/2014.
@@ -8,9 +8,9 @@ import camera.ThreeDimensionalViewCamera;
 public class CameraRunnable extends SimulationRunnable {
 
     private ThreeDimensionalEntityCanvas mCanvas;
-    private ThreeDimensionalViewCamera mCamera;
+    private Camera mCamera;
 
-    public CameraRunnable(ISimulationContainer container, ThreeDimensionalEntityCanvas canvas, ThreeDimensionalViewCamera camera) {
+    public CameraRunnable(ISimulationContainer container, ThreeDimensionalEntityCanvas canvas, Camera camera) {
         super(container);
         mCanvas = canvas;
         mCamera = camera;

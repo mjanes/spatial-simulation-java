@@ -16,9 +16,9 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.plaf.basic.BasicArrowButton;
 
+import entity.Entity;
 import physics.GravitationalPhysics;
-import camera.ThreeDimensionalViewCamera;
-import entity.BasePhysicalEntity;
+import camera.Camera;
 import setup.Setup;
 
 /**
@@ -51,13 +51,13 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     // Whether or not the universe is running
 	private boolean mRunning = true;
 	
-	private List<BasePhysicalEntity> mEntities = new ArrayList<>();
+	private List<Entity> mEntities = new ArrayList<>();
 	
 	// The canvas that is the display screen and JPanel that holds it	
 	private final ThreeDimensionalEntityCanvas CANVAS;
 
     // Check if volatile is appropriate. Will affect the universe loop thread.
-	private volatile ThreeDimensionalViewCamera mCamera;
+	private volatile Camera mCamera;
 	
 	private static final double CAMERA_ACCELERATION = 0.1;
 	private static final int ANGLE_INCREMENT = 2;
@@ -73,7 +73,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	public UIFrame(int width, int height) {	
 
 		// Initiate the mCamera
-		mCamera = new ThreeDimensionalViewCamera(0, 0, 0);
+		mCamera = new Camera(0, 0, 0);
 		
 		
 		// Setup canvas
@@ -260,7 +260,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	 * Utility/General
 	 **************************************************************************************************/
 	
-	public void setEntities(List<BasePhysicalEntity> entities) {
+	public void setEntities(List<Entity> entities) {
 		mEntities = entities;
 		CANVAS.setEntities(mEntities);
 	}

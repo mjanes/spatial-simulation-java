@@ -2,7 +2,7 @@ package physics;
 
 import java.util.List;
 
-import entity.BasePhysicalEntity;
+import entity.Entity;
 
 /**
  * Do we want this to extend an interface of 'Physics'? Maybe? What do I want the base physics operation to be? Well, something that takes a
@@ -23,9 +23,9 @@ public class GravitationalPhysics {
      *
      * @param entities Entities to run universe physics on.
      */
-    public static synchronized void updateUniverseState(List<BasePhysicalEntity> entities) {
+    public static synchronized void updateUniverseState(List<Entity> entities) {
         GravitationalPhysics.gravity(entities);
-        for (BasePhysicalEntity entity : entities) {
+        for (Entity entity : entities) {
             entity.move();
         }
     }
@@ -36,7 +36,7 @@ public class GravitationalPhysics {
 	 *
 	 * @param entities Entities to run gravitational attraction on.
 	 */
-	private static void gravity(List<BasePhysicalEntity> entities) {
+	private static void gravity(List<Entity> entities) {
         if (entities == null) return;
 
         int count = entities.size();
@@ -53,9 +53,9 @@ public class GravitationalPhysics {
      * F = G ((m1 * m2) / r ^ 2)
      *
      */
-    private static void gravitationallyAttract(BasePhysicalEntity object1, BasePhysicalEntity object2) {
+    private static void gravitationallyAttract(Entity object1, Entity object2) {
         // Distance between the two points
-        double distance = BasePhysicalEntity.getDistance(object1, object2);
+        double distance = Entity.getDistance(object1, object2);
 
         // Gravitational force that the two objects will impart on each other
         // apply Shell theorem

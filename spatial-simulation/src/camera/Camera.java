@@ -1,14 +1,10 @@
 package camera;
 
-import entity.IThreeDimensionalEntity;
+import entity.IDimensionalEntity;
 
 /**
- * A camera in three dimensional space. Extends TwoDimensionalViewCamera.
- * 
- * A TwoDimensionalViewCamera exists in three dimensional space. What is added by
- * the ThreeDimensionalViewCamera class is the ability to rotate the direction it 
- * is looking in. 
- * 
+ * A camera in three dimensional space.
+ *
  * And I understand that I'm probably using non-traditional terms for everything here
  * I suppose I should be using: https://en.wikipedia.org/wiki/Euler_angles
  * But at the moment I'm trying to teach myself things.
@@ -18,7 +14,7 @@ import entity.IThreeDimensionalEntity;
  * @author mjanes
  *
  */
-public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
+public class Camera implements IDimensionalEntity {
 	
 	protected double x;
 	protected double y;
@@ -45,7 +41,7 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 	double zAngle;
 	
 	
-	public ThreeDimensionalViewCamera(double x, double y, double z) {
+	public Camera(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -54,7 +50,7 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 		zAngle = 0;
 	}
 	
-	public ThreeDimensionalViewCamera(double x, double y, double z, double xAngle, double yAngle, double zAngle) {
+	public Camera(double x, double y, double z, double xAngle, double yAngle, double zAngle) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -165,7 +161,7 @@ public class ThreeDimensionalViewCamera implements IThreeDimensionalEntity {
 	}
 	
 	@Override
-	public double getDistance(IThreeDimensionalEntity other) {
+	public double getDistance(IDimensionalEntity other) {
 		return Math.sqrt(
 				Math.pow((x - other.getX()), 2) + 
 				Math.pow((y - other.getY()), 2) + 

@@ -10,7 +10,7 @@ import java.util.List;
  * 
  * @author mjanes
  */
-public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
+public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
 	
 	protected double x;
 	protected double y;
@@ -31,13 +31,13 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 
     private static final double DEFAULT_DENSITY = 200;
 
-	public BasePhysicalEntity(double x, double y, double z, double mass) {
+	public Entity(double x, double y, double z, double mass) {
 		this(x, y, z);
 		this.mass = mass;
         this.density = Math.sqrt(mass / DEFAULT_DENSITY);
 	}
 	
-	public BasePhysicalEntity(double x, double y, double z) {
+	public Entity(double x, double y, double z) {
 		this.x = x;
 		this.y = y;
 		this.z = z;
@@ -199,11 +199,11 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	 **********************************************************************************/
 	
 	@Override
-	public double getDistance(IThreeDimensionalEntity other) {
+	public double getDistance(IDimensionalEntity other) {
 		return getDistance(this, other);
     }
 
-    public static double getDistance(IThreeDimensionalEntity a, IThreeDimensionalEntity b) {
+    public static double getDistance(IDimensionalEntity a, IDimensionalEntity b) {
         return Math.sqrt(
                 Math.pow((a.getX() - b.getX()), 2) +
                         Math.pow((a.getY() - b.getY()), 2) +
