@@ -1,16 +1,13 @@
 package display;
 
-import java.awt.Canvas;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
+import camera.Camera;
+import entity.Entity;
+
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Collection;
-
-import camera.Camera;
-import entity.Entity;
 
 /**
  * Canvas for displaying Entity objects in three dimensional space. 
@@ -22,10 +19,10 @@ import entity.Entity;
  * 
  * NOTE: I am not using a standard three dimensional coordinate system: 
  * https://en.wikipedia.org/wiki/Cartesian_coordinate_system
- * I am having the x dimension be the left and right, y dimension being up and down, and z dimension 
+ * I am having the mX dimension be the left and right, mY dimension being up and down, and mZ dimension
  * being in and out.
  * Why on earth the standard three dimensional Cartesian coordinate system didn't take the two dimensional 
- * coordinate system and append a z axis to it, I have no idea, but that's the way I'm doing it for
+ * coordinate system and append a mZ axis to it, I have no idea, but that's the way I'm doing it for
  * now. May revise later, when I get fully away from the two dimensional entity canvas.
  * 
  * 
@@ -234,7 +231,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         xP = xP * distanceRatio;
         yP = yP * distanceRatio;
 
-        // Adding width / 2 and height / 2 to the x and y projections, so that 0,0 appears in the middle of the screen
+        // Adding width / 2 and height / 2 to the mX and mY projections, so that 0,0 appears in the middle of the screen
         // Resizing the radius, so that if an object's zP is equal to EYE_DISTANCE, it is shown at its default
         // radius, otherwise smaller if further away, larger if closer.
         xP += (canvasWidth / 2);

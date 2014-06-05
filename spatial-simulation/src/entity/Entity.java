@@ -12,148 +12,154 @@ import java.util.List;
  */
 public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
 	
-	protected double x;
-	protected double y;
-	protected double z;
+	protected double mX;
+	protected double mY;
+	protected double mZ;
 	
-	protected double prevX;
-	protected double prevY;
-	protected double prevZ;
+	protected double mPrevX;
+	protected double mPrevY;
+	protected double mPrevZ;
 	
-	protected double deltaX;
-	protected double deltaY;
-	protected double deltaZ;
+	protected double mDeltaX;
+	protected double mDeltaY;
+	protected double mDeltaZ;
 	
-	protected double mass = 1;
-	protected double density = 1;
+	protected double mMass = 1;
+	protected double mDensity = 1;
 	
-	protected ArrayList<IConnectedEntity> connections = new ArrayList<>();
+	protected ArrayList<IConnectedEntity> mConnections = new ArrayList<>();
 
     private static final double DEFAULT_DENSITY = 200;
 
 	public Entity(double x, double y, double z, double mass) {
 		this(x, y, z);
-		this.mass = mass;
-        this.density = Math.sqrt(mass / DEFAULT_DENSITY);
+		mMass = mass;
+        mDensity = Math.sqrt(mass / DEFAULT_DENSITY);
 	}
 	
 	public Entity(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.prevX = x;
-		this.prevY = y;
-		this.prevZ = z;
+		mX = x;
+		mY = y;
+		mZ = z;
+		mPrevX = x;
+		mPrevY = y;
+		mPrevZ = z;
 	}
 	
 	@Override
-	public void setX(double x) { this.x = x; }
+	public void setX(double x) {
+        mPrevX = mX;
+        mX = x;
+    }
 	
 	@Override
-	public double getX() { return x; }
+	public double getX() { return mX; }
 	
 	@Override
-	public void setY(double y) { this.y = y; }
+	public void setY(double y) {
+        mPrevY = mY;
+        mY = y;
+    }
 	
 	@Override
-	public double getY() { return y; }
+	public double getY() { return mY; }
 
 	@Override
-	public void setZ(double z) { this.z = z; }
+	public void setZ(double z) {
+        mPrevZ = mZ;
+        mZ = z;
+    }
 
 	@Override
-	public double getZ() { return z; }
+	public double getZ() { return mZ; }
 	
 	
 	/*********************** Previous location *******************/
 	
-	public double getPrevX() { return prevX; }
-	public double getPrevY() { return prevY; }
-	public double getPrevZ() { return prevZ; }
+	public double getPrevX() { return mPrevX; }
+	public double getPrevY() { return mPrevY; }
+	public double getPrevZ() { return mPrevZ; }
 
 	
 	/*********************** Delta *******************************/
 	
 	@Override
 	public void setDeltaX(double deltaX) {
-		this.deltaX = deltaX;
+		mDeltaX = deltaX;
 	}
 
 	@Override
 	public double getDeltaX() {
-		return deltaX;
+		return mDeltaX;
 	}
 	
 	@Override
 	public void addDeltaX(double deltaDeltaX) {
-		this.deltaX += deltaDeltaX;
+		mDeltaX += deltaDeltaX;
 	}
 
     public void applyForceX(double forceX) {
-        addDeltaX(forceX / mass);
+        addDeltaX(forceX / mMass);
     }
 
 	@Override
 	public void moveX(double deltaX) {
-		prevX = x;
-		x += deltaX;
+		setX(mX + deltaX);
 	}
 	
 	@Override
 	public void setDeltaY(double deltaY) {
-		this.deltaY = deltaY;
+		mDeltaY = deltaY;
 	}
 	
 	@Override
 	public double getDeltaY() {
-		return deltaY;
+		return mDeltaY;
 	}
 
 	@Override
 	public void addDeltaY(double deltaDeltaY) {
-		this.deltaY += deltaDeltaY;
+		mDeltaY += deltaDeltaY;
 	}
 
     public void applyForceY(double forceY) {
-        addDeltaY(forceY / mass);
+        addDeltaY(forceY / mMass);
     }
 
 	@Override
 	public void moveY(double deltaY) {
-		prevY = y;
-		y += deltaY;
+		setY(mY + deltaY);
 	}
 		
 	@Override
 	public void setDeltaZ(double deltaZ) {
-		this.deltaZ = deltaZ;
+		mDeltaZ = deltaZ;
 	}
 
 	@Override
 	public double getDeltaZ() {
-		return deltaZ;
+		return mDeltaZ;
 	}
 
 	@Override
 	public void addDeltaZ(double deltaDeltaZ) {
-		this.deltaZ += deltaDeltaZ;
+		mDeltaZ += deltaDeltaZ;
 	}
 
     public void applyForceZ(double forceZ) {
-        addDeltaZ(forceZ / mass);
+        addDeltaZ(forceZ / mMass);
     }
 
     @Override
 	public void moveZ(double deltaZ) {
-		prevZ = z;
-		z += deltaZ;
+		setZ(mZ + deltaZ);
 	}	
 	
 	@Override
 	public void move() {
-		moveX(deltaX);
-		moveY(deltaY);
-		moveZ(deltaZ);
+		moveX(mDeltaX);
+		moveY(mDeltaY);
+		moveZ(mDeltaZ);
 	}	
 	
 	
@@ -163,29 +169,29 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
 	@Override
 	public double getMass() {
-		return mass;
+		return mMass;
 	}
 	
 	@Override
 	public void setMass(double mass) {
-		this.mass = mass;
+		mMass = mass;
 	}
 
 	@Override
 	public double getDensity() {
-		return density;
+		return mDensity;
 	}
 
 	@Override
 	public void setDensity(double density) {
-		this.density = density;
+		mDensity = density;
 	}
 	
 	/* 
 	 * Putting this in now for simple graphics
 	 */
 	public double getRadius() {
-		double volume = mass / density;
+		double volume = mMass / mDensity;
 		// volume = 4/3 * pi * r ^ 3
 		// r ^ 3 = volume / (4/3 * pi)
 		// r = cube root(volume / (4/3 * pi))
@@ -218,17 +224,17 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	
 	@Override
 	public void addConnection(IConnectedEntity entity) {
-		connections.add(entity);
+		mConnections.add(entity);
 	}
 
 	@Override
 	public void removeConnection(IConnectedEntity entity) {
-		connections.remove(entity);
+		mConnections.remove(entity);
 	}
 
 	@Override
 	public List<IConnectedEntity> getConnections() {
-		return connections;
+		return mConnections;
 	}
 	
 	
@@ -244,7 +250,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
 	@Override
 	public String getLabel() {
-		return "x: " + x + ", y: " + y + ", z: " + z;
+		return "x: " + mX + ", y: " + mY + ", z: " + mZ;
 	}
 	
 	

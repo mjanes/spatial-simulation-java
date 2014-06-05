@@ -1,11 +1,11 @@
 package setup;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import display.ThreeDimensionalEntityCanvas;
 import entity.Entity;
 import physics.GravitationalPhysics;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Setup {
 	

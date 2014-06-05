@@ -1,4 +1,4 @@
-rootProject.name = 'spatial-simulation-java-intellij'
+rootProject.name = 'spatial-simulation'
 
 include 'spatial-simulation'
 

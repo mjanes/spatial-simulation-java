@@ -2,6 +2,8 @@ package camera;
 
 import entity.IDimensionalEntity;
 
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
 /**
  * A camera in three dimensional space.
  *
@@ -16,47 +18,54 @@ import entity.IDimensionalEntity;
  */
 public class Camera implements IDimensionalEntity {
 	
-	protected double x;
-	protected double y;
-	protected double z;
+	protected double mX;
+	protected double mY;
+	protected double mZ;
 	
-	protected double deltaX;
-	protected double deltaY;
-	protected double deltaZ;
+	protected double mDeltaX;
+	protected double mDeltaY;
+	protected double mDeltaZ;
+
+    // Matrices for display math
+    protected Array2DRowRealMatrix mTranslationMatrix = new Array2DRowRealMatrix(new double[][] {
+        {1, 0, 0, 0},
+        {0, 1, 0, 0},
+        {0, 0, 1, 0},
+        {0, 0, 0, 1}});
 	
 
 	// Orientation values
 	// All of these are angles
-	// Such that if the camera is located at x = 0, y = 0, z = 1, 
-	// With orientation xAngle = 0, yAngle = 0, and zAngle = 0
-	// A point located at x = 0, y = 0, z = 0, would appear in the center of the field of view
+	// Such that if the camera is located at mX = 0, mY = 0, mZ = 1,
+	// With orientation mXAngle = 0, mYAngle = 0, and mZAngle = 0
+	// A point located at mX = 0, mY = 0, mZ = 0, would appear in the center of the field of view
 	
-	// If the camera is located at x = 0, y = 0, z = -1, 
-	// With orientation xAngle = 0, yAngle = 0, and zAngle = 0
-	// A point located at x = 0, y = 180, z = 0, would appear in the center of the field of view
+	// If the camera is located at mX = 0, mY = 0, mZ = -1,
+	// With orientation mXAngle = 0, mYAngle = 0, and mZAngle = 0
+	// A point located at mX = 0, mY = 180, mZ = 0, would appear in the center of the field of view
 	
 	// Imagine each axis, and each of these angles as a clockwise rotation around that axis
-	double xAngle;
-	double yAngle;
-	double zAngle;
+	double mXAngle;
+	double mYAngle;
+	double mZAngle;
 	
 	
 	public Camera(double x, double y, double z) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		xAngle = 0;
-		yAngle = 0;
-		zAngle = 0;
+		mX = x;
+		mY = y;
+		mZ = z;
+		mXAngle = 0;
+		mYAngle = 0;
+		mZAngle = 0;
 	}
 	
 	public Camera(double x, double y, double z, double xAngle, double yAngle, double zAngle) {
-		this.x = x;
-		this.y = y;
-		this.z = z;
-		this.xAngle = xAngle;
-		this.yAngle = yAngle;
-		this.zAngle = zAngle;
+		mX = x;
+		mY = y;
+		mZ = z;
+		mXAngle = xAngle;
+		mYAngle = yAngle;
+		mZAngle = zAngle;
 	}
 	
 	/**********************************************************************
@@ -65,107 +74,110 @@ public class Camera implements IDimensionalEntity {
 	
 	@Override
 	public void setX(double x) {
-		this.x = x;
+		mX = x;
+        mTranslationMatrix.setEntry(0, 3, x);
 	}
 
 	@Override
 	public double getX() {
-		return x;
+		return mX;
 	}
 
 	@Override
 	public void setDeltaX(double deltaX) {
-		this.deltaX = deltaX;
+		mDeltaX = deltaX;
 	}
 
 	@Override
 	public void addDeltaX(double deltaDeltaX) {
-		deltaX += deltaDeltaX;
+		mDeltaX += deltaDeltaX;
 	}
 
 	@Override
 	public double getDeltaX() {
-		return deltaX;
+		return mDeltaX;
 	}
 
 	@Override
 	public void moveX(double deltaX) {
-		x += deltaX;
+		setX(mX + deltaX);
 	}
 	
 	@Override
 	public void setY(double y) {
-		this.y = y;
+		mY = y;
+        mTranslationMatrix.setEntry(1, 3, y);
 	}
 
 	@Override
 	public double getY() {
-		return y;
+		return mY;
 	}
 
 	@Override
 	public void setDeltaY(double deltaY) {
-		this.deltaY = deltaY;
+		mDeltaY = deltaY;
 	}
 
 	@Override
 	public void addDeltaY(double deltaDeltaY) {
-		deltaY += deltaDeltaY;
+		mDeltaY += deltaDeltaY;
 	}
 
 	@Override
 	public double getDeltaY() {
-		return deltaY;
+		return mDeltaY;
 	}
 	
 	@Override
 	public void moveY(double deltaY) {
-		y += deltaY;
+		setY(mY + deltaY);
 	}
 
 	@Override
 	public void setZ(double z) {
-		this.z = z;
+		mZ = z;
+        mTranslationMatrix.setEntry(2, 3, z);
 	}
 
 	@Override
 	public double getZ() {
-		return z;
+		return mZ;
 	}
 
 	@Override
 	public void setDeltaZ(double deltaZ) {
-		this.deltaZ = deltaZ;
+	    mDeltaZ = deltaZ;
 	}
 
 	@Override
 	public void addDeltaZ(double deltaDeltaZ) {
-		deltaZ += deltaDeltaZ;
+		mDeltaZ += deltaDeltaZ;
 	}
 
 	@Override
 	public double getDeltaZ() {
-		return deltaZ;
+		return mDeltaZ;
 	}
 	
 	@Override
 	public void moveZ(double deltaZ) {
-		z += deltaZ;
+		setZ(mZ + deltaZ);
 	}
 
 	@Override
 	public void move() {
-		moveX(deltaX);
-		moveY(deltaY);
-		moveZ(deltaZ);
+		moveX(mDeltaX);
+		moveY(mDeltaY);
+		moveZ(mDeltaZ);
 	}
 	
 	@Override
 	public double getDistance(IDimensionalEntity other) {
 		return Math.sqrt(
-				Math.pow((x - other.getX()), 2) + 
-				Math.pow((y - other.getY()), 2) + 
-				Math.pow((z - other.getZ()), 2)
+				Math.pow((mX - other.getX()), 2) +
+				Math.pow((mY - other.getY()), 2) +
+				Math.pow((mZ - other.getZ()), 2)
 			);
 	}
 	
@@ -175,30 +187,30 @@ public class Camera implements IDimensionalEntity {
 	 *********************************************************************/
 	
 	public double getXAngle() {
-		return xAngle;
+		return mXAngle;
 	}
 	
 	public void incrementXAngle(double increment) {
-		xAngle += increment;
-		xAngle = xAngle % 360;
+		mXAngle += increment;
+		mXAngle = mXAngle % 360;
 	}
 	
 	public double getYAngle() {
-		return yAngle;
+		return mYAngle;
 	}
 	
 	public void incrementYAngle(double increment) {
-		yAngle += increment;
-		yAngle = yAngle % 360;
+		mYAngle += increment;
+		mYAngle = mYAngle % 360;
 	}
 	
 	public double getZAngle() {
-		return zAngle;
+		return mZAngle;
 	}
 	
 	public void incrementZAngle(double increment) {
-		zAngle += increment;
-		zAngle = zAngle % 360;
+		mZAngle += increment;
+		mZAngle = mZAngle % 360;
 	}
 	
 	
@@ -208,9 +220,9 @@ public class Camera implements IDimensionalEntity {
 	 ********************************************************************************/
 	
 	/**
-	 * Incrementing the relative x angle, meaning, moving the camera angle up and 
-	 * down relative to the monitor. If the z angle is 90 degrees, then incrementing
-	 * the x angle 1 degree would instead increment the y angle 1 degree 
+	 * Incrementing the relative mX angle, meaning, moving the camera angle up and
+	 * down relative to the monitor. If the mZ angle is 90 degrees, then incrementing
+	 * the mX angle 1 degree would instead increment the mY angle 1 degree
 	 * 
 	 * 
 	 * @param increment
@@ -309,5 +321,19 @@ public class Camera implements IDimensionalEntity {
 		addDeltaY(deltaY);
 		addDeltaZ(deltaZ);		
 	}
+
+
+    /***************************************************************************************************
+     * Translation and rotation functions to take an entity and create output for use by the camera
+     ***************************************************************************************************/
+
+    public Array2DRowRealMatrix translate(IDimensionalEntity entity) {
+        return mTranslationMatrix.multiply(getR4Matrix(entity));
+    }
+
+    // Possible to-do, put this inside Dimensional entity
+    private static Array2DRowRealMatrix getR4Matrix(IDimensionalEntity entity) {
+        return new Array2DRowRealMatrix(new double[]{entity.getX(), entity.getY(), entity.getZ(), 1});
+    }
 
 }

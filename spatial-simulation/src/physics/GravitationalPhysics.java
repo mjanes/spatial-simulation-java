@@ -1,8 +1,8 @@
 package physics;
 
-import java.util.List;
-
 import entity.Entity;
+
+import java.util.List;
 
 /**
  * Do we want this to extend an interface of 'Physics'? Maybe? What do I want the base physics operation to be? Well, something that takes a
@@ -65,7 +65,7 @@ public class GravitationalPhysics {
         double force = (GRAVITATIONAL_CONSTANT * effectiveObject1Mass * effectiveObject2Mass) / Math.pow(distance, 2);
 
         // Not sure ratio is the proper term here, but the next block of lines is arrive at how the one dimensional
-        // force is translated into x, y, and z forces.
+        // force is translated into mX, mY, and mZ forces.
         double ratio = force / distance;
 
         double forceX = (object1.getX() - object2.getX()) * ratio;

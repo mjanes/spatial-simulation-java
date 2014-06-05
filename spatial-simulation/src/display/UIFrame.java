@@ -1,25 +1,15 @@
 package display;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridLayout;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.plaf.basic.BasicArrowButton;
-
+import camera.Camera;
 import entity.Entity;
 import physics.GravitationalPhysics;
-import camera.Camera;
 import setup.Setup;
+
+import javax.swing.*;
+import javax.swing.plaf.basic.BasicArrowButton;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Aside from me hating Swing, how am I going to make this work?
@@ -174,10 +164,10 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		
 		JButton yAngleMinus = new JButton("yAngle minus");		
 		JButton xAngleMinus = new JButton("xAngle plus");
-		JButton xAnglePlus = new JButton("xAngle minus");
-		JButton yAnglePlus = new JButton("yAngle plus");
+		JButton xAnglePlus = new JButton("mXAngle minus");
+		JButton yAnglePlus = new JButton("mYAngle plus");
 		JButton zAngleMinus = new JButton("zAngle minus");
-		JButton zAnglePlus = new JButton("zAngle Plus");
+		JButton zAnglePlus = new JButton("mZAngle Plus");
 		
 		Dimension buttonDimension = new Dimension(66, 66);
 		yAngleMinus.setPreferredSize(buttonDimension);
