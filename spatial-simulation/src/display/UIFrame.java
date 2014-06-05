@@ -54,7 +54,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	private List<BasePhysicalEntity> mEntities = new ArrayList<>();
 	
 	// The canvas that is the display screen and JPanel that holds it	
-	private ThreeDimensionalEntityCanvas mCanvas;
+	private final ThreeDimensionalEntityCanvas CANVAS;
 
     // Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile ThreeDimensionalViewCamera mCamera;
@@ -77,7 +77,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		
 		
 		// Setup canvas
-		mCanvas = new ThreeDimensionalEntityCanvas(width, height, mCamera);
+		CANVAS = new ThreeDimensionalEntityCanvas(width, height, mCamera);
 		
 		
 		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
@@ -111,15 +111,15 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(controlPanel, BorderLayout.WEST);
-		contentPane.add(mCanvas, BorderLayout.CENTER);
+		contentPane.add(CANVAS, BorderLayout.CENTER);
 		pack();		
 		setVisible(true);	
 
 		// initialize the buffer of the canvas
-		mCanvas.initBuffer();
+		CANVAS.initBuffer();
 
         // Start the mCamera thread
-        Thread cameraThread = new Thread(new CameraRunnable(this, mCanvas, mCamera));
+        Thread cameraThread = new Thread(new CameraRunnable(this, CANVAS, mCamera));
         cameraThread.setPriority(Thread.MIN_PRIORITY);
         cameraThread.start();
 	}
@@ -262,7 +262,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	
 	public void setEntities(List<BasePhysicalEntity> entities) {
 		mEntities = entities;
-		mCanvas.setEntities(mEntities);
+		CANVAS.setEntities(mEntities);
 	}
 	
 	public void start() {

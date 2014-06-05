@@ -16,9 +16,9 @@ package display;
  */
 public abstract class SimulationRunnable implements Runnable {
 
-    protected ISimulationContainer mContainer;
+    protected final ISimulationContainer mContainer;
 
-    protected long cycleTime;
+    protected long mCycleTime;
 
     public SimulationRunnable(ISimulationContainer container) {
         mContainer = container;
@@ -26,21 +26,21 @@ public abstract class SimulationRunnable implements Runnable {
 
     @Override
     public void run() {
-        cycleTime = System.currentTimeMillis();
+        mCycleTime = System.currentTimeMillis();
 
         while (true)  {
 
             // Wait an appropriate amount of time, so that the frame rate is progressing constantly.
-            synchFramerate();
+            syncFrameRate();
 
             increment();
         }
     }
 
-    protected void synchFramerate() {
+    protected void syncFrameRate() {
 
-        cycleTime = cycleTime + mContainer.getFrameDelay();
-        long difference = cycleTime - System.currentTimeMillis();
+        mCycleTime = mCycleTime + mContainer.getFrameDelay();
+        long difference = mCycleTime - System.currentTimeMillis();
 
         try {
             // if frameDelay has already occurred since last cycle time, do not sleep.

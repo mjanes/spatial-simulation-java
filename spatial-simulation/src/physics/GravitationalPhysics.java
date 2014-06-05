@@ -1,6 +1,5 @@
 package physics;
 
-import java.util.Collection;
 import java.util.List;
 
 import entity.BasePhysicalEntity;
@@ -22,7 +21,7 @@ public class GravitationalPhysics {
     /**
      * Run round of physics
      *
-     * @param entities
+     * @param entities Entities to run universe physics on.
      */
     public static synchronized void updateUniverseState(List<BasePhysicalEntity> entities) {
         GravitationalPhysics.gravity(entities);
@@ -35,9 +34,9 @@ public class GravitationalPhysics {
 	 * I might want to rename this to threeDimensionalGravitationalPhysics to separate it from two dimensional objects. 
 	 * Might just have both in here for now.
 	 *
-	 * @param entities
+	 * @param entities Entities to run gravitational attraction on.
 	 */
-	public static void gravity(List<BasePhysicalEntity> entities) {
+	private static void gravity(List<BasePhysicalEntity> entities) {
         if (entities == null) return;
 
         int count = entities.size();
@@ -54,11 +53,11 @@ public class GravitationalPhysics {
      * F = G ((m1 * m2) / r ^ 2)
      *
      */
-    public static void gravitationallyAttract(BasePhysicalEntity object1, BasePhysicalEntity object2) {
+    private static void gravitationallyAttract(BasePhysicalEntity object1, BasePhysicalEntity object2) {
         // Distance between the two points
         double distance = BasePhysicalEntity.getDistance(object1, object2);
 
-        // Gravitational force that the two objects will impart on eachother
+        // Gravitational force that the two objects will impart on each other
         // apply Shell theorem
         double effectiveObject1Mass = getEffectiveMass(distance, object1.getRadius(), object1.getMass());
         double effectiveObject2Mass = getEffectiveMass(distance, object2.getRadius(), object2.getMass());

@@ -10,7 +10,7 @@ import physics.GravitationalPhysics;
 public class Setup {
 	
 	public static List<BasePhysicalEntity> create() {
-		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<>();
 		//entities.addAll(basicOrbitCouple());
 
 		entities.addAll(randomRotatingSetWithCenter(350));
@@ -23,7 +23,7 @@ public class Setup {
 	}
 	
 	private static ArrayList<BasePhysicalEntity> basicOrbitCouple() {
-		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<>();
 
         BasePhysicalEntity entityLarger = new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 10000);
 		entityLarger.applyForceX(-4000);
@@ -37,7 +37,7 @@ public class Setup {
 	}
 	
 	private static ArrayList<BasePhysicalEntity> randomRotatingSetWithCenter(int n) {
-		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<>();
 
         BasePhysicalEntity center = new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000000);
         entities.add(center);
@@ -71,7 +71,7 @@ public class Setup {
 	
 	
 	private static ArrayList<BasePhysicalEntity> grid(int x) {
-		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<>();
 		
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < x; j++) {
@@ -83,13 +83,13 @@ public class Setup {
 	}
 	
 	private static ArrayList<BasePhysicalEntity> point() {
-		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<>();
 		entities.add(new BasePhysicalEntity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
 		return entities;
 	}
 	
 	private static ArrayList<BasePhysicalEntity> cube() {
-		ArrayList<BasePhysicalEntity> entities = new ArrayList<BasePhysicalEntity>();
+		ArrayList<BasePhysicalEntity> entities = new ArrayList<>();
 		
 		BasePhysicalEntity a = new BasePhysicalEntity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);		
 		BasePhysicalEntity b = new BasePhysicalEntity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);
@@ -113,7 +113,7 @@ public class Setup {
 	}
 	
 	/**
-	 * Experiment with creating a parametized function for setting things up.
+	 * Experiment with creating a parameterized function for setting things up.
 	 * 
 	 * Will create entities, with some sort of spiral motion. Beyond that... probably a lot of variables I haven't
 	 * thought of yet.

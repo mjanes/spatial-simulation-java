@@ -36,7 +36,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
-	ArrayList<BasePhysicalEntity> mEntities = new ArrayList<BasePhysicalEntity>();
+	ArrayList<BasePhysicalEntity> mEntities = new ArrayList<>();
 
 	private BufferStrategy mStrategy;
 	
@@ -61,7 +61,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 *******************************************************************************************************/	
 
 	public void setEntities(Collection<BasePhysicalEntity> entities) {
-		mEntities = new ArrayList<BasePhysicalEntity>(entities);
+		mEntities = new ArrayList<>(entities);
 	}
 
 	/**
@@ -153,12 +153,24 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         g.drawLine((int) xP, (int) yP, (int) previousPoint.getX(), (int) previousPoint.getY());
     }
 
+    /**
+     * Looking into doing this all with matrix math for speed improvement.
+     *
+     * http://www.matrix44.net/cms/notes/opengl-3d-graphics/basic-3d-math-matrices
+     *
+     * @param camera
+     * @param canvasWidth
+     * @param canvasHeight
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
     private static Point2D.Double getCanvasLocation(ThreeDimensionalViewCamera camera, double canvasWidth, double canvasHeight, double x, double y, double z) {
         // Misc variables used for calculating rotations and projections
         double xP;
         double yP;
         double zP;
-        double angle;
         double cos;
         double sin;
         double tempX;
@@ -181,30 +193,30 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 
 
         // Perform the rotations on the various axes
-        // Note: Apparently order matters here, which I am somewhwat confused by.
+        // Note: Apparently order matters here, which I am somewhat confused by.
 
         // X axis rotation
-        angle = Math.toRadians(camera.getXAngle());
-        cos = Math.cos(angle);
-        sin = Math.sin(angle);
+        double xAngle = Math.toRadians(camera.getXAngle());
+        cos = Math.cos(xAngle);
+        sin = Math.sin(xAngle);
         tempY = yP * cos - zP * sin;
         tempZ = yP * sin + zP * cos;
         yP = tempY;
         zP = tempZ;
 
         // Y axis rotation
-        angle = Math.toRadians(camera.getYAngle());
-        cos = Math.cos(angle);
-        sin = Math.sin(angle);
+        double yAngle = Math.toRadians(camera.getYAngle());
+        cos = Math.cos(yAngle);
+        sin = Math.sin(yAngle);
         tempX = xP * cos - zP * sin;
         tempZ = xP * sin + zP * cos;
         xP = tempX;
         zP = tempZ;
 
         // Z axis rotation
-        angle = Math.toRadians(camera.getZAngle());
-        cos = Math.cos(angle);
-        sin = Math.sin(angle);
+        double zAngle = Math.toRadians(camera.getZAngle());
+        cos = Math.cos(zAngle);
+        sin = Math.sin(zAngle);
         tempX = xP * cos - yP * sin;
         tempY = xP * sin + yP * cos;
         xP = tempX;

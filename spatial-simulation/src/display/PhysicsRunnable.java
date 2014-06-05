@@ -1,6 +1,5 @@
 package display;
 
-import camera.ThreeDimensionalViewCamera;
 import entity.BasePhysicalEntity;
 import physics.GravitationalPhysics;
 
@@ -15,6 +14,7 @@ public class PhysicsRunnable extends SimulationRunnable {
 
     public PhysicsRunnable(ISimulationContainer container, List<BasePhysicalEntity> entities) {
         super(container);
+        if (entities == null) throw new IllegalArgumentException();
         mEntities = entities;
     }
 

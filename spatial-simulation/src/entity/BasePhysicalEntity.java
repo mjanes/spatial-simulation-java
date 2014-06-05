@@ -1,7 +1,5 @@
 package entity;
 
-import camera.ThreeDimensionalViewCamera;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +27,7 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	protected double mass = 1;
 	protected double density = 1;
 	
-	protected ArrayList<IConnectedEntity> connections = new ArrayList<IConnectedEntity>();
+	protected ArrayList<IConnectedEntity> connections = new ArrayList<>();
 
     private static final double DEFAULT_DENSITY = 200;
 
@@ -52,7 +50,7 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	public void setX(double x) { this.x = x; }
 	
 	@Override
-	public double getX() { return x; }	
+	public double getX() { return x; }
 	
 	@Override
 	public void setY(double y) { this.y = y; }
@@ -98,7 +96,7 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	@Override
 	public void moveX(double deltaX) {
 		prevX = x;
-		x += deltaX;	
+		x += deltaX;
 	}
 	
 	@Override
@@ -235,7 +233,7 @@ public class BasePhysicalEntity implements IThreeDimensionalEntity, IPhysicalEnt
 	
 	
 	/********************************************************************************
-	 * Label interface. Givving the entities labels for the moment to aid 
+	 * Label interface. Giving the entities labels for the moment to aid
 	 * 3d debugging.
 	 ********************************************************************************/
 
