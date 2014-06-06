@@ -3,6 +3,7 @@ package physics;
 import entity.Entity;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Do we want this to extend an interface of 'Physics'? Maybe? What do I want the base physics operation to be? Well, something that takes a
@@ -25,9 +26,8 @@ public class GravitationalPhysics {
      */
     public static synchronized void updateUniverseState(List<Entity> entities) {
         GravitationalPhysics.gravity(entities);
-        for (Entity entity : entities) {
-            entity.move();
-        }
+
+        entities.parallelStream().forEach(e -> e.move());
     }
 
 	/** 
@@ -40,11 +40,9 @@ public class GravitationalPhysics {
         if (entities == null) return;
 
         int count = entities.size();
-        for (int i = 0; i < count; i++) {
-            for (int j = i + 1; j < count; j++) {
-                gravitationallyAttract(entities.get(i), entities.get(j));
-            }
-        }
+        IntStream.range(0, count).parallel()
+                .forEach(i -> IntStream.range(i + 1, count)
+                    .forEach(j -> GravitationalPhysics.gravitationallyAttract(entities.get(i), entities.get(j))));
 	}
 
     /**

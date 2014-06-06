@@ -118,9 +118,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 		double canvasWidth = getWidth();
 		double canvasHeight = getHeight();
 
-        for (Entity entity : mEntities) {
-			paintEntity(g, mCamera, entity, canvasWidth, canvasHeight);
-		}		
+        mEntities.stream().forEach(e -> paintEntity(g, mCamera, e, canvasWidth, canvasHeight));
 	}
 
     private void paintEntity(Graphics g, Camera camera, Entity entity, double canvasWidth, double canvasHeight) {

@@ -3,6 +3,7 @@ package entity;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -12,8 +13,12 @@ import java.util.List;
  * 
  * @author mjanes
  */
-public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
-	
+public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled, Comparator<Entity> {
+
+    protected static int sMaxId = 0;
+
+    protected int mId;
+
 	protected double mX;
 	protected double mY;
 	protected double mZ;
@@ -50,7 +55,15 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
         mPrevX = x;
         mPrevY = y;
         mPrevZ = z;
+
+        mId = sMaxId;
+        sMaxId++;
 	}
+
+    public int getId() {
+        return mId;
+    }
+
 	
 	@Override
 	public void setX(double x) {
@@ -275,5 +288,10 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
     // Or git rid of the internal xyz values, and just have a point.
     public Entity getPrevLocationAsEntity() {
         return new Entity(getPrevX(), getPrevY(), getPrevZ());
+    }
+
+    @Override
+    public int compare(Entity o1, Entity o2) {
+        return o1.mId - o2.mId;
     }
 }
