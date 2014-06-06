@@ -3,7 +3,6 @@ package entity;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -33,15 +32,16 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	
 	protected double mMass = 1;
 	protected double mDensity = 1;
-	
+	protected double mRadius;
+
 	protected ArrayList<IConnectedEntity> mConnections = new ArrayList<>();
 
     private static final double DEFAULT_DENSITY = 200;
 
 	public Entity(double x, double y, double z, double mass) {
 		this(x, y, z);
-		mMass = mass;
-        mDensity = Math.sqrt(mass / DEFAULT_DENSITY);
+		setMass(mass);
+        setDensity(Math.sqrt(mass / DEFAULT_DENSITY));
 	}
 	
 	public Entity(double x, double y, double z) {
@@ -185,6 +185,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	@Override
 	public void setMass(double mass) {
 		mMass = mass;
+        setRadius();
 	}
 
 	@Override
@@ -195,19 +196,20 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	@Override
 	public void setDensity(double density) {
 		mDensity = density;
+        setRadius();
 	}
 	
-	/* 
-	 * Putting this in now for simple graphics
-	 */
 	public double getRadius() {
-		double volume = mMass / mDensity;
-		// volume = 4/3 * pi * r ^ 3
-		// r ^ 3 = volume / (4/3 * pi)
-		// r = cube root(volume / (4/3 * pi))
-		return Math.pow(((volume / (4.0/3 * Math.PI))), (1.0 / 3));
+		return mRadius;
 	}
-	
+
+    private void setRadius() {
+        double volume = mMass / mDensity;
+        // volume = 4/3 * pi * r ^ 3
+        // r ^ 3 = volume / (4/3 * pi)
+        // r = cube root(volume / (4/3 * pi))
+        mRadius = Math.pow(((volume / (4.0/3 * Math.PI))), (1.0 / 3));
+    }
 	
 	
 	/**********************************************************************************
