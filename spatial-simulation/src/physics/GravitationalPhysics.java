@@ -54,8 +54,7 @@ public class GravitationalPhysics {
         // Distance between the two points
         double distance = Entity.getDistance(object1, object2);
 
-        // Gravitational force that the two objects will impart on each other
-        // apply Shell theorem
+        // Gravitational force that the two objects will impart on each other apply Shell theorem
         double effectiveObject1Mass = getEffectiveMass(distance, object1.getRadius(), object1.getMass());
         double effectiveObject2Mass = getEffectiveMass(distance, object2.getRadius(), object2.getMass());
 

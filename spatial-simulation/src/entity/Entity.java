@@ -13,11 +13,7 @@ import java.util.List;
  * 
  * @author mjanes
  */
-public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled, Comparator<Entity> {
-
-    protected static int sMaxId = 0;
-
-    protected int mId;
+public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
 
 	protected double mX;
 	protected double mY;
@@ -55,16 +51,8 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
         mPrevX = x;
         mPrevY = y;
         mPrevZ = z;
-
-        mId = sMaxId;
-        sMaxId++;
 	}
 
-    public int getId() {
-        return mId;
-    }
-
-	
 	@Override
 	public void setX(double x) {
         mPrevX = mX;
@@ -290,8 +278,4 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
         return new Entity(getPrevX(), getPrevY(), getPrevZ());
     }
 
-    @Override
-    public int compare(Entity o1, Entity o2) {
-        return o1.mId - o2.mId;
-    }
 }
