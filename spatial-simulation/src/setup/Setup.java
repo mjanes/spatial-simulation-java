@@ -13,7 +13,7 @@ public class Setup {
 		ArrayList<Entity> entities = new ArrayList<>();
 		//entities.addAll(basicOrbitCouple());
 
-		entities.addAll(randomRotatingSetWithCenter(400));
+		entities.addAll(randomRotatingSetWithCenter(320));
 		
 		//entities.addAll(grid(10));
 		//entities.addAll(cube());

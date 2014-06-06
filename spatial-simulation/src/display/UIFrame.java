@@ -8,6 +8,7 @@ import setup.Setup;
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,15 +37,16 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	private static final long serialVersionUID = 1L;
 	
 	// Ideally, we don't want these static, but for convenience at the moment
-	private int mFrameDelay = 10; // Milliseconds between each frame painting
+	private int mFrameDelay = 30; // Milliseconds between each frame painting
 
     // Whether or not the universe is running
+    // Note that the camera is currently part of the universe
 	private boolean mRunning = true;
 	
 	private List<Entity> mEntities = new ArrayList<>();
 	
 	// The canvas that is the display screen and JPanel that holds it	
-	private final ThreeDimensionalEntityCanvas CANVAS;
+	private final ThreeDimensionalEntityCanvas mCanvas;
 
     // Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile Camera mCamera;
@@ -67,7 +69,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		
 		
 		// Setup canvas
-		CANVAS = new ThreeDimensionalEntityCanvas(width, height, mCamera);
+		mCanvas = new ThreeDimensionalEntityCanvas(width, height, mCamera);
 		
 		
 		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
@@ -101,15 +103,25 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(controlPanel, BorderLayout.WEST);
-		contentPane.add(CANVAS, BorderLayout.CENTER);
+		contentPane.add(mCanvas, BorderLayout.CENTER);
 		pack();		
 		setVisible(true);	
 
+        // Exit listener to force shutdown of universe thread on window close
+        WindowListener exitListener = new WindowAdapter() {
+
+            @Override
+            public void windowClosing(WindowEvent e) {
+                System.exit(1);
+            }
+        };
+        addWindowListener(exitListener);
+
 		// initialize the buffer of the canvas
-		CANVAS.initBuffer();
+		mCanvas.initBuffer();
 
         // Start the mCamera thread
-        Thread cameraThread = new Thread(new CameraRunnable(this, CANVAS, mCamera));
+        Thread cameraThread = new Thread(new CameraRunnable(this, mCanvas, mCamera));
         cameraThread.setPriority(Thread.MIN_PRIORITY);
         cameraThread.start();
 	}
@@ -138,8 +150,8 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		
         eastButton.addActionListener(e -> mCamera.addDeltaSelfX(CAMERA_ACCELERATION));
         westButton.addActionListener(e -> mCamera.addDeltaSelfX(-CAMERA_ACCELERATION));
-		northButton.addActionListener(e -> mCamera.addDeltaSelfY(-CAMERA_ACCELERATION));
-		southButton.addActionListener(e -> mCamera.addDeltaSelfY(CAMERA_ACCELERATION));
+		northButton.addActionListener(e -> mCamera.addDeltaSelfY(CAMERA_ACCELERATION));
+		southButton.addActionListener(e -> mCamera.addDeltaSelfY(-CAMERA_ACCELERATION));
 		forwardButton.addActionListener(e -> mCamera.addDeltaSelfZ(CAMERA_ACCELERATION));
 		backwardsButton.addActionListener(e -> mCamera.addDeltaSelfZ(-CAMERA_ACCELERATION));
 		
@@ -252,7 +264,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	
 	public void setEntities(List<Entity> entities) {
 		mEntities = entities;
-		CANVAS.setEntities(mEntities);
+		mCanvas.setEntities(mEntities);
 	}
 	
 	public void start() {
@@ -279,5 +291,8 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     public synchronized void setRunning(boolean running) {
         mRunning = running;
     }
+
+
+
 
 }

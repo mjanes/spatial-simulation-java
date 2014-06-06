@@ -47,6 +47,9 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
         setX(x);
         setY(y);
         setZ(z);
+        mPrevX = x;
+        mPrevY = y;
+        mPrevZ = z;
 	}
 	
 	@Override
@@ -268,7 +271,8 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
         return r4Matrix;
     }
 
-    // TODO: This will be called a lot, create a better way of doing this. Return point? W
+    // TODO: This will be called a lot, create a better way of doing this. Return point?
+    // Or git rid of the internal xyz values, and just have a point.
     public Entity getPrevLocationAsEntity() {
         return new Entity(getPrevX(), getPrevY(), getPrevZ());
     }

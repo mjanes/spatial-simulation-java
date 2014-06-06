@@ -28,7 +28,7 @@ public abstract class SimulationRunnable implements Runnable {
     public void run() {
         mCycleTime = System.currentTimeMillis();
 
-        while (true)  {
+        while (mContainer.isRunning())  {
 
             // Wait an appropriate amount of time, so that the frame rate is progressing constantly.
             syncFrameRate();
@@ -43,8 +43,13 @@ public abstract class SimulationRunnable implements Runnable {
         long difference = mCycleTime - System.currentTimeMillis();
 
         try {
-            // if frameDelay has already occurred since last cycle time, do not sleep.
-            Thread.sleep(Math.max(0,  difference));
+            // if frameDelay has already occurred since last cycle time, do not sleep. But log it as an error.
+            if (difference < 0) {
+                System.out.println("Time taken per cycle for " + this.getClass().getSimpleName() + " exceeded frame delay by " + -difference + " milliseconds.");
+                // Reset cycle time
+                mCycleTime = System.currentTimeMillis();
+            }
+            Thread.sleep(Math.max(0, difference));
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

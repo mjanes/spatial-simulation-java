@@ -163,11 +163,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
      * @return
      */
     private static Point2D.Double getCanvasLocation(Camera camera, double canvasWidth, double canvasHeight, Entity entity) {
-        // Misc variables used for calculating rotations and projections
-        double xP;
-        double yP;
-        double zP;
-        double distanceRatio;
+        if (entity == null) return null;
 
         /* Starting offset from camera
          * This is to set the camera at the center of things
@@ -194,16 +190,16 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         matrix = camera.performZRotation(matrix);
 
         // Rotation is complete
-        xP = matrix.getEntry(0, 0);
-        yP = matrix.getEntry(1, 0);
-        zP = matrix.getEntry(2, 0);
+        double xP = matrix.getEntry(0, 0);
+        double yP = matrix.getEntry(1, 0);
+        double zP = matrix.getEntry(2, 0);
 
         // Objects with a negative zP will not be displayed.
         // Objects with a 0 zP are assumed to be on the camera, covering the screen essentially
         if (zP < 0) return null;
 
         // Project onto viewing plane, ie the further away it is, the more it will appear towards the center
-        distanceRatio = EYE_DISTANCE / zP;
+        double distanceRatio = EYE_DISTANCE / zP;
         xP = xP * distanceRatio;
         yP = yP * distanceRatio;
 
