@@ -1,5 +1,6 @@
 package camera;
 
+import entity.Entity;
 import entity.IDimensionalEntity;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
@@ -32,7 +33,6 @@ public class Camera implements IDimensionalEntity {
         {0, 1, 0, 0},
         {0, 0, 1, 0},
         {0, 0, 0, 1}});
-	
 
 	// Orientation values
 	// All of these are angles
@@ -48,9 +48,26 @@ public class Camera implements IDimensionalEntity {
 	double mXAngle;
 	double mYAngle;
 	double mZAngle;
-	
-	
-	public Camera(double x, double y, double z) {
+
+    protected Array2DRowRealMatrix mXRotationMatrix = new Array2DRowRealMatrix(new double[][] {
+            {1, 0, 0, 0},
+            {0, Math.cos(-Math.toRadians(mXAngle)), Math.sin(Math.toRadians(mXAngle)), 0},
+            {0, Math.sin(-Math.toRadians(mXAngle)), -Math.cos(Math.toRadians(mXAngle)), 0},
+            {0, 0, 0, 1}});
+
+    protected Array2DRowRealMatrix mYRotationMatrix = new Array2DRowRealMatrix(new double[][] {
+            {-Math.cos(Math.toRadians(mYAngle)), 0, -Math.sin(Math.toRadians(mYAngle)), 0},
+            {0, 1, 0, 0},
+            {Math.sin(Math.toRadians(mYAngle)), 0, -Math.cos(Math.toRadians(mYAngle)), 0},
+            {0, 0, 0, 1}});
+
+    protected Array2DRowRealMatrix mZRotationMatrix = new Array2DRowRealMatrix(new double[][] {
+            {-Math.cos(Math.toRadians(mZAngle)), Math.sin(Math.toRadians(mZAngle)), 0, 0},
+            {-Math.sin(Math.toRadians(mYAngle)), -Math.cos(Math.toRadians(mYAngle)), 0, 0},
+            {0, 0, 1, 0},
+            {0, 0, 0, 1}});
+
+    public Camera(double x, double y, double z) {
 		mX = x;
 		mY = y;
 		mZ = z;
@@ -75,7 +92,7 @@ public class Camera implements IDimensionalEntity {
 	@Override
 	public void setX(double x) {
 		mX = x;
-        mTranslationMatrix.setEntry(0, 3, x);
+        mTranslationMatrix.setEntry(0, 3, -x);
 	}
 
 	@Override
@@ -106,7 +123,7 @@ public class Camera implements IDimensionalEntity {
 	@Override
 	public void setY(double y) {
 		mY = y;
-        mTranslationMatrix.setEntry(1, 3, y);
+        mTranslationMatrix.setEntry(1, 3, -y);
 	}
 
 	@Override
@@ -137,7 +154,7 @@ public class Camera implements IDimensionalEntity {
 	@Override
 	public void setZ(double z) {
 		mZ = z;
-        mTranslationMatrix.setEntry(2, 3, z);
+        mTranslationMatrix.setEntry(2, 3, -z);
 	}
 
 	@Override
@@ -193,6 +210,10 @@ public class Camera implements IDimensionalEntity {
 	public void incrementXAngle(double increment) {
 		mXAngle += increment;
 		mXAngle = mXAngle % 360;
+        mXRotationMatrix.setEntry(1, 1, -Math.cos(Math.toRadians(mXAngle)));
+        mXRotationMatrix.setEntry(1, 2, Math.sin(Math.toRadians(mXAngle)));
+        mXRotationMatrix.setEntry(2, 1, -Math.sin(Math.toRadians(mXAngle)));
+        mXRotationMatrix.setEntry(2, 2, -Math.cos(Math.toRadians(mXAngle)));
 	}
 	
 	public double getYAngle() {
@@ -202,6 +223,10 @@ public class Camera implements IDimensionalEntity {
 	public void incrementYAngle(double increment) {
 		mYAngle += increment;
 		mYAngle = mYAngle % 360;
+        mXRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mYAngle)));
+        mXRotationMatrix.setEntry(0, 2, -Math.sin(Math.toRadians(mYAngle)));
+        mXRotationMatrix.setEntry(2, 0, Math.sin(Math.toRadians(mYAngle)));
+        mXRotationMatrix.setEntry(2, 2, -Math.cos(Math.toRadians(mYAngle)));
 	}
 	
 	public double getZAngle() {
@@ -211,7 +236,11 @@ public class Camera implements IDimensionalEntity {
 	public void incrementZAngle(double increment) {
 		mZAngle += increment;
 		mZAngle = mZAngle % 360;
-	}
+        mXRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mZAngle)));
+        mXRotationMatrix.setEntry(0, 1, Math.sin(Math.toRadians(mZAngle)));
+        mXRotationMatrix.setEntry(1, 0, -Math.sin(Math.toRadians(mZAngle)));
+        mXRotationMatrix.setEntry(1, 1, -Math.cos(Math.toRadians(mZAngle)));
+    }
 	
 	
 	
@@ -327,13 +356,20 @@ public class Camera implements IDimensionalEntity {
      * Translation and rotation functions to take an entity and create output for use by the camera
      ***************************************************************************************************/
 
-    public Array2DRowRealMatrix translate(IDimensionalEntity entity) {
-        return mTranslationMatrix.multiply(getR4Matrix(entity));
+    public Array2DRowRealMatrix translate(Entity entity) {
+        return mTranslationMatrix.multiply(entity.getR4Matrix());
     }
 
-    // Possible to-do, put this inside Dimensional entity
-    private static Array2DRowRealMatrix getR4Matrix(IDimensionalEntity entity) {
-        return new Array2DRowRealMatrix(new double[]{entity.getX(), entity.getY(), entity.getZ(), 1});
+    public Array2DRowRealMatrix performXRotation(Array2DRowRealMatrix matrix) {
+        return mXRotationMatrix.multiply(matrix);
+    }
+
+    public Array2DRowRealMatrix performYRotation(Array2DRowRealMatrix matrix) {
+        return mYRotationMatrix.multiply(matrix);
+    }
+
+    public Array2DRowRealMatrix performZRotation(Array2DRowRealMatrix matrix) {
+        return mZRotationMatrix.multiply(matrix);
     }
 
 }

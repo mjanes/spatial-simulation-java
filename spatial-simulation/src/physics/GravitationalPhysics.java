@@ -51,7 +51,6 @@ public class GravitationalPhysics {
      * This calculates amount of force the puller object imparts on the pullee.
      *
      * F = G ((m1 * m2) / r ^ 2)
-     *
      */
     private static void gravitationallyAttract(Entity object1, Entity object2) {
         // Distance between the two points

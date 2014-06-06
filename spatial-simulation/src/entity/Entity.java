@@ -1,5 +1,7 @@
 package entity;
 
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,6 +17,10 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	protected double mX;
 	protected double mY;
 	protected double mZ;
+
+    protected Array2DRowRealMatrix r4Matrix = new Array2DRowRealMatrix(new double[] {0, 0, 0, 1});
+
+    // return new Array2DRowRealMatrix(new double[] {x, y, z, 1});
 	
 	protected double mPrevX;
 	protected double mPrevY;
@@ -38,18 +44,16 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	}
 	
 	public Entity(double x, double y, double z) {
-		mX = x;
-		mY = y;
-		mZ = z;
-		mPrevX = x;
-		mPrevY = y;
-		mPrevZ = z;
+        setX(x);
+        setY(y);
+        setZ(z);
 	}
 	
 	@Override
 	public void setX(double x) {
         mPrevX = mX;
         mX = x;
+        r4Matrix.setEntry(0, 0, x);
     }
 	
 	@Override
@@ -59,6 +63,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	public void setY(double y) {
         mPrevY = mY;
         mY = y;
+        r4Matrix.setEntry(1, 0, y);
     }
 	
 	@Override
@@ -68,6 +73,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	public void setZ(double z) {
         mPrevZ = mZ;
         mZ = z;
+        r4Matrix.setEntry(2, 0, z);
     }
 
 	@Override
@@ -252,6 +258,18 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	public String getLabel() {
 		return "x: " + mX + ", y: " + mY + ", z: " + mZ;
 	}
-	
-	
+
+
+    /******************************************************************************************************
+     * Matrix for display
+     ******************************************************************************************************/
+
+    public Array2DRowRealMatrix getR4Matrix() {
+        return r4Matrix;
+    }
+
+    // TODO: This will be called a lot, create a better way of doing this. Return point? W
+    public Entity getPrevLocationAsEntity() {
+        return new Entity(getPrevX(), getPrevY(), getPrevZ());
+    }
 }

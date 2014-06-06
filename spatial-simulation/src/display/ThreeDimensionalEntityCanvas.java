@@ -2,6 +2,7 @@ package display;
 
 import camera.Camera;
 import entity.Entity;
+import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -129,7 +130,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         int radius = (int) (entity.getRadius() * EYE_DISTANCE / camera.getDistance(entity));
         if (radius < 1) return;
 
-        Point2D.Double point = getCanvasLocation(camera, canvasWidth, canvasHeight, entity.getX(), entity.getY(), entity.getZ());
+        Point2D.Double point = getCanvasLocation(camera, canvasWidth, canvasHeight, entity);
         if (point == null) return;
 
         double xP = point.getX();
@@ -143,7 +144,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         //g.drawString("xP: " + xP + ", yP: " + yP, (int) xP + 5, (int) yP - 10);
 
         // Paint previous location, in order to get a sense of motion
-        Point2D.Double previousPoint = getCanvasLocation(camera, canvasWidth, canvasHeight, entity.getPrevX(), entity.getPrevY(), entity.getPrevZ());
+        Point2D.Double previousPoint = getCanvasLocation(camera, canvasWidth, canvasHeight, entity.getPrevLocationAsEntity());
         if (previousPoint == null) return;
 
         g.setColor(Color.RED);
@@ -158,21 +159,14 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
      * @param camera
      * @param canvasWidth
      * @param canvasHeight
-     * @param x
-     * @param y
-     * @param z
+     *
      * @return
      */
-    private static Point2D.Double getCanvasLocation(Camera camera, double canvasWidth, double canvasHeight, double x, double y, double z) {
+    private static Point2D.Double getCanvasLocation(Camera camera, double canvasWidth, double canvasHeight, Entity entity) {
         // Misc variables used for calculating rotations and projections
         double xP;
         double yP;
         double zP;
-        double cos;
-        double sin;
-        double tempX;
-        double tempY;
-        double tempZ;
         double distanceRatio;
 
         /* Starting offset from camera
@@ -184,43 +178,25 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
          * be in the lower right quadrant. 1, -1 would be in the upper right.
          * May want to undo that later...
          */
-        xP = x - camera.getX();
-        yP = y - camera.getY();
-        zP = z - camera.getZ();
+        Array2DRowRealMatrix matrix = camera.translate(entity);
 
 
         // Perform the rotations on the various axes
         // Note: Apparently order matters here, which I am somewhat confused by.
 
         // X axis rotation
-        double xAngle = Math.toRadians(camera.getXAngle());
-        cos = Math.cos(xAngle);
-        sin = Math.sin(xAngle);
-        tempY = yP * cos - zP * sin;
-        tempZ = yP * sin + zP * cos;
-        yP = tempY;
-        zP = tempZ;
+        matrix = camera.performXRotation(matrix);
 
         // Y axis rotation
-        double yAngle = Math.toRadians(camera.getYAngle());
-        cos = Math.cos(yAngle);
-        sin = Math.sin(yAngle);
-        tempX = xP * cos - zP * sin;
-        tempZ = xP * sin + zP * cos;
-        xP = tempX;
-        zP = tempZ;
+        matrix = camera.performYRotation(matrix);
 
         // Z axis rotation
-        double zAngle = Math.toRadians(camera.getZAngle());
-        cos = Math.cos(zAngle);
-        sin = Math.sin(zAngle);
-        tempX = xP * cos - yP * sin;
-        tempY = xP * sin + yP * cos;
-        xP = tempX;
-        yP = tempY;
-
+        matrix = camera.performZRotation(matrix);
 
         // Rotation is complete
+        xP = matrix.getEntry(0, 0);
+        yP = matrix.getEntry(1, 0);
+        zP = matrix.getEntry(2, 0);
 
         // Objects with a negative zP will not be displayed.
         // Objects with a 0 zP are assumed to be on the camera, covering the screen essentially
