@@ -7,7 +7,6 @@ import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 import java.awt.*;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -34,13 +33,11 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
-	ArrayList<Entity> mEntities = new ArrayList<>();
-
 	private BufferStrategy mStrategy;
 	
 	private Camera mCamera;
 	
-	public static final double EYE_DISTANCE = 3000;
+	public static final double EYE_DISTANCE = 5000;
 	
 	
 	/*******************************************************************************************************
@@ -57,10 +54,6 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	/*******************************************************************************************************
 	 * Utilities
 	 *******************************************************************************************************/	
-
-	public void setEntities(Collection<Entity> entities) {
-		mEntities = new ArrayList<>(entities);
-	}
 
 	/**
 	 * This must be in a separate method, and not the constructor, because this component must be laid out
@@ -79,10 +72,10 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 * Graphics
 	 ********************************************************************************************************/	
 
-	public void updateGraphics() {
+	public void updateGraphics(Collection<Entity> entities) {
 		Graphics g = mStrategy.getDrawGraphics();
 		
-		doPaint(g);
+		doPaint(g, entities);
 		g.dispose();
 		mStrategy.show();
 	}	
@@ -111,14 +104,16 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 *  
 	 * @param g
 	 */
-	private void doPaint(Graphics g) {
+	private void doPaint(Graphics g, Collection<Entity> entities) {
 		super.paint(g);
+
+        if (entities == null) return;
 
 		// Canvas width and height
 		double canvasWidth = getWidth();
 		double canvasHeight = getHeight();
 
-        mEntities.stream().forEach(e -> paintEntity(g, mCamera, e, canvasWidth, canvasHeight));
+        entities.stream().forEach(e -> paintEntity(g, mCamera, e, canvasWidth, canvasHeight));
 	}
 
     private void paintEntity(Graphics g, Camera camera, Entity entity, double canvasWidth, double canvasHeight) {

@@ -13,7 +13,7 @@ public class Setup {
 		ArrayList<Entity> entities = new ArrayList<>();
 		//entities.addAll(basicOrbitCouple());
 
-		entities.addAll(randomRotatingSetWithCenter(850));
+		entities.addAll(randomRotatingSetWithCenter(1000));
 		
 		//entities.addAll(grid(10));
 		//entities.addAll(cube());
@@ -39,11 +39,12 @@ public class Setup {
 	private static ArrayList<Entity> randomRotatingSetWithCenter(int n) {
 		ArrayList<Entity> entities = new ArrayList<>();
 
-        Entity center = new Entity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000000);
+        final double Z_DISTANCE = 20000;
+
+        Entity center = new Entity(0, 0, Z_DISTANCE, 1000000);
         entities.add(center);
 
-        final double rotationConstant = 1.0/200;
-		final double rotationFactor = GravitationalPhysics.GRAVITATIONAL_CONSTANT * Math.sqrt(center.getMass()) * rotationConstant;
+		final double rotationFactor = GravitationalPhysics.GRAVITATIONAL_CONSTANT * Math.sqrt(center.getMass()) * 2;
 
 		Entity newEntity;
         double mass;
@@ -52,15 +53,18 @@ public class Setup {
         double z;
         double forceX;
         double forceY;
+        int radius = 2000;
+        int zSpread = 10;
 		for (int i = 0; i < n; ++i) {
-            x = (Math.random() * 800) - 400;
-            y = (Math.random() * 800) - 400;
-            z = ThreeDimensionalEntityCanvas.EYE_DISTANCE + (Math.random() * 10) - 5;
-            mass = Math.random() * 1000;
-            forceX = -y * mass * Math.random() * rotationFactor;
-            forceY = x * mass * Math.random() * rotationFactor;
+            x = (Math.random() * radius) - radius / 2;
+            y = (Math.random() * radius) - radius / 2;
+            z = Z_DISTANCE + (Math.random() * zSpread) - zSpread / 2;
+            mass = Math.random() * 2000;
+            newEntity = new Entity(x, y, z, mass);
 
-			newEntity = new Entity(x, y, z, mass);
+            forceX = -y * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
+            forceY = x * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
+
 			newEntity.applyForceX(forceX);
 			newEntity.applyForceY(forceY);
 			entities.add(newEntity);

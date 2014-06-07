@@ -1,5 +1,11 @@
 package display;
 
+import camera.Camera;
+import entity.Entity;
+import physics.GravitationalPhysics;
+
+import java.util.List;
+
 /**
  * Running the universe and camera
  *
@@ -14,14 +20,21 @@ package display;
  *
  * Created by mjanes on 5/17/2014.
  */
-public abstract class SimulationRunnable implements Runnable {
+public class SimulationRunnable implements Runnable {
 
     protected final ISimulationContainer mContainer;
 
     protected long mCycleTime;
 
-    public SimulationRunnable(ISimulationContainer container) {
+    protected List<Entity> mEntities;
+    private ThreeDimensionalEntityCanvas mCanvas;
+    private Camera mCamera;
+
+    public SimulationRunnable(ISimulationContainer container, List<Entity> entities, ThreeDimensionalEntityCanvas canvas, Camera camera) {
         mContainer = container;
+        mEntities = entities;
+        mCanvas = canvas;
+        mCamera = camera;
     }
 
     @Override
@@ -55,10 +68,26 @@ public abstract class SimulationRunnable implements Runnable {
         }
     }
 
-    abstract protected void increment();
+    public void setEntities(List<Entity> entities) {
+        mEntities = entities;
+    }
+
+    protected void increment() {
+        // Perform physics simulations
+        if (mContainer.isRunning()) {
+            mEntities = GravitationalPhysics.updateUniverseState(mEntities);
+        }
+
+        // tell graphics to repaint
+        mCanvas.updateGraphics(mEntities);
+
+        // TODO: Perhaps create a separate pause camera button?
+        mCamera.move();
+    }
 
     public static interface ISimulationContainer {
         public int getFrameDelay();
         public boolean isRunning();
     }
+
 }

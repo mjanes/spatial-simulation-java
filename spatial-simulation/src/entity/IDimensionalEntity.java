@@ -25,4 +25,5 @@ public interface IDimensionalEntity {
 
     public void move();
 	public double getDistance(IDimensionalEntity other);
+    public void saveDistance(IDimensionalEntity other, double distance);
 }

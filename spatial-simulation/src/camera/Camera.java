@@ -5,6 +5,9 @@ import entity.IDimensionalEntity;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * A camera in three dimensional space.
  *
@@ -66,6 +69,10 @@ public class Camera implements IDimensionalEntity {
             {-Math.sin(Math.toRadians(mYAngle)), -Math.cos(Math.toRadians(mYAngle)), 0, 0},
             {0, 0, 1, 0},
             {0, 0, 0, 1}});
+
+
+    protected Map<IDimensionalEntity, Double> mDistanceRecord = new HashMap<>();
+
 
     public Camera(double x, double y, double z) {
 		mX = x;
@@ -187,16 +194,41 @@ public class Camera implements IDimensionalEntity {
 		moveX(mDeltaX);
 		moveY(mDeltaY);
 		moveZ(mDeltaZ);
+        mDistanceRecord = new HashMap<>();
 	}
-	
-	@Override
-	public double getDistance(IDimensionalEntity other) {
-		return Math.sqrt(
-				Math.pow((mX - other.getX()), 2) +
-				Math.pow((mY - other.getY()), 2) +
-				Math.pow((mZ - other.getZ()), 2)
-			);
-	}
+
+
+    /*******************************************************************************************************************
+     * Distance calculations
+     ******************************************************************************************************************/
+
+    @Override
+    public double getDistance(IDimensionalEntity other) {
+        Double recordedDistance = mDistanceRecord.get(other);
+        if (recordedDistance != null) return recordedDistance;
+
+        double distance = getDistance(this, other);
+        saveDistance(this, other, distance);
+        return distance;
+    }
+
+    @Override
+    public void saveDistance(IDimensionalEntity other, double distance) {
+        mDistanceRecord.put(other, distance);
+    }
+
+    private static void saveDistance(IDimensionalEntity a, IDimensionalEntity b, double distance) {
+        a.saveDistance(b, distance);
+        b.saveDistance(a, distance);
+    }
+
+    public static double getDistance(IDimensionalEntity a, IDimensionalEntity b) {
+        return Math.sqrt(
+                Math.pow((a.getX() - b.getX()), 2) +
+                        Math.pow((a.getY() - b.getY()), 2) +
+                        Math.pow((a.getZ() - b.getZ()), 2)
+        );
+    }
 	
 	
 	/*********************************************************************

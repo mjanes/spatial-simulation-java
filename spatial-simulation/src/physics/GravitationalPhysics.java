@@ -2,6 +2,7 @@ package physics;
 
 import entity.Entity;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -24,10 +25,40 @@ public class GravitationalPhysics {
      *
      * @param entities Entities to run universe physics on.
      */
-    public static synchronized void updateUniverseState(List<Entity> entities) {
+    public static synchronized List<Entity> updateUniverseState(List<Entity> entities) {
+        if (entities == null || entities.size() == 0) return entities;
+
+        entities = GravitationalPhysics.applyCollisions(entities);
+
         GravitationalPhysics.gravity(entities);
 
-        entities.parallelStream().forEach(e -> e.move());
+        entities.parallelStream().forEach(Entity::move);
+
+        return entities;
+    }
+
+    private static List<Entity> applyCollisions(List<Entity> entities) {
+        // Just going to brute force it at first.
+        ArrayList<Entity> result = new ArrayList<>();
+        int count = entities.size();
+        for (int i = 0; i < count; i++) {
+            Entity a = entities.get(i);
+            for (int j = i + 1; j < count; j++) {
+                Entity b = entities.get(j);
+
+                // If this triggers, there is a collision, restart.
+                if (a.isOverlapping(b)) {
+                    Entity resultantEntity = Entity.collide(a, b);
+                    entities.remove(a);
+                    entities.remove(b);
+                    entities.add(resultantEntity);
+                    i = 0;
+                    count = entities.size();
+                }
+            }
+        }
+
+        return entities;
     }
 
 	/** 
@@ -42,13 +73,13 @@ public class GravitationalPhysics {
         int count = entities.size();
         IntStream.range(0, count).parallel()
                 .forEach(i -> IntStream.range(i + 1, count)
-                    .forEach(j -> GravitationalPhysics.gravitationallyAttract(entities.get(i), entities.get(j))));
+                        .forEach(j -> GravitationalPhysics.gravitationallyAttract(entities.get(i), entities.get(j))));
 	}
 
     /**
      * This calculates amount of force the puller object imparts on the pullee.
      *
-     * F = G ((m1 * m2) / r ^ 2)
+     *
      */
     private static void gravitationallyAttract(Entity object1, Entity object2) {
         // Distance between the two points
@@ -58,15 +89,25 @@ public class GravitationalPhysics {
         double effectiveObject1Mass = getEffectiveMass(distance, object1.getRadius(), object1.getMass());
         double effectiveObject2Mass = getEffectiveMass(distance, object2.getRadius(), object2.getMass());
 
+        // Newton's law of universal gravitation
+        // F = G ((m1 * m2) / r ^ 2)
+        // https://en.wikipedia.org/wiki/Newton's_law_of_universal_gravitation
         double force = (GRAVITATIONAL_CONSTANT * effectiveObject1Mass * effectiveObject2Mass) / Math.pow(distance, 2);
 
-        // Not sure ratio is the proper term here, but the next block of lines is arrive at how the one dimensional
-        // force is translated into mX, mY, and mZ forces.
-        double ratio = force / distance;
 
-        double forceX = (object1.getX() - object2.getX()) * ratio;
-        double forceY = (object1.getY() - object2.getY()) * ratio;
-        double forceZ = (object1.getZ() - object2.getZ()) * ratio;
+        // Translate the force into x, y, and z parameters using 3D pythagorean theorem
+        // http://www.odeion.org/pythagoras/pythag3d.html
+        // force ^ 2 = forceX ^ 2 + forceY ^ 2 + forceZ ^ 2,
+        //  and forceX, forceY, forceZ are proportional to x, y, and z distance
+        double xDistance = object1.getX() - object2.getX();
+        double yDistance = object1.getY() - object2.getY();
+        double zDistance = object1.getZ() - object2.getZ();
+
+        double distanceForceRatio = force / distance;
+
+        double forceX = xDistance * distanceForceRatio;
+        double forceY = yDistance * distanceForceRatio;
+        double forceZ = zDistance * distanceForceRatio;
 
         object1.applyForceX(-forceX);
         object1.applyForceY(-forceY);

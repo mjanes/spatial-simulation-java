@@ -3,7 +3,9 @@ package entity;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Base physical entity for the physics sim. A sphereoid in three dimensional space. 
@@ -20,8 +22,6 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
     protected Array2DRowRealMatrix r4Matrix = new Array2DRowRealMatrix(new double[] {0, 0, 0, 1});
 
-    // return new Array2DRowRealMatrix(new double[] {x, y, z, 1});
-	
 	protected double mPrevX;
 	protected double mPrevY;
 	protected double mPrevZ;
@@ -36,7 +36,16 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
 	protected ArrayList<IConnectedEntity> mConnections = new ArrayList<>();
 
+    protected Map<IDimensionalEntity, Double> mDistanceRecord = new HashMap<>();
+
     private static final double DEFAULT_DENSITY = 200;
+
+    public Entity(double x, double y, double z, double deltaX, double deltaY, double deltaZ, double mass) {
+        this(x, y, z, mass);
+        setDeltaX(deltaX);
+        setDeltaY(deltaY);
+        setDeltaZ(deltaZ);
+    }
 
 	public Entity(double x, double y, double z, double mass) {
 		this(x, y, z);
@@ -170,6 +179,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 		moveX(mDeltaX);
 		moveY(mDeltaY);
 		moveZ(mDeltaZ);
+        mDistanceRecord = new HashMap<>();
 	}	
 	
 	
@@ -218,7 +228,22 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	
 	@Override
 	public double getDistance(IDimensionalEntity other) {
-		return getDistance(this, other);
+        Double recordedDistance = mDistanceRecord.get(other);
+        if (recordedDistance != null) return recordedDistance;
+
+		double distance = getDistance(this, other);
+        saveDistance(this, other, distance);
+        return distance;
+    }
+
+    @Override
+    public void saveDistance(IDimensionalEntity other, double distance) {
+        mDistanceRecord.put(other, distance);
+    }
+
+    private static void saveDistance(IDimensionalEntity a, IDimensionalEntity b, double distance) {
+        a.saveDistance(b, distance);
+        b.saveDistance(a, distance);
     }
 
     public static double getDistance(IDimensionalEntity a, IDimensionalEntity b) {
@@ -267,17 +292,40 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
 
     /******************************************************************************************************
-     * Matrix for display
+     * Display utilities
      ******************************************************************************************************/
 
     public Array2DRowRealMatrix getR4Matrix() {
         return r4Matrix;
     }
 
-    // TODO: This will be called a lot, create a better way of doing this. Return point?
-    // Or git rid of the internal xyz values, and just have a point.
     public Entity getPrevLocationAsEntity() {
         return new Entity(getPrevX(), getPrevY(), getPrevZ());
+    }
+
+
+    /****************************************************************************************************
+     * Collision utilities
+     ****************************************************************************************************/
+
+    public boolean isOverlapping(Entity other) {
+        return getDistance(other) < (getRadius() + other.getRadius());
+    }
+
+    public static Entity collide(Entity a, Entity b) {
+        double newMass = a.getMass() + b.getMass();
+        double aMassProportion = a.getMass() / newMass;
+        double bMassProportion = b.getMass() / newMass;
+
+        double newDeltaX = a.getDeltaX() * aMassProportion + b.getDeltaX() * bMassProportion;
+        double newDeltaY = a.getDeltaY() * aMassProportion + b.getDeltaY() * bMassProportion;
+        double newDeltaZ = a.getDeltaZ() * aMassProportion + b.getDeltaZ() * bMassProportion;
+
+        double newX = a.getX() * aMassProportion + b.getX() * bMassProportion;
+        double newY = a.getY() * aMassProportion + b.getY() * bMassProportion;
+        double newZ = a.getZ() * aMassProportion + b.getZ() * bMassProportion;
+
+        return new Entity(newX, newY, newZ, newDeltaX, newDeltaY, newDeltaZ, newMass);
     }
 
 }

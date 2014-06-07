@@ -51,10 +51,11 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     // Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile Camera mCamera;
 	
-	private static final double CAMERA_ACCELERATION = 0.1;
+	private static final double CAMERA_ACCELERATION = 0.2;
 	private static final int ANGLE_INCREMENT = 2;
 
     private Thread mUniverseThread;
+    private SimulationRunnable mSimulationRunnable;
 
 	/**
 	 * UI setup
@@ -121,7 +122,8 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		mCanvas.initBuffer();
 
         // Start the mCamera thread
-        Thread cameraThread = new Thread(new CameraRunnable(this, mCanvas, mCamera));
+        mSimulationRunnable = new SimulationRunnable(this, mEntities, mCanvas, mCamera);
+        Thread cameraThread = new Thread(mSimulationRunnable);
         cameraThread.setPriority(Thread.MIN_PRIORITY);
         cameraThread.start();
 	}
@@ -247,11 +249,8 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     public JPanel setupSetupPanel() {
         JPanel setupPanel = new JPanel(new FlowLayout());
 
-        JButton setupButton = new JButton("Setup");
-        setupButton.addActionListener(e -> setEntities(Setup.create()));
         JButton startButton = new JButton("Start");
-        startButton.addActionListener(e -> start());
-        setupPanel.add(setupButton);
+        startButton.addActionListener(e -> setEntities(Setup.create()));
         setupPanel.add(startButton);
 
         return setupPanel;
@@ -261,17 +260,12 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	/***************************************************************************************************
 	 * Utility/General
 	 **************************************************************************************************/
-	
+
 	public void setEntities(List<Entity> entities) {
 		mEntities = entities;
-		mCanvas.setEntities(mEntities);
-	}
-	
-	public void start() {
-        if (mUniverseThread != null) mUniverseThread.interrupt();
-        mUniverseThread = new Thread(new PhysicsRunnable(this, mEntities));
-		mUniverseThread.setPriority(Thread.MIN_PRIORITY);
-		mUniverseThread.start();
+		if (mSimulationRunnable != null) {
+            mSimulationRunnable.setEntities(mEntities);
+        }
 	}
 
     @Override
@@ -291,8 +285,5 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     public synchronized void setRunning(boolean running) {
         mRunning = running;
     }
-
-
-
 
 }
