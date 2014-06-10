@@ -1,6 +1,5 @@
 package setup;
 
-import display.ThreeDimensionalEntityCanvas;
 import entity.Entity;
 import physics.GravitationalPhysics;
 
@@ -13,7 +12,7 @@ public class Setup {
 		ArrayList<Entity> entities = new ArrayList<>();
 		//entities.addAll(basicOrbitCouple());
 
-		entities.addAll(setup(1500, 2000, 1000, 1, 500));
+		entities.addAll(setup(1500, 3000, 1500, 1, 500));
 		
 		//entities.addAll(grid(10));
 		//entities.addAll(cube());
@@ -78,18 +77,24 @@ public class Setup {
 //
 //		return entities;
 //	}
-	
-	/**
-	 * Experiment with creating a parameterized function for setting things up.
-	 * 
-	 * Will create entities, with some sort of spiral motion. Beyond that... probably a lot of variables I haven't
-	 * thought of yet.
-	 *
-	 */
-	public static ArrayList<Entity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
+
+    /**
+     *
+     * @param numEntities           Number of entities + one central entity, that will be created
+     * @param massDistribution      Mass of each entity, other than center, will be between 0 and massDistribution
+     * @param radius                Radius of the circle the entities will be uniformly distributed in.
+     * @param speedDistribution     A larger number makes the entities go faster, smaller goes slower. 1 is balanced to
+     *                              roughly make an entity with speed one half of speedDistribution item orbit the
+     *                              center mass according to Kepler's laws of planetary motion. Admittedly that math is
+     *                              fuzzy.
+     * @param xyTozRatio            Entities will be given a random z value between 0 and radius / xyTozRatio
+     *
+     * @return All entities
+     */
+	public static List<Entity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
         ArrayList<Entity> entities = new ArrayList<>();
 
-        final double Z_DISTANCE = 20000;
+        final double Z_DISTANCE = 25000; // distance the center object is from the user
 
         Entity center = new Entity(0, 0, Z_DISTANCE, 1000000);
         entities.add(center);
@@ -101,13 +106,13 @@ public class Setup {
         // https://en.wikipedia.org/wiki/Kepler's_laws_of_planetary_motion
         // v = Sqrt[(G M)/r].
 
-        final double rotationFactor = speedDistribution * (GravitationalPhysics.GRAVITATIONAL_CONSTANT / 2600) * (center.getMass() + (massDistribution * numEntities / 2));
+        final double rotationFactor;
+        final double modifiedGravitationalConstant = GravitationalPhysics.GRAVITATIONAL_CONSTANT / 3000;
+        rotationFactor = speedDistribution * modifiedGravitationalConstant * (center.getMass() + (massDistribution * numEntities / 2));
 
         for (int i = 0; i < numEntities; ++i) {
             double theta = Math.random() * 2 * Math.PI;
             double r = radius * Math.sqrt(Math.random());
-            //double x = (Math.random() * radius) - radius / 2;
-            //double y = (Math.random() * radius) - radius / 2;
             double x = center.getX() + r * Math.cos(theta);
             double y = center.getY() + r * Math.sin(theta);
             double z = Z_DISTANCE + (Math.random() * zDistribution) - zDistribution / 2;

@@ -2,7 +2,7 @@ package display;
 
 import camera.Camera;
 import entity.Entity;
-import physics.GravitationalPhysics;
+import physics.UniversePhysics;
 import setup.Setup;
 
 import javax.swing.*;
@@ -44,9 +44,6 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	private boolean mRunning = true;
 	
 	private List<Entity> mEntities = new ArrayList<>();
-	
-	// The canvas that is the display screen and JPanel that holds it	
-	private final ThreeDimensionalEntityCanvas mCanvas;
 
     // Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile Camera mCamera;
@@ -54,7 +51,6 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	private static final double CAMERA_ACCELERATION = 0.5;
 	private static final int ANGLE_INCREMENT = 2;
 
-    private Thread mUniverseThread;
     private SimulationRunnable mSimulationRunnable;
 
 	/**
@@ -70,7 +66,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		
 		
 		// Setup canvas
-		mCanvas = new ThreeDimensionalEntityCanvas(width, height, mCamera);
+        ThreeDimensionalEntityCanvas canvas = new ThreeDimensionalEntityCanvas(width, height, mCamera);
 		
 		
 		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
@@ -104,7 +100,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		Container contentPane = getContentPane();
 		contentPane.setLayout(new BorderLayout());
 		contentPane.add(controlPanel, BorderLayout.WEST);
-		contentPane.add(mCanvas, BorderLayout.CENTER);
+		contentPane.add(canvas, BorderLayout.CENTER);
 		pack();		
 		setVisible(true);	
 
@@ -119,10 +115,10 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
         addWindowListener(exitListener);
 
 		// initialize the buffer of the canvas
-		mCanvas.initBuffer();
+		canvas.initBuffer();
 
         // Start the mCamera thread
-        mSimulationRunnable = new SimulationRunnable(this, mEntities, mCanvas, mCamera);
+        mSimulationRunnable = new SimulationRunnable(this, mEntities, canvas, mCamera);
         Thread cameraThread = new Thread(mSimulationRunnable);
         cameraThread.setPriority(Thread.MIN_PRIORITY);
         cameraThread.start();
@@ -225,7 +221,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		JButton decreaseSpeedButton = new JButton("Decrease Speed");
 		
 		pauseUnpauseButton.addActionListener(e -> setRunning(!isRunning()));
-        incrementButton.addActionListener(e -> GravitationalPhysics.updateUniverseState(mEntities));
+        incrementButton.addActionListener(e -> UniversePhysics.updateUniverseState(mEntities));
 		increaseSpeedButton.addActionListener(e -> incrementFrameDelay(-1));
 		decreaseSpeedButton.addActionListener(e -> incrementFrameDelay(1));
 

@@ -121,7 +121,8 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         // Optimization, continue if the entity is too small and far away from the camera
         // so as to avoid all the expensive trig operations.
         int radius = (int) (entity.getRadius() * EYE_DISTANCE / camera.getDistance(entity));
-        if (radius < 1) return;
+        //if (radius < 1) return;
+        if (radius < 1) radius = 1;
 
         Point2D.Double point = getCanvasLocation(camera, canvasWidth, canvasHeight, entity);
         if (point == null) return;

@@ -19,55 +19,13 @@ public class GravitationalPhysics {
 	
 	public static final double GRAVITATIONAL_CONSTANT = .01;
 
-    /**
-     * Run round of physics
-     *
-     * @param entities Entities to run universe physics on.
-     */
-    public static synchronized List<Entity> updateUniverseState(List<Entity> entities) {
-        if (entities == null || entities.size() == 0) return entities;
-
-        entities = GravitationalPhysics.applyCollisions(entities);
-
-        GravitationalPhysics.gravity(entities);
-
-        entities.parallelStream().forEach(Entity::move);
-
-        return entities;
-    }
-
-    private static List<Entity> applyCollisions(List<Entity> entities) {
-
-        int count = entities.size();
-        for (int i = 0; i < count; i++) {
-            Entity a = entities.get(i);
-            for (int j = i + 1; j < count; j++) {
-                Entity b = entities.get(j);
-
-                // If this triggers, there is a collision, restart.
-                if (a.isOverlapping(b)) {
-                    Entity resultantEntity = Entity.collide(a, b);
-                    entities.remove(a);
-                    entities.remove(b);
-                    entities.add(resultantEntity);
-                    i -= 1;
-                    j -= 1;
-                    count = entities.size();
-                    break;
-                }
-            }
-        }
-
-        return entities;
-    }
-
 	/** 
 	 * I might want to rename this to threeDimensionalGravitationalPhysics to separate it from two dimensional objects. 
 	 * Might just have both in here for now.
 	 *
 	 * @param entities Entities to run gravitational attraction on.
 	 */
-	private static void gravity(List<Entity> entities) {
+	public static void gravity(List<Entity> entities) {
         if (entities == null) return;
 
         int count = entities.size();

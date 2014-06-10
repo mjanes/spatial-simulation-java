@@ -2,7 +2,7 @@ package display;
 
 import camera.Camera;
 import entity.Entity;
-import physics.GravitationalPhysics;
+import physics.UniversePhysics;
 
 import java.util.List;
 
@@ -58,7 +58,8 @@ public class SimulationRunnable implements Runnable {
         try {
             // if frameDelay has already occurred since last cycle time, do not sleep. But log it as an error.
             if (difference < 0) {
-                System.out.println("Time taken per cycle for " + this.getClass().getSimpleName() + " exceeded frame delay by " + -difference + " milliseconds.");
+                System.out.println("Time taken per cycle for " + this.getClass().getSimpleName() + " exceeded frame delay by " + -difference + " milliseconds. " +
+                        "Number of entities: " + mEntities.size());
                 // Reset cycle time
                 mCycleTime = System.currentTimeMillis();
             }
@@ -75,7 +76,7 @@ public class SimulationRunnable implements Runnable {
     protected void increment() {
         // Perform physics simulations
         if (mContainer.isRunning()) {
-            mEntities = GravitationalPhysics.updateUniverseState(mEntities);
+            mEntities = UniversePhysics.updateUniverseState(mEntities);
         }
 
         // tell graphics to repaint
