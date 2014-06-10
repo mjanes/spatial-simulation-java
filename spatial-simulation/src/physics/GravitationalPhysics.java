@@ -1,6 +1,7 @@
 package physics;
 
 import entity.Entity;
+import entity.IDimensionalEntity;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -41,7 +42,7 @@ public class GravitationalPhysics {
      */
     private static void gravitationallyAttract(Entity object1, Entity object2) {
         // Distance between the two points
-        double distance = Entity.getDistance(object1, object2);
+        double distance = IDimensionalEntity.getDistance(object1, object2);
 
         // Gravitational force that the two objects will impart on each other apply Shell theorem
         double effectiveObject1Mass = getEffectiveMass(distance, object1.getRadius(), object1.getMass());

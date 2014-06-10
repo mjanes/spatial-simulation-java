@@ -25,5 +25,13 @@ public interface IDimensionalEntity {
 
     public void move();
 	public double getDistance(IDimensionalEntity other);
-    public void saveDistance(IDimensionalEntity other, double distance);
+
+
+    public static double getDistance(IDimensionalEntity a, IDimensionalEntity b) {
+        return Math.sqrt(
+                Math.pow((a.getX() - b.getX()), 2) +
+                        Math.pow((a.getY() - b.getY()), 2) +
+                        Math.pow((a.getZ() - b.getZ()), 2)
+        );
+    }
 }

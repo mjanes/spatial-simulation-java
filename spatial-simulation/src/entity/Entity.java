@@ -36,8 +36,6 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
 	protected ArrayList<IConnectedEntity> mConnections = new ArrayList<>();
 
-    protected Map<IDimensionalEntity, Double> mDistanceRecord = new HashMap<>();
-
     private static final double DEFAULT_DENSITY = 300;
 
     public Entity(double x, double y, double z, double deltaX, double deltaY, double deltaZ, double mass) {
@@ -179,7 +177,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 		moveX(mDeltaX);
 		moveY(mDeltaY);
 		moveZ(mDeltaZ);
-        mDistanceRecord = new HashMap<>();
+        //mDistanceRecord = new HashMap<>();
 	}	
 	
 	
@@ -228,30 +226,8 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 	
 	@Override
 	public double getDistance(IDimensionalEntity other) {
-        Double recordedDistance = mDistanceRecord.get(other);
-        if (recordedDistance != null) return recordedDistance;
-
-		double distance = getDistance(this, other);
-        saveDistance(this, other, distance);
+		double distance = IDimensionalEntity.getDistance(this, other);
         return distance;
-    }
-
-    @Override
-    public void saveDistance(IDimensionalEntity other, double distance) {
-        mDistanceRecord.put(other, distance);
-    }
-
-    private static void saveDistance(IDimensionalEntity a, IDimensionalEntity b, double distance) {
-        a.saveDistance(b, distance);
-        b.saveDistance(a, distance);
-    }
-
-    public static double getDistance(IDimensionalEntity a, IDimensionalEntity b) {
-        return Math.sqrt(
-                Math.pow((a.getX() - b.getX()), 2) +
-                        Math.pow((a.getY() - b.getY()), 2) +
-                        Math.pow((a.getZ() - b.getZ()), 2)
-        );
     }
 
 

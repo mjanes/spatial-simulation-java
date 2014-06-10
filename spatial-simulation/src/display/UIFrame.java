@@ -37,7 +37,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	private static final long serialVersionUID = 1L;
 	
 	// Ideally, we don't want these static, but for convenience at the moment
-	private int mFrameDelay = 30; // Milliseconds between each frame painting
+	private int mFrameDelay = 80; // Milliseconds between each frame painting
 
     // Whether or not the universe is running
     // Note that the camera is currently part of the universe
