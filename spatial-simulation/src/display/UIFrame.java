@@ -51,7 +51,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     // Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile Camera mCamera;
 	
-	private static final double CAMERA_ACCELERATION = 0.2;
+	private static final double CAMERA_ACCELERATION = 0.5;
 	private static final int ANGLE_INCREMENT = 2;
 
     private Thread mUniverseThread;
@@ -219,21 +219,19 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	 */
 	private JPanel setupTimePanel() {
 		JPanel timePanel = new JPanel(new FlowLayout());
-		JButton pauseButton = new JButton("Pause");
+		JButton pauseUnpauseButton = new JButton("Pause/Unpause");
         JButton incrementButton = new JButton("Increment");
-		JButton playButton = new JButton("Play");
 		JButton increaseSpeedButton = new JButton("Increase Speed");
 		JButton decreaseSpeedButton = new JButton("Decrease Speed");
 		
-		pauseButton.addActionListener(e -> setRunning(false));
+		pauseUnpauseButton.addActionListener(e -> setRunning(!isRunning()));
         incrementButton.addActionListener(e -> GravitationalPhysics.updateUniverseState(mEntities));
-		playButton.addActionListener(e -> setRunning(true));
 		increaseSpeedButton.addActionListener(e -> incrementFrameDelay(-1));
 		decreaseSpeedButton.addActionListener(e -> incrementFrameDelay(1));
 
-		timePanel.add(pauseButton);
+		timePanel.add(pauseUnpauseButton);
         timePanel.add(incrementButton);
-		timePanel.add(playButton);
+
         // TODO: Display current speed.
 		timePanel.add(decreaseSpeedButton);
 		timePanel.add(increaseSpeedButton);

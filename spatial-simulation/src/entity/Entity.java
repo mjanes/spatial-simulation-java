@@ -38,7 +38,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
     protected Map<IDimensionalEntity, Double> mDistanceRecord = new HashMap<>();
 
-    private static final double DEFAULT_DENSITY = 200;
+    private static final double DEFAULT_DENSITY = 300;
 
     public Entity(double x, double y, double z, double deltaX, double deltaY, double deltaZ, double mass) {
         this(x, y, z, mass);

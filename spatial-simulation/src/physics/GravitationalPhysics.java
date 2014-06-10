@@ -2,7 +2,6 @@ package physics;
 
 import entity.Entity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -38,8 +37,7 @@ public class GravitationalPhysics {
     }
 
     private static List<Entity> applyCollisions(List<Entity> entities) {
-        // Just going to brute force it at first.
-        ArrayList<Entity> result = new ArrayList<>();
+
         int count = entities.size();
         for (int i = 0; i < count; i++) {
             Entity a = entities.get(i);
@@ -52,8 +50,10 @@ public class GravitationalPhysics {
                     entities.remove(a);
                     entities.remove(b);
                     entities.add(resultantEntity);
-                    i = 0;
+                    i -= 1;
+                    j -= 1;
                     count = entities.size();
+                    break;
                 }
             }
         }
