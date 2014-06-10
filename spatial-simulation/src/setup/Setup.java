@@ -12,7 +12,7 @@ public class Setup {
 		ArrayList<Entity> entities = new ArrayList<>();
 		//entities.addAll(basicOrbitCouple());
 
-		entities.addAll(setup(1500, 3000, 1500, 1, 500));
+		entities.addAll(setup(2000, 3000, 1500, 1, 500));
 		
 		//entities.addAll(grid(10));
 		//entities.addAll(cube());

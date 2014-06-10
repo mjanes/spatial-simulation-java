@@ -309,7 +309,11 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
      ****************************************************************************************************/
 
     public boolean isOverlapping(Entity other) {
-        return getDistance(other) < (getRadius() + other.getRadius());
+        double minDistance = getRadius() + other.getRadius();
+        if (Math.abs(getX() - other.getX()) > minDistance) return false;
+        if (Math.abs(getY() - other.getY()) > minDistance) return false;
+        if (Math.abs(getZ() - other.getZ()) > minDistance) return false;
+        return getDistance(other) < minDistance;
     }
 
     public static Entity collide(Entity a, Entity b) {
