@@ -4,7 +4,9 @@ import entity.Entity;
 import physics.GravitationalPhysics;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Setup {
 	
@@ -53,30 +55,32 @@ public class Setup {
 //		entities.add(new Entity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
 //		return entities;
 //	}
-//
-//	private static ArrayList<Entity> cube() {
-//		ArrayList<Entity> entities = new ArrayList<>();
-//
-//		Entity a = new Entity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);
-//		Entity b = new Entity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);
-//		Entity c = new Entity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);
-//		Entity d = new Entity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 1000, 500);
-//		Entity e = new Entity(-300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500);
-//		Entity f = new Entity(300, -300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500);
-//		Entity g = new Entity(-300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500);
-//		Entity h = new Entity(300, 300, ThreeDimensionalEntityCanvas.EYE_DISTANCE + 2000, 500);
-//
-//		entities.add(a);
-//		entities.add(b);
-//		entities.add(c);
-//		entities.add(d);
-//		entities.add(e);
-//		entities.add(f);
-//		entities.add(g);
-//		entities.add(h);
-//
-//		return entities;
-//	}
+
+	private static List<Entity> cube() {
+        final double Z_DISTANCE = 3000; // distance the center object is from the user
+
+        List<Entity> entities = new ArrayList<>();
+
+        Entity a = new Entity(-300, -300, Z_DISTANCE + 1000, 5000);
+		Entity b = new Entity(300, -300, Z_DISTANCE + 1000, 5000);
+		Entity c = new Entity(-300, 300, Z_DISTANCE + 1000, 5000);
+		Entity d = new Entity(300, 300, Z_DISTANCE + 1000, 5000);
+		Entity e = new Entity(-300, -300, Z_DISTANCE + 2000, 5000);
+		Entity f = new Entity(300, -300, Z_DISTANCE + 2000, 5000);
+		Entity g = new Entity(-300, 300, Z_DISTANCE + 2000, 5000);
+		Entity h = new Entity(300, 300, Z_DISTANCE + 2000, 5000);
+
+		entities.add(a);
+		entities.add(b);
+		entities.add(c);
+		entities.add(d);
+		entities.add(e);
+		entities.add(f);
+		entities.add(g);
+		entities.add(h);
+
+		return entities;
+	}
 
     /**
      *
@@ -92,7 +96,8 @@ public class Setup {
      * @return All entities
      */
 	public static List<Entity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
-        ArrayList<Entity> entities = new ArrayList<>();
+        List<Entity> entities = new ArrayList<>();
+
 
         final double Z_DISTANCE = 25000; // distance the center object is from the user
 
@@ -107,27 +112,34 @@ public class Setup {
         // v = Sqrt[(G M)/r].
 
         final double rotationFactor;
-        final double modifiedGravitationalConstant = GravitationalPhysics.GRAVITATIONAL_CONSTANT / 3000;
+        final double modifiedGravitationalConstant = GravitationalPhysics.GRAVITATIONAL_CONSTANT / 3500;
         rotationFactor = speedDistribution * modifiedGravitationalConstant * (center.getMass() + (massDistribution * numEntities / 2));
 
-        for (int i = 0; i < numEntities; ++i) {
-            double theta = Math.random() * 2 * Math.PI;
-            double r = radius * Math.sqrt(Math.random());
-            double x = center.getX() + r * Math.cos(theta);
-            double y = center.getY() + r * Math.sin(theta);
-            double z = Z_DISTANCE + (Math.random() * zDistribution) - zDistribution / 2;
-            double mass = Math.random() * massDistribution;
-            Entity newEntity = new Entity(x, y, z, mass);
+        long time = System.currentTimeMillis();
 
-            double forceX = -y * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
-            double forceY = x * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
-            double forceZ = Math.random() * zDistribution / 10;
+        IntStream.range(0, numEntities).
+                forEach(i -> {
 
-            newEntity.applyForceX(forceX);
-            newEntity.applyForceY(forceY);
-            newEntity.applyForceZ(forceZ);
-            entities.add(newEntity);
-        }
+                    double theta = Math.random() * 2 * Math.PI;
+                    double r = radius * Math.sqrt(Math.random());
+                    double x = center.getX() + r * Math.cos(theta);
+                    double y = center.getY() + r * Math.sin(theta);
+                    double z = Z_DISTANCE + (Math.random() * zDistribution) - zDistribution / 2;
+                    double mass = Math.random() * massDistribution;
+                    Entity newEntity = new Entity(x, y, z, mass);
+
+                    double forceX = -y * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
+                    double forceY = x * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
+                    double forceZ = Math.random() * zDistribution / 10;
+
+                    newEntity.applyForceX(forceX);
+                    newEntity.applyForceY(forceY);
+                    newEntity.applyForceZ(forceZ);
+                    entities.add(newEntity);
+                });
+
+
+        System.out.println("Contstruction time: " + (System.currentTimeMillis() - time));
 
         return entities;
 	}

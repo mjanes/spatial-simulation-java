@@ -45,13 +45,13 @@ public class GravitationalPhysics {
         double distance = IDimensionalEntity.getDistance(object1, object2);
 
         // Gravitational force that the two objects will impart on each other apply Shell theorem
-        double effectiveObject1Mass = getEffectiveMass(distance, object1.getRadius(), object1.getMass());
-        double effectiveObject2Mass = getEffectiveMass(distance, object2.getRadius(), object2.getMass());
+        //double effectiveObject1Mass = getEffectiveMass(distance, object1.getRadius(), object1.getMass());
+        //double effectiveObject2Mass = getEffectiveMass(distance, object2.getRadius(), object2.getMass());
 
         // Newton's law of universal gravitation
         // F = G ((m1 * m2) / r ^ 2)
         // https://en.wikipedia.org/wiki/Newton's_law_of_universal_gravitation
-        double force = (GRAVITATIONAL_CONSTANT * effectiveObject1Mass * effectiveObject2Mass) / Math.pow(distance, 2);
+        double force = (GRAVITATIONAL_CONSTANT * object1.getMass() * object2.getMass()) / Math.pow(distance, 2);
 
 
         // Translate the force into x, y, and z parameters using 3D pythagorean theorem
