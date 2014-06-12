@@ -174,10 +174,10 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		
 		JButton yAngleMinus = new JButton("yAngle minus");		
 		JButton xAngleMinus = new JButton("xAngle plus");
-		JButton xAnglePlus = new JButton("mXAngle minus");
-		JButton yAnglePlus = new JButton("mYAngle plus");
+		JButton xAnglePlus = new JButton("xAngle minus");
+		JButton yAnglePlus = new JButton("yAngle plus");
 		JButton zAngleMinus = new JButton("zAngle minus");
-		JButton zAnglePlus = new JButton("mZAngle Plus");
+		JButton zAnglePlus = new JButton("zAngle Plus");
 		
 		Dimension buttonDimension = new Dimension(66, 66);
 		yAngleMinus.setPreferredSize(buttonDimension);

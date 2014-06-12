@@ -228,10 +228,10 @@ public class Camera implements IDimensionalEntity {
 
     public void setYAngle(double yAngle) {
         mYAngle = yAngle % 360;
-        mXRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mYAngle)));
-        mXRotationMatrix.setEntry(0, 2, -Math.sin(Math.toRadians(mYAngle)));
-        mXRotationMatrix.setEntry(2, 0, Math.sin(Math.toRadians(mYAngle)));
-        mXRotationMatrix.setEntry(2, 2, -Math.cos(Math.toRadians(mYAngle)));
+        mYRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mYAngle)));
+        mYRotationMatrix.setEntry(0, 2, -Math.sin(Math.toRadians(mYAngle)));
+        mYRotationMatrix.setEntry(2, 0, Math.sin(Math.toRadians(mYAngle)));
+        mYRotationMatrix.setEntry(2, 2, -Math.cos(Math.toRadians(mYAngle)));
     }
 	
 	public void incrementYAngle(double increment) {
@@ -244,10 +244,10 @@ public class Camera implements IDimensionalEntity {
 
     public void setZAngle(double zAngle) {
         mZAngle = zAngle % 360;
-        mXRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mZAngle)));
-        mXRotationMatrix.setEntry(0, 1, Math.sin(Math.toRadians(mZAngle)));
-        mXRotationMatrix.setEntry(1, 0, -Math.sin(Math.toRadians(mZAngle)));
-        mXRotationMatrix.setEntry(1, 1, -Math.cos(Math.toRadians(mZAngle)));
+        mZRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mZAngle)));
+        mZRotationMatrix.setEntry(0, 1, Math.sin(Math.toRadians(mZAngle)));
+        mZRotationMatrix.setEntry(1, 0, -Math.sin(Math.toRadians(mZAngle)));
+        mZRotationMatrix.setEntry(1, 1, -Math.cos(Math.toRadians(mZAngle)));
     }
 	
 	public void incrementZAngle(double increment) {

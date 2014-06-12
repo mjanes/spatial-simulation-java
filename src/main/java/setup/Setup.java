@@ -8,7 +8,9 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 public class Setup {
-	
+
+    private static double sZDistance = 3000; // default distance from the user
+
 	public static List<Entity> create() {
 		ArrayList<Entity> entities = new ArrayList<>();
 		//entities.addAll(basicOrbitCouple());
@@ -35,39 +37,39 @@ public class Setup {
 //
 //        return entities;
 //	}
-//
-//
-//	private static ArrayList<entity.Entity> grid(int x) {
-//		ArrayList<entity.Entity> entities = new ArrayList<>();
-//
-//		for (int i = 0; i < x; i++) {
-//			for (int j = 0; j < x; j++) {
-//				entities.add(new entity.Entity((i - x / 2) * 100, (j - x / 2) * 100, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 200));
-//			}
-//		}
-//
-//		return entities;
-//	}
-//
-//	private static ArrayList<entity.Entity> point() {
-//		ArrayList<entity.Entity> entities = new ArrayList<>();
-//		entities.add(new entity.Entity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
-//		return entities;
-//	}
+
+
+	private static ArrayList<entity.Entity> grid(int x) {
+        sZDistance = 5000;
+
+		ArrayList<entity.Entity> entities = new ArrayList<>();
+
+		for (int i = 0; i < x; i++) {
+			for (int j = 0; j < x; j++) {
+				entities.add(new entity.Entity((i - x / 2) * 100, (j - x / 2) * 100, sZDistance, 200));
+			}
+		}
+
+		return entities;
+	}
+
+	private static ArrayList<entity.Entity> point() {
+		ArrayList<entity.Entity> entities = new ArrayList<>();
+		entities.add(new entity.Entity(0, 0, sZDistance, 1000));
+		return entities;
+	}
 
 	private static List<Entity> cube() {
-        final double Z_DISTANCE = 3000; // distance the center object is from the user
-
         List<Entity> entities = new ArrayList<>();
 
-        Entity a = new Entity(-300, -300, Z_DISTANCE + 1000, 5000);
-		Entity b = new Entity(300, -300, Z_DISTANCE + 1000, 5000);
-		Entity c = new Entity(-300, 300, Z_DISTANCE + 1000, 5000);
-		Entity d = new Entity(300, 300, Z_DISTANCE + 1000, 5000);
-		Entity e = new Entity(-300, -300, Z_DISTANCE + 2000, 5000);
-		Entity f = new Entity(300, -300, Z_DISTANCE + 2000, 5000);
-		Entity g = new Entity(-300, 300, Z_DISTANCE + 2000, 5000);
-		Entity h = new Entity(300, 300, Z_DISTANCE + 2000, 5000);
+        Entity a = new Entity(-300, -300, sZDistance + 1000, 5000);
+		Entity b = new Entity(300, -300, sZDistance + 1000, 5000);
+		Entity c = new Entity(-300, 300, sZDistance + 1000, 5000);
+		Entity d = new Entity(300, 300, sZDistance + 1000, 5000);
+		Entity e = new Entity(-300, -300, sZDistance + 2000, 5000);
+		Entity f = new Entity(300, -300, sZDistance + 2000, 5000);
+		Entity g = new Entity(-300, 300, sZDistance + 2000, 5000);
+		Entity h = new Entity(300, 300, sZDistance + 2000, 5000);
 
 		entities.add(a);
 		entities.add(b);
@@ -98,9 +100,9 @@ public class Setup {
         List<Entity> entities = new ArrayList<>();
 
 
-        final double Z_DISTANCE = 25000; // distance the center object is from the user
+        sZDistance = 25000; // distance the center object is from the user
 
-        Entity center = new Entity(0, 0, Z_DISTANCE, 1000000);
+        Entity center = new Entity(0, 0, sZDistance, 1000000);
         entities.add(center);
 
         double zDistribution = radius / xyTozRatio;
@@ -123,7 +125,7 @@ public class Setup {
                     double r = radius * Math.sqrt(Math.random());
                     double x = center.getX() + r * Math.cos(theta);
                     double y = center.getY() + r * Math.sin(theta);
-                    double z = Z_DISTANCE + (Math.random() * zDistribution) - zDistribution / 2;
+                    double z = sZDistance + (Math.random() * zDistribution) - zDistribution / 2;
                     double mass = Math.random() * massDistribution;
                     Entity newEntity = new Entity(x, y, z, mass);
 
