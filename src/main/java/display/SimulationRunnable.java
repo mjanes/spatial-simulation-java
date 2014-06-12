@@ -1,7 +1,7 @@
 package display;
 
-import camera.Camera;
 import entity.Entity;
+import camera.Camera;
 import physics.UniversePhysics;
 
 import java.util.List;

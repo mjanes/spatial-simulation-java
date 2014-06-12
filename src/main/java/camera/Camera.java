@@ -5,9 +5,6 @@ import entity.IDimensionalEntity;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * A camera in three dimensional space.
  *

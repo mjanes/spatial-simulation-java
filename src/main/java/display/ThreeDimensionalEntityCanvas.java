@@ -10,7 +10,7 @@ import java.awt.image.BufferStrategy;
 import java.util.Collection;
 
 /**
- * Canvas for displaying Entity objects in three dimensional space. 
+ * Canvas for displaying entity.Entity objects in three dimensional space.
  * 
  * The canvas is the projection plane, as seen from the Camera object.
  * The projection plane is assumed to be EYE_Z_DISTANCE units from the camera, as, I assumed that
@@ -130,7 +130,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         double xP = point.getX();
         double yP = point.getY();
 
-        // Entity color
+        // entity.Entity color
         g.setColor(Color.BLACK);
         // Subtract half the radius from the projection point, because g.fillOval does not surround the center point
         g.fillOval((int) xP - radius / 2, (int) yP - radius / 2, radius, radius);

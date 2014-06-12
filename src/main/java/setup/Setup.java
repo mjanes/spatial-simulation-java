@@ -4,7 +4,6 @@ import entity.Entity;
 import physics.GravitationalPhysics;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.IntStream;
 
@@ -23,14 +22,14 @@ public class Setup {
 		return entities;
 	}
 	
-//	private static ArrayList<Entity> basicOrbitCouple() {
-//		ArrayList<Entity> entities = new ArrayList<>();
+//	private static ArrayList<entity.Entity> basicOrbitCouple() {
+//		ArrayList<entity.Entity> entities = new ArrayList<>();
 //
-//        Entity entityLarger = new Entity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 10000);
+//        entity.Entity entityLarger = new entity.Entity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 10000);
 //		entityLarger.applyForceX(-4000);
 //        entities.add(entityLarger);
 //
-//        Entity entitySmaller = new Entity(-200, -200, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 500);
+//        entity.Entity entitySmaller = new entity.Entity(-200, -200, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 500);
 //        entitySmaller.applyForceX(4000);
 //        entities.add(entitySmaller);
 //
@@ -38,21 +37,21 @@ public class Setup {
 //	}
 //
 //
-//	private static ArrayList<Entity> grid(int x) {
-//		ArrayList<Entity> entities = new ArrayList<>();
+//	private static ArrayList<entity.Entity> grid(int x) {
+//		ArrayList<entity.Entity> entities = new ArrayList<>();
 //
 //		for (int i = 0; i < x; i++) {
 //			for (int j = 0; j < x; j++) {
-//				entities.add(new Entity((i - x / 2) * 100, (j - x / 2) * 100, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 200));
+//				entities.add(new entity.Entity((i - x / 2) * 100, (j - x / 2) * 100, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 200));
 //			}
 //		}
 //
 //		return entities;
 //	}
 //
-//	private static ArrayList<Entity> point() {
-//		ArrayList<Entity> entities = new ArrayList<>();
-//		entities.add(new Entity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
+//	private static ArrayList<entity.Entity> point() {
+//		ArrayList<entity.Entity> entities = new ArrayList<>();
+//		entities.add(new entity.Entity(0, 0, ThreeDimensionalEntityCanvas.EYE_DISTANCE, 1000));
 //		return entities;
 //	}
 

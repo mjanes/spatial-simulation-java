@@ -3,9 +3,7 @@ package entity;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Base physical entity for the physics sim. A sphereoid in three dimensional space. 
