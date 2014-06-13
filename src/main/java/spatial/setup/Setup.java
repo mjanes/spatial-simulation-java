@@ -1,7 +1,7 @@
-package setup;
+package spatial.setup;
 
-import entity.Entity;
-import physics.GravitationalPhysics;
+import spatial.entity.SpatialEntity;
+import spatial.physics.GravitationalPhysics;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ public class Setup {
 
     private static double sZDistance = 3000; // default distance from the user
 
-	public static List<Entity> create() {
-		ArrayList<Entity> entities = new ArrayList<>();
+	public static List<SpatialEntity> create() {
+		ArrayList<SpatialEntity> entities = new ArrayList<>();
 		//entities.addAll(basicOrbitCouple());
 
 		entities.addAll(setup(2000, 3000, 1500, 1, 500));
@@ -39,37 +39,37 @@ public class Setup {
 //	}
 
 
-	private static ArrayList<entity.Entity> grid(int x) {
+	private static ArrayList<SpatialEntity> grid(int x) {
         sZDistance = 5000;
 
-		ArrayList<entity.Entity> entities = new ArrayList<>();
+		ArrayList<SpatialEntity> entities = new ArrayList<>();
 
 		for (int i = 0; i < x; i++) {
 			for (int j = 0; j < x; j++) {
-				entities.add(new entity.Entity((i - x / 2) * 100, (j - x / 2) * 100, sZDistance, 200));
+				entities.add(new SpatialEntity((i - x / 2) * 100, (j - x / 2) * 100, sZDistance, 200));
 			}
 		}
 
 		return entities;
 	}
 
-	private static ArrayList<entity.Entity> point() {
-		ArrayList<entity.Entity> entities = new ArrayList<>();
-		entities.add(new entity.Entity(0, 0, sZDistance, 1000));
+	private static ArrayList<SpatialEntity> point() {
+		ArrayList<SpatialEntity> entities = new ArrayList<>();
+		entities.add(new SpatialEntity(0, 0, sZDistance, 1000));
 		return entities;
 	}
 
-	private static List<Entity> cube() {
-        List<Entity> entities = new ArrayList<>();
+	private static List<SpatialEntity> cube() {
+        List<SpatialEntity> entities = new ArrayList<>();
 
-        Entity a = new Entity(-300, -300, sZDistance + 1000, 5000);
-		Entity b = new Entity(300, -300, sZDistance + 1000, 5000);
-		Entity c = new Entity(-300, 300, sZDistance + 1000, 5000);
-		Entity d = new Entity(300, 300, sZDistance + 1000, 5000);
-		Entity e = new Entity(-300, -300, sZDistance + 2000, 5000);
-		Entity f = new Entity(300, -300, sZDistance + 2000, 5000);
-		Entity g = new Entity(-300, 300, sZDistance + 2000, 5000);
-		Entity h = new Entity(300, 300, sZDistance + 2000, 5000);
+        SpatialEntity a = new SpatialEntity(-300, -300, sZDistance + 1000, 5000);
+		SpatialEntity b = new SpatialEntity(300, -300, sZDistance + 1000, 5000);
+		SpatialEntity c = new SpatialEntity(-300, 300, sZDistance + 1000, 5000);
+		SpatialEntity d = new SpatialEntity(300, 300, sZDistance + 1000, 5000);
+		SpatialEntity e = new SpatialEntity(-300, -300, sZDistance + 2000, 5000);
+		SpatialEntity f = new SpatialEntity(300, -300, sZDistance + 2000, 5000);
+		SpatialEntity g = new SpatialEntity(-300, 300, sZDistance + 2000, 5000);
+		SpatialEntity h = new SpatialEntity(300, 300, sZDistance + 2000, 5000);
 
 		entities.add(a);
 		entities.add(b);
@@ -96,13 +96,13 @@ public class Setup {
      *
      * @return All entities
      */
-	public static List<Entity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
-        List<Entity> entities = new ArrayList<>();
+	public static List<SpatialEntity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
+        List<SpatialEntity> entities = new ArrayList<>();
 
 
         sZDistance = 25000; // distance the center object is from the user
 
-        Entity center = new Entity(0, 0, sZDistance, 1000000);
+        SpatialEntity center = new SpatialEntity(0, 0, sZDistance, 1000000);
         entities.add(center);
 
         double zDistribution = radius / xyTozRatio;
@@ -127,16 +127,16 @@ public class Setup {
                     double y = center.getY() + r * Math.sin(theta);
                     double z = sZDistance + (Math.random() * zDistribution) - zDistribution / 2;
                     double mass = Math.random() * massDistribution;
-                    Entity newEntity = new Entity(x, y, z, mass);
+                    SpatialEntity newSpatialEntity = new SpatialEntity(x, y, z, mass);
 
-                    double forceX = -y * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
-                    double forceY = x * mass * Math.random() * rotationFactor / center.getDistance(newEntity);
+                    double forceX = -y * mass * Math.random() * rotationFactor / center.getDistance(newSpatialEntity);
+                    double forceY = x * mass * Math.random() * rotationFactor / center.getDistance(newSpatialEntity);
                     double forceZ = Math.random() * zDistribution / 10;
 
-                    newEntity.applyForceX(forceX);
-                    newEntity.applyForceY(forceY);
-                    newEntity.applyForceZ(forceZ);
-                    entities.add(newEntity);
+                    newSpatialEntity.applyForceX(forceX);
+                    newSpatialEntity.applyForceY(forceY);
+                    newSpatialEntity.applyForceZ(forceZ);
+                    entities.add(newSpatialEntity);
                 });
 
 

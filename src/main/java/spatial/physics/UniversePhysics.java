@@ -1,6 +1,6 @@
-package physics;
+package spatial.physics;
 
-import entity.Entity;
+import spatial.entity.SpatialEntity;
 
 import java.util.List;
 
@@ -14,14 +14,14 @@ public class UniversePhysics {
      *
      * @param entities Entities to run universe physics on.
      */
-    public static synchronized List<Entity> updateUniverseState(List<Entity> entities) {
+    public static synchronized List<SpatialEntity> updateUniverseState(List<SpatialEntity> entities) {
         if (entities == null || entities.size() == 0) return entities;
 
         entities = CollisionPhysics.applyCollisions(entities);
 
         GravitationalPhysics.gravity(entities);
 
-        entities.parallelStream().forEach(Entity::move);
+        entities.parallelStream().forEach(SpatialEntity::move);
 
         return entities;
     }

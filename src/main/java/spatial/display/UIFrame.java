@@ -1,14 +1,16 @@
-package display;
+package spatial.display;
 
-import camera.Camera;
-import entity.Entity;
-import physics.UniversePhysics;
-import setup.Setup;
+import spatial.camera.Camera;
+import spatial.entity.SpatialEntity;
+import spatial.physics.UniversePhysics;
+import spatial.setup.Setup;
 
 import javax.swing.*;
 import javax.swing.plaf.basic.BasicArrowButton;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,7 +45,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     // Note that the camera is currently part of the universe
 	private boolean mRunning = true;
 	
-	private List<Entity> mEntities = new ArrayList<>();
+	private List<SpatialEntity> mEntities = new ArrayList<>();
 
     // Check if volatile is appropriate. Will affect the universe loop thread.
 	private volatile Camera mCamera;
@@ -66,7 +68,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 		
 		
 		// Setup canvas
-        ThreeDimensionalEntityCanvas canvas = new ThreeDimensionalEntityCanvas(width, height, mCamera);
+        SpatialEntityCanvas canvas = new SpatialEntityCanvas(width, height, mCamera);
 		
 		
 		// The navigation panel, which is responsible for moving around the universe, ie, changing how it
@@ -119,9 +121,9 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 
         // Start the mCamera thread
         mSimulationRunnable = new SimulationRunnable(this, mEntities, canvas, mCamera);
-        Thread cameraThread = new Thread(mSimulationRunnable);
-        cameraThread.setPriority(Thread.MIN_PRIORITY);
-        cameraThread.start();
+        Thread simulationThread = new Thread(mSimulationRunnable);
+        simulationThread.setPriority(Thread.MIN_PRIORITY);
+        simulationThread.start();
 	}
 	
 	
@@ -255,7 +257,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
 	 * Utility/General
 	 **************************************************************************************************/
 
-	public void setEntities(List<Entity> entities) {
+	public void setEntities(List<SpatialEntity> entities) {
 		mEntities = entities;
 		if (mSimulationRunnable != null) {
             mSimulationRunnable.setEntities(mEntities);

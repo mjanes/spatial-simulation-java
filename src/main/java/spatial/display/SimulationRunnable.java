@@ -1,8 +1,8 @@
-package display;
+package spatial.display;
 
-import entity.Entity;
-import camera.Camera;
-import physics.UniversePhysics;
+import spatial.camera.Camera;
+import spatial.entity.SpatialEntity;
+import spatial.physics.UniversePhysics;
 
 import java.util.List;
 
@@ -26,11 +26,11 @@ public class SimulationRunnable implements Runnable {
 
     protected long mCycleTime;
 
-    protected List<Entity> mEntities;
-    private ThreeDimensionalEntityCanvas mCanvas;
+    protected List<SpatialEntity> mEntities;
+    private SpatialEntityCanvas mCanvas;
     private Camera mCamera;
 
-    public SimulationRunnable(ISimulationContainer container, List<Entity> entities, ThreeDimensionalEntityCanvas canvas, Camera camera) {
+    public SimulationRunnable(ISimulationContainer container, List<SpatialEntity> entities, SpatialEntityCanvas canvas, Camera camera) {
         mContainer = container;
         mEntities = entities;
         mCanvas = canvas;
@@ -69,7 +69,7 @@ public class SimulationRunnable implements Runnable {
         }
     }
 
-    public void setEntities(List<Entity> entities) {
+    public void setEntities(List<SpatialEntity> entities) {
         mEntities = entities;
     }
 

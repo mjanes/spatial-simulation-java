@@ -1,6 +1,6 @@
-package main;
+package spatial.main;
 
-import display.UIFrame;
+import spatial.display.UIFrame;
 
 public class SpatialSimulation {
 	

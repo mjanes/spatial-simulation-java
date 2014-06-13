@@ -1,7 +1,7 @@
-package physics;
+package spatial.physics;
 
-import entity.Entity;
-import entity.IDimensionalEntity;
+import spatial.entity.IDimensionalEntity;
+import spatial.entity.SpatialEntity;
 
 import java.util.List;
 import java.util.stream.IntStream;
@@ -26,7 +26,7 @@ public class GravitationalPhysics {
 	 *
 	 * @param entities Entities to run gravitational attraction on.
 	 */
-	public static void gravity(List<Entity> entities) {
+	public static void gravity(List<SpatialEntity> entities) {
         if (entities == null) return;
 
         int count = entities.size();
@@ -40,7 +40,7 @@ public class GravitationalPhysics {
      *
      *
      */
-    private static void gravitationallyAttract(Entity object1, Entity object2) {
+    private static void gravitationallyAttract(SpatialEntity object1, SpatialEntity object2) {
         // Distance between the two points
         double distance = IDimensionalEntity.getDistance(object1, object2);
 

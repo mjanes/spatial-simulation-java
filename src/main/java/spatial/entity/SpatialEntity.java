@@ -1,4 +1,4 @@
-package entity;
+package spatial.entity;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
 
@@ -12,7 +12,7 @@ import java.util.List;
  * 
  * @author mjanes
  */
-public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
+public class SpatialEntity implements IMobileDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
 
 	protected double mX;
 	protected double mY;
@@ -36,20 +36,20 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
 
     private static final double DEFAULT_DENSITY = 300;
 
-    public Entity(double x, double y, double z, double deltaX, double deltaY, double deltaZ, double mass) {
+    public SpatialEntity(double x, double y, double z, double deltaX, double deltaY, double deltaZ, double mass) {
         this(x, y, z, mass);
         setDeltaX(deltaX);
         setDeltaY(deltaY);
         setDeltaZ(deltaZ);
     }
 
-	public Entity(double x, double y, double z, double mass) {
+	public SpatialEntity(double x, double y, double z, double mass) {
 		this(x, y, z);
 		setMass(mass);
         setDensity(Math.sqrt(mass / DEFAULT_DENSITY));
 	}
 	
-	public Entity(double x, double y, double z) {
+	public SpatialEntity(double x, double y, double z) {
         setX(x);
         setY(y);
         setZ(z);
@@ -269,12 +269,13 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
      * Display utilities
      ******************************************************************************************************/
 
+    @Override
     public Array2DRowRealMatrix getR4Matrix() {
         return r4Matrix;
     }
 
-    public Entity getPrevLocationAsEntity() {
-        return new Entity(getPrevX(), getPrevY(), getPrevZ());
+    public SpatialEntity getPrevLocationAsEntity() {
+        return new SpatialEntity(getPrevX(), getPrevY(), getPrevZ());
     }
 
 
@@ -282,7 +283,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
      * Collision utilities
      ****************************************************************************************************/
 
-    public boolean isOverlapping(Entity other) {
+    public boolean isOverlapping(SpatialEntity other) {
         double minDistance = getRadius() + other.getRadius();
         if (Math.abs(getX() - other.getX()) > minDistance) return false;
         if (Math.abs(getY() - other.getY()) > minDistance) return false;
@@ -290,7 +291,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
         return getDistance(other) < minDistance;
     }
 
-    public static Entity collide(Entity a, Entity b) {
+    public static SpatialEntity collide(SpatialEntity a, SpatialEntity b) {
         double newMass = a.getMass() + b.getMass();
         double aMassProportion = a.getMass() / newMass;
         double bMassProportion = b.getMass() / newMass;
@@ -303,7 +304,7 @@ public class Entity implements IDimensionalEntity, IPhysicalEntity, IConnectedEn
         double newY = a.getY() * aMassProportion + b.getY() * bMassProportion;
         double newZ = a.getZ() * aMassProportion + b.getZ() * bMassProportion;
 
-        return new Entity(newX, newY, newZ, newDeltaX, newDeltaY, newDeltaZ, newMass);
+        return new SpatialEntity(newX, newY, newZ, newDeltaX, newDeltaY, newDeltaZ, newMass);
     }
 
 }

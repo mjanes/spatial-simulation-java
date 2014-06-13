@@ -1,4 +1,4 @@
-package entity;
+package spatial.entity;
 
 public interface IPhysicalEntity {
 	public double getMass();

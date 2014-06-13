@@ -1,8 +1,8 @@
-package display;
+package spatial.display;
 
-import camera.Camera;
-import entity.Entity;
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import spatial.camera.Camera;
+import spatial.entity.SpatialEntity;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
@@ -29,7 +29,7 @@ import java.util.Collection;
  * @author mjanes
  *
  */
-public class ThreeDimensionalEntityCanvas extends Canvas {
+public class SpatialEntityCanvas extends Canvas {
 
 	private static final long serialVersionUID = 1L;
 
@@ -44,7 +44,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 * Constructors
 	 *******************************************************************************************************/
 	
-	public ThreeDimensionalEntityCanvas(int width, int height, Camera camera) {
+	public SpatialEntityCanvas(int width, int height, Camera camera) {
 		super();
 		setPreferredSize(new Dimension(width, height));		
 	    mCamera = camera;
@@ -72,10 +72,10 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 * Graphics
 	 ********************************************************************************************************/	
 
-	public void updateGraphics(Collection<Entity> entities) {
+	public void updateGraphics(Collection<SpatialEntity> entities) {
 		Graphics g = mStrategy.getDrawGraphics();
 		
-		doPaint(g, entities);
+		paintEntities(g, entities);
 		g.dispose();
 		mStrategy.show();
 	}	
@@ -104,7 +104,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
 	 *  
 	 * @param g
 	 */
-	private void doPaint(Graphics g, Collection<Entity> entities) {
+	private void paintEntities(Graphics g, Collection<SpatialEntity> entities) {
 		super.paint(g);
 
         if (entities == null) return;
@@ -116,15 +116,15 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         entities.stream().forEach(e -> paintEntity(g, mCamera, e, canvasWidth, canvasHeight));
 	}
 
-    private void paintEntity(Graphics g, Camera camera, Entity entity, double canvasWidth, double canvasHeight) {
+    private void paintEntity(Graphics g, Camera camera, SpatialEntity spatialEntity, double canvasWidth, double canvasHeight) {
         // Distance from camera to view plane is DEFAULT_EYE_Z_DISTANCE
         // Optimization, continue if the entity is too small and far away from the camera
         // so as to avoid all the expensive trig operations.
-        int radius = (int) (entity.getRadius() * EYE_DISTANCE / camera.getDistance(entity));
+        int radius = (int) (spatialEntity.getRadius() * EYE_DISTANCE / camera.getDistance(spatialEntity));
         //if (radius < 1) return;
         if (radius < 1) radius = 1;
 
-        Point2D.Double point = getCanvasLocation(camera, canvasWidth, canvasHeight, entity);
+        Point2D.Double point = getCanvasLocation(camera, canvasWidth, canvasHeight, spatialEntity);
         if (point == null) return;
 
         double xP = point.getX();
@@ -138,7 +138,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
         //g.drawString("xP: " + xP + ", yP: " + yP, (int) xP + 5, (int) yP - 10);
 
         // Paint previous location, in order to get a sense of motion
-        Point2D.Double previousPoint = getCanvasLocation(camera, canvasWidth, canvasHeight, entity.getPrevLocationAsEntity());
+        Point2D.Double previousPoint = getCanvasLocation(camera, canvasWidth, canvasHeight, spatialEntity.getPrevLocationAsEntity());
         if (previousPoint == null) return;
 
         g.setColor(Color.RED);
@@ -156,8 +156,8 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
      *
      * @return
      */
-    private static Point2D.Double getCanvasLocation(Camera camera, double canvasWidth, double canvasHeight, Entity entity) {
-        if (entity == null) return null;
+    private static Point2D.Double getCanvasLocation(Camera camera, double canvasWidth, double canvasHeight, SpatialEntity spatialEntity) {
+        if (spatialEntity == null) return null;
 
         /* Starting offset from camera
          * This is to set the camera at the center of things
@@ -168,7 +168,7 @@ public class ThreeDimensionalEntityCanvas extends Canvas {
          * be in the lower right quadrant. 1, -1 would be in the upper right.
          * May want to undo that later...
          */
-        Array2DRowRealMatrix matrix = camera.translate(entity);
+        Array2DRowRealMatrix matrix = camera.translate(spatialEntity);
 
 
         // Perform the rotations on the various axes

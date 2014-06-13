@@ -1,9 +1,8 @@
-package camera;
-
-import entity.Entity;
-import entity.IDimensionalEntity;
+package spatial.camera;
 
 import org.apache.commons.math3.linear.Array2DRowRealMatrix;
+import spatial.entity.IDimensionalEntity;
+import spatial.entity.IMobileDimensionalEntity;
 
 /**
  * A camera in three dimensional space.
@@ -17,7 +16,7 @@ import org.apache.commons.math3.linear.Array2DRowRealMatrix;
  * @author mjanes
  *
  */
-public class Camera implements IDimensionalEntity {
+public class Camera implements IMobileDimensionalEntity {
 	
 	protected double mX;
 	protected double mY;
@@ -201,8 +200,13 @@ public class Camera implements IDimensionalEntity {
         return distance;
     }
 
-	
-	/*********************************************************************
+    @Override
+    public Array2DRowRealMatrix getR4Matrix() {
+        return null;
+    }
+
+
+    /*********************************************************************
 	 * Angles
 	 *********************************************************************/
 	
@@ -368,8 +372,8 @@ public class Camera implements IDimensionalEntity {
      * Translation and rotation functions to take an entity and create output for use by the camera
      ***************************************************************************************************/
 
-    public Array2DRowRealMatrix translate(Entity entity) {
-        return mTranslationMatrix.multiply(entity.getR4Matrix());
+    public Array2DRowRealMatrix translate(IDimensionalEntity dimensionalEntity) {
+        return mTranslationMatrix.multiply(dimensionalEntity.getR4Matrix());
     }
 
     public Array2DRowRealMatrix performXRotation(Array2DRowRealMatrix matrix) {
