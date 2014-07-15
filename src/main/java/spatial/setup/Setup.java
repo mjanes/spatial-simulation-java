@@ -139,9 +139,6 @@ public class Setup {
                     entities.add(newSpatialEntity);
                 });
 
-
-        System.out.println("Contstruction time: " + (System.currentTimeMillis() - time));
-
         return entities;
 	}
 
