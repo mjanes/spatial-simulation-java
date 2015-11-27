@@ -11,110 +11,107 @@ import java.util.Collection;
 
 /**
  * Canvas for displaying entity.Entity objects in three dimensional space.
- * 
+ * <p>
  * The canvas is the projection plane, as seen from the Camera object.
  * The projection plane is assumed to be EYE_Z_DISTANCE units from the camera, as, I assumed that
- * was how far the an eye would be from the monitor, though as it is currently 400, it is not exactly 
+ * was how far the an eye would be from the monitor, though as it is currently 400, it is not exactly
  * accurate.
- * 
- * NOTE: I am not using a standard three dimensional coordinate system: 
+ * <p>
+ * NOTE: I am not using a standard three dimensional coordinate system:
  * https://en.wikipedia.org/wiki/Cartesian_coordinate_system
  * I am having the mX dimension be the left and right, mY dimension being up and down, and mZ dimension
  * being in and out.
- * Why on earth the standard three dimensional Cartesian coordinate system didn't take the two dimensional 
+ * <p>
+ * Why on earth the standard three dimensional Cartesian coordinate system didn't take the two dimensional
  * coordinate system and append a mZ axis to it, I have no idea, but that's the way I'm doing it for
  * now. May revise later, when I get fully away from the two dimensional entity canvas.
- * 
- * 
- * @author mjanes
- *
  */
 public class SpatialEntityCanvas extends Canvas {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private BufferStrategy mStrategy;
-	
-	private Camera mCamera;
-	
-	public static final double EYE_DISTANCE = 5000;
-	
-	
-	/*******************************************************************************************************
-	 * Constructors
-	 *******************************************************************************************************/
-	
-	public SpatialEntityCanvas(int width, int height, Camera camera) {
-		super();
-		setPreferredSize(new Dimension(width, height));		
-	    mCamera = camera;
-	}
-	
-	
-	/*******************************************************************************************************
-	 * Utilities
-	 *******************************************************************************************************/	
+    private BufferStrategy mStrategy;
 
-	/**
-	 * This must be in a separate method, and not the constructor, because this component must be laid out
-	 * before creating the buffer strategy.
-	 * 
-	 * I would like it if there were different lifecyle methods, akin to Android's onLayout, onCreateView, etc
-	 * that this could be put in, but, well, not sure those exist with swing and awt.
-	 */
-	public void initBuffer() {
-		createBufferStrategy(2);
-		mStrategy = getBufferStrategy();
-	}
-	
+    private Camera mCamera;
 
-	/********************************************************************************************************
-	 * Graphics
-	 ********************************************************************************************************/	
+    public static final double EYE_DISTANCE = 5000;
 
-	public void updateGraphics(Collection<SpatialEntity> entities) {
-		Graphics g = mStrategy.getDrawGraphics();
-		
-		paintEntities(g, entities);
-		g.dispose();
-		mStrategy.show();
-	}	
-	
-	
-	/**
-	 * Now this is probably going to be a good bit more complex than the TwoDimensionalEntityCanvas.
-	 * 
-	 * In order to get this running at some degree of efficiency, it looks like it's going to involve
-	 * a good deal of matrix math.
-	 * 
-	 * Referencing: 
-	 * 	https://en.wikipedia.org/wiki/3D_projection
-	 *  https://en.wikipedia.org/wiki/3D_projection#Perspective_projection
-	 *  https://en.wikipedia.org/wiki/Camera_matrix
-	 *  http://ogldev.atspace.co.uk/www/tutorial12/tutorial12.html
-	 *  https://en.wikipedia.org/wiki/Pinhole_camera_model
-	 *  https://en.wikipedia.org/wiki/Rotation_(mathematics)
-	 *  http://www.gamedev.net/topic/286454-simple-2d-point-rotation/
-	 *  https://stackoverflow.com/questions/7576263/simple-3d-projection-and-orientation-handling
-	 *  http://www.epixea.com/research/multi-view-coding-thesisse8.html
-	 *  http://www.csc.villanova.edu/~mdamian/Past/graphicsF10/notes/Projection.pdf
-	 *  https://en.wikipedia.org/wiki/Rotation_matrix
-	 *  https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions
-	 *  https://en.wikipedia.org/wiki/Euclidean_vector
-	 *  
-	 * @param g
-	 */
-	private void paintEntities(Graphics g, Collection<SpatialEntity> entities) {
-		super.paint(g);
+
+    /*******************************************************************************************************
+     * Constructors
+     *******************************************************************************************************/
+
+    public SpatialEntityCanvas(int width, int height, Camera camera) {
+        super();
+        setPreferredSize(new Dimension(width, height));
+        mCamera = camera;
+    }
+
+
+    /*******************************************************************************************************
+     * Utilities
+     *******************************************************************************************************/
+
+    /**
+     * This must be in a separate method, and not the constructor, because this component must be laid out
+     * before creating the buffer strategy.
+     * <p>
+     * I would like it if there were different lifecyle methods, akin to Android's onLayout, onCreateView, etc
+     * that this could be put in, but, well, not sure those exist with swing and awt.
+     */
+    public void initBuffer() {
+        createBufferStrategy(2);
+        mStrategy = getBufferStrategy();
+    }
+
+
+    /********************************************************************************************************
+     * Graphics
+     ********************************************************************************************************/
+
+    public void updateGraphics(Collection<SpatialEntity> entities) {
+        Graphics g = mStrategy.getDrawGraphics();
+
+        paintEntities(g, entities);
+        g.dispose();
+        mStrategy.show();
+    }
+
+
+    /**
+     * Now this is probably going to be a good bit more complex than the TwoDimensionalEntityCanvas.
+     * <p>
+     * In order to get this running at some degree of efficiency, it looks like it's going to involve
+     * a good deal of matrix math.
+     * <p>
+     * Referencing:
+     * https://en.wikipedia.org/wiki/3D_projection
+     * https://en.wikipedia.org/wiki/3D_projection#Perspective_projection
+     * https://en.wikipedia.org/wiki/Camera_matrix
+     * http://ogldev.atspace.co.uk/www/tutorial12/tutorial12.html
+     * https://en.wikipedia.org/wiki/Pinhole_camera_model
+     * https://en.wikipedia.org/wiki/Rotation_(mathematics)
+     * http://www.gamedev.net/topic/286454-simple-2d-point-rotation/
+     * https://stackoverflow.com/questions/7576263/simple-3d-projection-and-orientation-handling
+     * http://www.epixea.com/research/multi-view-coding-thesisse8.html
+     * http://www.csc.villanova.edu/~mdamian/Past/graphicsF10/notes/Projection.pdf
+     * https://en.wikipedia.org/wiki/Rotation_matrix
+     * https://en.wikipedia.org/wiki/Rotation_formalisms_in_three_dimensions
+     * https://en.wikipedia.org/wiki/Euclidean_vector
+     *
+     * @param g
+     */
+    private void paintEntities(Graphics g, Collection<SpatialEntity> entities) {
+        super.paint(g);
 
         if (entities == null) return;
 
-		// Canvas width and height
-		double canvasWidth = getWidth();
-		double canvasHeight = getHeight();
+        // Canvas width and height
+        double canvasWidth = getWidth();
+        double canvasHeight = getHeight();
 
         entities.stream().forEach(e -> paintEntity(g, mCamera, e, canvasWidth, canvasHeight));
-	}
+    }
 
     private void paintEntity(Graphics g, Camera camera, SpatialEntity spatialEntity, double canvasWidth, double canvasHeight) {
         // Distance from camera to view plane is DEFAULT_EYE_Z_DISTANCE
@@ -147,13 +144,12 @@ public class SpatialEntityCanvas extends Canvas {
 
     /**
      * Looking into doing this all with matrix math for speed improvement.
-     *
+     * <p>
      * http://www.matrix44.net/cms/notes/opengl-3d-graphics/basic-3d-math-matrices
      *
      * @param camera
      * @param canvasWidth
      * @param canvasHeight
-     *
      * @return
      */
     private static Point2D.Double getCanvasLocation(Camera camera, double canvasWidth, double canvasHeight, SpatialEntity spatialEntity) {

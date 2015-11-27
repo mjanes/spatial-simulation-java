@@ -10,35 +10,31 @@ import java.util.stream.IntStream;
  * Do we want this to extend an interface of 'Physics'? Maybe? What do I want the base physics operation to be? Well, something that takes a
  * collection of entities? And... hrm... how do we want that to work? I mean... so, all these objects are going to be passed as pointers, so, we
  * can edit the objects themselves. But, some of the entities might be destroyed or new ones created.
- * 
+ * <p>
  * Yeah, I suppose it would probably be cleaner to not have this be a separate class, but to put everything in the entities themselves. So...
  * well, makes it harder to use the same code for both this and for social network display, but that's probably just premature optimization.
- * 
- * @author mjanes
  */
 public class GravitationalPhysics {
-	
-	public static final double GRAVITATIONAL_CONSTANT = .01;
 
-	/** 
-	 * I might want to rename this to threeDimensionalGravitationalPhysics to separate it from two dimensional objects. 
-	 * Might just have both in here for now.
-	 *
-	 * @param entities Entities to run gravitational attraction on.
-	 */
-	public static void gravity(List<SpatialEntity> entities) {
+    public static final double GRAVITATIONAL_CONSTANT = .01;
+
+    /**
+     * I might want to rename this to threeDimensionalGravitationalPhysics to separate it from two dimensional objects.
+     * Might just have both in here for now.
+     *
+     * @param entities Entities to run gravitational attraction on.
+     */
+    public static void gravity(List<SpatialEntity> entities) {
         if (entities == null) return;
 
         int count = entities.size();
         IntStream.range(0, count).parallel()
                 .forEach(i -> IntStream.range(i + 1, count)
                         .forEach(j -> GravitationalPhysics.gravitationallyAttract(entities.get(i), entities.get(j))));
-	}
+    }
 
     /**
      * This calculates amount of force the puller object imparts on the pullee.
-     *
-     *
      */
     private static void gravitationallyAttract(SpatialEntity object1, SpatialEntity object2) {
         // Distance between the two points
@@ -78,11 +74,10 @@ public class GravitationalPhysics {
     }
 
     /**
-     *
      * However, it is not quite that simple. As we have not yet implemented collisions, and do not
      * want to depend upon collisions, we need to account for how the gravitation force exerted by
      * an object is reduced if you are inside that object.
-     *
+     * <p>
      * Reference: https://en.wikipedia.org/wiki/Shell_theorem
      */
     private static double getEffectiveMass(double distance, double radius, double mass) {

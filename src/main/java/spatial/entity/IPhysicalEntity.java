@@ -1,8 +1,11 @@
 package spatial.entity;
 
 public interface IPhysicalEntity {
-	public double getMass();
-	public void setMass(double mass);
-	public double getDensity();
-	public void setDensity(double density);	
+    double getMass();
+
+    void setMass(double mass);
+
+    double getDensity();
+
+    void setDensity(double density);
 }

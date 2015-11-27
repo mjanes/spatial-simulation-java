@@ -4,9 +4,6 @@ import spatial.entity.SpatialEntity;
 
 import java.util.List;
 
-/**
- * Created by mjanes on 6/10/2014.
- */
 public class CollisionPhysics {
 
     public static List<SpatialEntity> applyCollisions(List<SpatialEntity> entities) {

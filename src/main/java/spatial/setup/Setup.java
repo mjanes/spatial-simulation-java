@@ -11,19 +11,19 @@ public class Setup {
 
     private static double sZDistance = 3000; // default distance from the user
 
-	public static List<SpatialEntity> create() {
-		ArrayList<SpatialEntity> entities = new ArrayList<>();
-		//entities.addAll(basicOrbitCouple());
+    public static List<SpatialEntity> create() {
+        ArrayList<SpatialEntity> entities = new ArrayList<>();
+        //entities.addAll(basicOrbitCouple());
 
-		entities.addAll(setup(2000, 3000, 1500, 1, 500));
-		
-		//entities.addAll(grid(10));
-		//entities.addAll(cube());
-		//entities.addAll(point());
-		
-		return entities;
-	}
-	
+        entities.addAll(setup(2000, 3000, 1500, 1, 500));
+
+        //entities.addAll(grid(10));
+        //entities.addAll(cube());
+        //entities.addAll(point());
+
+        return entities;
+    }
+
 //	private static ArrayList<entity.Entity> basicOrbitCouple() {
 //		ArrayList<entity.Entity> entities = new ArrayList<>();
 //
@@ -39,64 +39,62 @@ public class Setup {
 //	}
 
 
-	private static ArrayList<SpatialEntity> grid(int x) {
+    private static ArrayList<SpatialEntity> grid(int x) {
         sZDistance = 5000;
 
-		ArrayList<SpatialEntity> entities = new ArrayList<>();
+        ArrayList<SpatialEntity> entities = new ArrayList<>();
 
-		for (int i = 0; i < x; i++) {
-			for (int j = 0; j < x; j++) {
-				entities.add(new SpatialEntity((i - x / 2) * 100, (j - x / 2) * 100, sZDistance, 200));
-			}
-		}
+        for (int i = 0; i < x; i++) {
+            for (int j = 0; j < x; j++) {
+                entities.add(new SpatialEntity((i - x / 2) * 100, (j - x / 2) * 100, sZDistance, 200));
+            }
+        }
 
-		return entities;
-	}
+        return entities;
+    }
 
-	private static ArrayList<SpatialEntity> point() {
-		ArrayList<SpatialEntity> entities = new ArrayList<>();
-		entities.add(new SpatialEntity(0, 0, sZDistance, 1000));
-		return entities;
-	}
+    private static ArrayList<SpatialEntity> point() {
+        ArrayList<SpatialEntity> entities = new ArrayList<>();
+        entities.add(new SpatialEntity(0, 0, sZDistance, 1000));
+        return entities;
+    }
 
-	private static List<SpatialEntity> cube() {
+    private static List<SpatialEntity> cube() {
         List<SpatialEntity> entities = new ArrayList<>();
 
         SpatialEntity a = new SpatialEntity(-300, -300, sZDistance + 1000, 5000);
-		SpatialEntity b = new SpatialEntity(300, -300, sZDistance + 1000, 5000);
-		SpatialEntity c = new SpatialEntity(-300, 300, sZDistance + 1000, 5000);
-		SpatialEntity d = new SpatialEntity(300, 300, sZDistance + 1000, 5000);
-		SpatialEntity e = new SpatialEntity(-300, -300, sZDistance + 2000, 5000);
-		SpatialEntity f = new SpatialEntity(300, -300, sZDistance + 2000, 5000);
-		SpatialEntity g = new SpatialEntity(-300, 300, sZDistance + 2000, 5000);
-		SpatialEntity h = new SpatialEntity(300, 300, sZDistance + 2000, 5000);
+        SpatialEntity b = new SpatialEntity(300, -300, sZDistance + 1000, 5000);
+        SpatialEntity c = new SpatialEntity(-300, 300, sZDistance + 1000, 5000);
+        SpatialEntity d = new SpatialEntity(300, 300, sZDistance + 1000, 5000);
+        SpatialEntity e = new SpatialEntity(-300, -300, sZDistance + 2000, 5000);
+        SpatialEntity f = new SpatialEntity(300, -300, sZDistance + 2000, 5000);
+        SpatialEntity g = new SpatialEntity(-300, 300, sZDistance + 2000, 5000);
+        SpatialEntity h = new SpatialEntity(300, 300, sZDistance + 2000, 5000);
 
-		entities.add(a);
-		entities.add(b);
-		entities.add(c);
-		entities.add(d);
-		entities.add(e);
-		entities.add(f);
-		entities.add(g);
-		entities.add(h);
+        entities.add(a);
+        entities.add(b);
+        entities.add(c);
+        entities.add(d);
+        entities.add(e);
+        entities.add(f);
+        entities.add(g);
+        entities.add(h);
 
-		return entities;
-	}
+        return entities;
+    }
 
     /**
-     *
-     * @param numEntities           Number of entities + one central entity, that will be created
-     * @param massDistribution      Mass of each entity, other than center, will be between 0 and massDistribution
-     * @param radius                Radius of the circle the entities will be uniformly distributed in.
-     * @param speedDistribution     A larger number makes the entities go faster, smaller goes slower. 1 is balanced to
-     *                              roughly make an entity with speed one half of speedDistribution item orbit the
-     *                              center mass according to Kepler's laws of planetary motion. Admittedly that math is
-     *                              fuzzy.
-     * @param xyTozRatio            Entities will be given a random z value between 0 and radius / xyTozRatio
-     *
+     * @param numEntities       Number of entities + one central entity, that will be created
+     * @param massDistribution  Mass of each entity, other than center, will be between 0 and massDistribution
+     * @param radius            Radius of the circle the entities will be uniformly distributed in.
+     * @param speedDistribution A larger number makes the entities go faster, smaller goes slower. 1 is balanced to
+     *                          roughly make an entity with speed one half of speedDistribution item orbit the
+     *                          center mass according to Kepler's laws of planetary motion. Admittedly that math is
+     *                          fuzzy.
+     * @param xyTozRatio        Entities will be given a random z value between 0 and radius / xyTozRatio
      * @return All entities
      */
-	public static List<SpatialEntity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
+    public static List<SpatialEntity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
         List<SpatialEntity> entities = new ArrayList<>();
 
 
@@ -115,8 +113,6 @@ public class Setup {
         final double rotationFactor;
         final double modifiedGravitationalConstant = GravitationalPhysics.GRAVITATIONAL_CONSTANT / 3500;
         rotationFactor = speedDistribution * modifiedGravitationalConstant * (center.getMass() + (massDistribution * numEntities / 2));
-
-        long time = System.currentTimeMillis();
 
         IntStream.range(0, numEntities).
                 forEach(i -> {
@@ -140,6 +136,6 @@ public class Setup {
                 });
 
         return entities;
-	}
+    }
 
 }

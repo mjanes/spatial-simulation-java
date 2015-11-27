@@ -8,17 +8,15 @@ import java.util.List;
 
 /**
  * Running the universe and camera
- *
+ * <p>
  * Learning about this from: http://www.javalobby.org/forums/thread.jspa?threadID=16867&tstart=0
- *
+ * <p>
  * Pieces/threads we need:
  * 1) Simulation logic of a given phase of the universe. Currently, that is applying gravity and moving the entities.
  * 2) Render the universe state. Does not have to be phase that was just simulated. Can be the previous phase, so
- * 	that those two phase have occurred on separate threads.
+ * that those two phase have occurred on separate threads.
  * 3) Sleep until a certain amount of time has passed, and then draw the graphics rendered in phase 2,
  * thus ensuring a consistent frame rate.
- *
- * Created by mjanes on 5/17/2014.
  */
 public class SimulationRunnable implements Runnable {
 
@@ -41,7 +39,7 @@ public class SimulationRunnable implements Runnable {
     public void run() {
         mCycleTime = System.currentTimeMillis();
 
-        while (mContainer.isRunning())  {
+        while (mContainer.isRunning()) {
 
             // Wait an appropriate amount of time, so that the frame rate is progressing constantly.
             syncFrameRate();
@@ -86,9 +84,10 @@ public class SimulationRunnable implements Runnable {
         mCamera.move();
     }
 
-    public static interface ISimulationContainer {
-        public int getFrameDelay();
-        public boolean isRunning();
+    public interface ISimulationContainer {
+        int getFrameDelay();
+
+        boolean isRunning();
     }
 
 }
