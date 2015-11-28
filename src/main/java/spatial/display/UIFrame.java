@@ -21,14 +21,18 @@ import java.util.List;
  * every other UI element is going to be attached to or inside of this one.
  * <p>
  * Current TODO:
- * Menu options
- * a) saving
- * b) loading
- * c) restarting the simulation
+ * 1. Menu options
+ *   a) saving
+ *   b) loading
+ *  c) restarting the simulation
  * <p>
- * And at some point I want to put in things that you can edit how Setup works from here... but I'm going to
+ * 2. At some point I want to put in things that you can edit how Setup works from here... but I'm going to
  * deal with that later.
  * <p>
+ * 3. Option to rotate world, as opposed to rotating the camera. Or, to rotate the camera around the world, aka the 0,0
+ * coordinate.
+ *
+ *
  * This is intended to be the controller in the MVP model.
  */
 public class UIFrame extends JFrame implements SimulationRunnable.ISimulationContainer {

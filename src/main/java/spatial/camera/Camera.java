@@ -249,6 +249,15 @@ public class Camera implements IMobileDimensionalEntity {
         setZAngle(mZAngle + increment);
     }
 
+    /**
+     * Get the angle between this entity, based on its location, the location of the other entity, and this entity's
+     * current rotation.
+     *
+     * TODO: How do we want to return this?
+     */
+    public ? getAngleTo(IDimensionalEntity other){
+
+    }
 
     /********************************************************************************
      * Incrementing angles relative to the orientation of the screen
@@ -281,19 +290,22 @@ public class Camera implements IMobileDimensionalEntity {
         incrementYAngle(yAngle);
     }
 
+    /**
+     * TODO: Check that past self knew what he was doing when wrote this
+     */
     public void incrementRelativeZAngle(double increment) {
         incrementZAngle(increment);
     }
 
 
-    /********************************************************************************
+    /****************************************************************************************************
      * Movement functions relative to the direction the camera is facing in.
      * <p>
      * After some initial math on this was broken, turning towards references:
      * http://www.mathsisfun.com/polar-cartesian-coordinates.html
      * https://en.wikipedia.org/wiki/Spherical_coordinate_system
      * https://en.wikipedia.org/wiki/List_of_common_coordinate_transformations#To_Cartesian_coordinates
-     ********************************************************************************/
+     *****************************************************************************************************/
 
     public void addDeltaSelfX(final double delta) {
         double deltaX;
@@ -356,6 +368,30 @@ public class Camera implements IMobileDimensionalEntity {
         addDeltaZ(deltaZ);
     }
 
+
+    /***************************************************************************************************
+     * Methods to rotate the camera around the origin
+     *
+     * May later wish to add methods that simultaneously do this, and rotate, so that the camera may
+     * maintain observation of something at the point
+     *
+     * Need to read through this more: https://en.wikipedia.org/wiki/Axes_conventions
+     ***************************************************************************************************/
+
+    public void moveNorthSouth(final double distance, double subjectX, double subjectY, double subjectZ){
+        // 1. Find the angle between the camera's location and the subject xyz
+        // 2. Add the appropriate deltas (Or just move xyz without delta)
+    }
+
+    public void moveEastWest(final double distance, double subjectX, double subjectY, double subjectZ){
+        // 1. Find the angle between the camera's location and the subject xyz
+        // 2. Add the appropriate deltas (Or just move xyz without delta)
+    }
+
+    public void moveUpDown(final double distance, double subjectX, double subjectY, double subjectZ){
+        // 1. Find the angle between the camera's location and the subject xyz
+        // 2. Add the appropriate deltas (Or just move xyz without delta)
+    }
 
     /***************************************************************************************************
      * Translation and rotation functions to take an entity and create output for use by the camera
