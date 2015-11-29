@@ -1,6 +1,8 @@
 apply plugin: 'java'
+compileJava {
+    sourceCompatibility = 1.8
+}
 
-sourceCompatibility = 1.8
 version = '1.0'
 
 repositories {
