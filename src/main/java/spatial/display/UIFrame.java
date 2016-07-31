@@ -45,12 +45,12 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     private List<SpatialEntity> mEntities = new ArrayList<>();
 
     // Check if volatile is appropriate. Will affect the universe loop thread.
-    private volatile Camera mCamera;
+    private final Camera mCamera;
 
     private static final double CAMERA_ACCELERATION = 0.5;
     private static final int ANGLE_INCREMENT = 2;
 
-    private SimulationRunnable mSimulationRunnable;
+    private final SimulationRunnable mSimulationRunnable;
 
     /**
      * UI setup
@@ -239,7 +239,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
     }
 
 
-    public JPanel setupSetupPanel() {
+    private JPanel setupSetupPanel() {
         JPanel setupPanel = new JPanel(new FlowLayout());
 
         JButton startButton = new JButton("Start");
@@ -254,7 +254,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
      * Utility/General
      **************************************************************************************************/
 
-    public void setEntities(List<SpatialEntity> entities) {
+    private void setEntities(List<SpatialEntity> entities) {
         mEntities = entities;
         if (mSimulationRunnable != null) {
             mSimulationRunnable.setEntities(mEntities);
@@ -266,7 +266,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
         return mFrameDelay;
     }
 
-    public synchronized void incrementFrameDelay(int increment) {
+    private synchronized void incrementFrameDelay(int increment) {
         mFrameDelay += increment;
     }
 
@@ -275,7 +275,7 @@ public class UIFrame extends JFrame implements SimulationRunnable.ISimulationCon
         return mRunning;
     }
 
-    public synchronized void setRunning(boolean running) {
+    private synchronized void setRunning(boolean running) {
         mRunning = running;
     }
 

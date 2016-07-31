@@ -1,6 +1,6 @@
 package spatial.entity;
 
-public interface IPhysicalEntity {
+interface IPhysicalEntity {
     double getMass();
 
     void setMass(double mass);

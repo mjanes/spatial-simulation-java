@@ -18,17 +18,17 @@ import java.util.List;
  * 3) Sleep until a certain amount of time has passed, and then draw the graphics rendered in phase 2,
  * thus ensuring a consistent frame rate.
  */
-public class SimulationRunnable implements Runnable {
+class SimulationRunnable implements Runnable {
 
-    protected final ISimulationContainer mContainer;
+    private final ISimulationContainer mContainer;
 
-    protected long mCycleTime;
+    private long mCycleTime;
 
-    protected List<SpatialEntity> mEntities;
-    private SpatialEntityCanvas mCanvas;
-    private Camera mCamera;
+    private List<SpatialEntity> mEntities;
+    private final SpatialEntityCanvas mCanvas;
+    private final Camera mCamera;
 
-    public SimulationRunnable(ISimulationContainer container, List<SpatialEntity> entities, SpatialEntityCanvas canvas, Camera camera) {
+    SimulationRunnable(ISimulationContainer container, List<SpatialEntity> entities, SpatialEntityCanvas canvas, Camera camera) {
         mContainer = container;
         mEntities = entities;
         mCanvas = canvas;
@@ -48,7 +48,7 @@ public class SimulationRunnable implements Runnable {
         }
     }
 
-    protected void syncFrameRate() {
+    private void syncFrameRate() {
 
         mCycleTime = mCycleTime + mContainer.getFrameDelay();
         long difference = mCycleTime - System.currentTimeMillis();
@@ -67,11 +67,11 @@ public class SimulationRunnable implements Runnable {
         }
     }
 
-    public void setEntities(List<SpatialEntity> entities) {
+    void setEntities(List<SpatialEntity> entities) {
         mEntities = entities;
     }
 
-    protected void increment() {
+    private void increment() {
         // Perform physics simulations
         if (mContainer.isRunning()) {
             mEntities = UniversePhysics.updateUniverseState(mEntities);
@@ -84,7 +84,7 @@ public class SimulationRunnable implements Runnable {
         mCamera.move();
     }
 
-    public interface ISimulationContainer {
+    interface ISimulationContainer {
         int getFrameDelay();
 
         boolean isRunning();

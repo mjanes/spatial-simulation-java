@@ -15,16 +15,16 @@ import spatial.entity.IMobileDimensionalEntity;
  */
 public class Camera implements IMobileDimensionalEntity {
 
-    protected double mX;
-    protected double mY;
-    protected double mZ;
+    private double mX;
+    private double mY;
+    private double mZ;
 
-    protected double mDeltaX;
-    protected double mDeltaY;
-    protected double mDeltaZ;
+    private double mDeltaX;
+    private double mDeltaY;
+    private double mDeltaZ;
 
     // Matrices for display math
-    protected Array2DRowRealMatrix mTranslationMatrix = new Array2DRowRealMatrix(new double[][]{
+    private final Array2DRowRealMatrix mTranslationMatrix = new Array2DRowRealMatrix(new double[][]{
             {1, 0, 0, 0},
             {0, 1, 0, 0},
             {0, 0, 1, 0},
@@ -41,23 +41,23 @@ public class Camera implements IMobileDimensionalEntity {
     // A point located at mX = 0, mY = 180, mZ = 0, would appear in the center of the field of view
 
     // Imagine each axis, and each of these angles as a clockwise rotation around that axis
-    double mXAngle;
-    double mYAngle;
-    double mZAngle;
+    private double mXAngle;
+    private double mYAngle;
+    private double mZAngle;
 
-    protected Array2DRowRealMatrix mXRotationMatrix = new Array2DRowRealMatrix(new double[][]{
+    private final Array2DRowRealMatrix mXRotationMatrix = new Array2DRowRealMatrix(new double[][]{
             {1, 0, 0, 0},
             {0, Math.cos(-Math.toRadians(mXAngle)), Math.sin(Math.toRadians(mXAngle)), 0},
             {0, Math.sin(-Math.toRadians(mXAngle)), -Math.cos(Math.toRadians(mXAngle)), 0},
             {0, 0, 0, 1}});
 
-    protected Array2DRowRealMatrix mYRotationMatrix = new Array2DRowRealMatrix(new double[][]{
+    private final Array2DRowRealMatrix mYRotationMatrix = new Array2DRowRealMatrix(new double[][]{
             {-Math.cos(Math.toRadians(mYAngle)), 0, -Math.sin(Math.toRadians(mYAngle)), 0},
             {0, 1, 0, 0},
             {Math.sin(Math.toRadians(mYAngle)), 0, -Math.cos(Math.toRadians(mYAngle)), 0},
             {0, 0, 0, 1}});
 
-    protected Array2DRowRealMatrix mZRotationMatrix = new Array2DRowRealMatrix(new double[][]{
+    private final Array2DRowRealMatrix mZRotationMatrix = new Array2DRowRealMatrix(new double[][]{
             {-Math.cos(Math.toRadians(mZAngle)), Math.sin(Math.toRadians(mZAngle)), 0, 0},
             {-Math.sin(Math.toRadians(mYAngle)), -Math.cos(Math.toRadians(mYAngle)), 0, 0},
             {0, 0, 1, 0},
@@ -68,7 +68,7 @@ public class Camera implements IMobileDimensionalEntity {
         this(x, y, z, 0, 0, 0);
     }
 
-    public Camera(double x, double y, double z, double xAngle, double yAngle, double zAngle) {
+    private Camera(double x, double y, double z, double xAngle, double yAngle, double zAngle) {
         mX = x;
         mY = y;
         mZ = z;
@@ -201,11 +201,11 @@ public class Camera implements IMobileDimensionalEntity {
      * Angles
      *********************************************************************/
 
-    public double getXAngle() {
+    private double getXAngle() {
         return mXAngle;
     }
 
-    public void setXAngle(double xAngle) {
+    private void setXAngle(double xAngle) {
         mXAngle = xAngle % 360;
         mXRotationMatrix.setEntry(1, 1, -Math.cos(Math.toRadians(mXAngle)));
         mXRotationMatrix.setEntry(1, 2, Math.sin(Math.toRadians(mXAngle)));
@@ -213,15 +213,15 @@ public class Camera implements IMobileDimensionalEntity {
         mXRotationMatrix.setEntry(2, 2, -Math.cos(Math.toRadians(mXAngle)));
     }
 
-    public void incrementXAngle(double increment) {
+    private void incrementXAngle(double increment) {
         setXAngle(mXAngle + increment);
     }
 
-    public double getYAngle() {
+    private double getYAngle() {
         return mYAngle;
     }
 
-    public void setYAngle(double yAngle) {
+    private void setYAngle(double yAngle) {
         mYAngle = yAngle % 360;
         mYRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mYAngle)));
         mYRotationMatrix.setEntry(0, 2, -Math.sin(Math.toRadians(mYAngle)));
@@ -229,15 +229,15 @@ public class Camera implements IMobileDimensionalEntity {
         mYRotationMatrix.setEntry(2, 2, -Math.cos(Math.toRadians(mYAngle)));
     }
 
-    public void incrementYAngle(double increment) {
+    private void incrementYAngle(double increment) {
         setYAngle(mYAngle + increment);
     }
 
-    public double getZAngle() {
+    private double getZAngle() {
         return mZAngle;
     }
 
-    public void setZAngle(double zAngle) {
+    private void setZAngle(double zAngle) {
         mZAngle = zAngle % 360;
         mZRotationMatrix.setEntry(0, 0, -Math.cos(Math.toRadians(mZAngle)));
         mZRotationMatrix.setEntry(0, 1, Math.sin(Math.toRadians(mZAngle)));
@@ -245,7 +245,7 @@ public class Camera implements IMobileDimensionalEntity {
         mZRotationMatrix.setEntry(1, 1, -Math.cos(Math.toRadians(mZAngle)));
     }
 
-    public void incrementZAngle(double increment) {
+    private void incrementZAngle(double increment) {
         setZAngle(mZAngle + increment);
     }
 

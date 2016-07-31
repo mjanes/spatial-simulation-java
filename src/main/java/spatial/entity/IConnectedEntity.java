@@ -11,7 +11,7 @@ import java.util.List;
  * TODO: Graphically display connections, which, given how entities don't know where they
  * will be displayed on screen, is going to require some rethinking of the entity canvases.
  */
-public interface IConnectedEntity {
+interface IConnectedEntity {
 
     void addConnection(IConnectedEntity entity);
 

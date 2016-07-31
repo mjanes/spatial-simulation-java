@@ -26,15 +26,15 @@ import java.util.Collection;
  * coordinate system and append a mZ axis to it, I have no idea, but that's the way I'm doing it for
  * now. May revise later, when I get fully away from the two dimensional entity canvas.
  */
-public class SpatialEntityCanvas extends Canvas {
+class SpatialEntityCanvas extends Canvas {
 
     private static final long serialVersionUID = 1L;
 
     private BufferStrategy mStrategy;
 
-    private Camera mCamera;
+    private final Camera mCamera;
 
-    public static final double EYE_DISTANCE = 5000;
+    private static final double EYE_DISTANCE = 5000;
 
 
     /*******************************************************************************************************
@@ -110,7 +110,7 @@ public class SpatialEntityCanvas extends Canvas {
         double canvasWidth = getWidth();
         double canvasHeight = getHeight();
 
-        entities.stream().forEach(e -> paintEntity(g, mCamera, e, canvasWidth, canvasHeight));
+        entities.forEach(e -> paintEntity(g, mCamera, e, canvasWidth, canvasHeight));
     }
 
     private void paintEntity(Graphics g, Camera camera, SpatialEntity spatialEntity, double canvasWidth, double canvasHeight) {

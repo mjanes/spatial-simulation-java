@@ -1,6 +1,6 @@
 package spatial.entity;
 
-public interface ILabeled {
+interface ILabeled {
 
     boolean hasLabel();
 

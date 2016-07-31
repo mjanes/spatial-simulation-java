@@ -94,7 +94,7 @@ public class Setup {
      * @param xyTozRatio        Entities will be given a random z value between 0 and radius / xyTozRatio
      * @return All entities
      */
-    public static List<SpatialEntity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
+    private static List<SpatialEntity> setup(int numEntities, double massDistribution, double radius, double speedDistribution, double xyTozRatio) {
         List<SpatialEntity> entities = new ArrayList<>();
 
 

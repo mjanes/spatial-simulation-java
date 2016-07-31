@@ -12,29 +12,29 @@ import java.util.List;
  */
 public class SpatialEntity implements IMobileDimensionalEntity, IPhysicalEntity, IConnectedEntity, ILabeled {
 
-    protected double mX;
-    protected double mY;
-    protected double mZ;
+    private double mX;
+    private double mY;
+    private double mZ;
 
-    protected Array2DRowRealMatrix r4Matrix = new Array2DRowRealMatrix(new double[]{0, 0, 0, 1});
+    private final Array2DRowRealMatrix r4Matrix = new Array2DRowRealMatrix(new double[]{0, 0, 0, 1});
 
-    protected double mPrevX;
-    protected double mPrevY;
-    protected double mPrevZ;
+    private double mPrevX;
+    private double mPrevY;
+    private double mPrevZ;
 
-    protected double mDeltaX;
-    protected double mDeltaY;
-    protected double mDeltaZ;
+    private double mDeltaX;
+    private double mDeltaY;
+    private double mDeltaZ;
 
-    protected double mMass = 1;
-    protected double mDensity = 1;
-    protected double mRadius;
+    private double mMass = 1;
+    private double mDensity = 1;
+    private double mRadius;
 
-    protected ArrayList<IConnectedEntity> mConnections = new ArrayList<>();
+    private final ArrayList<IConnectedEntity> mConnections = new ArrayList<>();
 
     private static final double DEFAULT_DENSITY = 300;
 
-    public SpatialEntity(double x, double y, double z, double deltaX, double deltaY, double deltaZ, double mass) {
+    private SpatialEntity(double x, double y, double z, double deltaX, double deltaY, double deltaZ, double mass) {
         this(x, y, z, mass);
         setDeltaX(deltaX);
         setDeltaY(deltaY);
@@ -47,7 +47,7 @@ public class SpatialEntity implements IMobileDimensionalEntity, IPhysicalEntity,
         setDensity(Math.sqrt(mass / DEFAULT_DENSITY));
     }
 
-    public SpatialEntity(double x, double y, double z) {
+    private SpatialEntity(double x, double y, double z) {
         setX(x);
         setY(y);
         setZ(z);
@@ -97,15 +97,15 @@ public class SpatialEntity implements IMobileDimensionalEntity, IPhysicalEntity,
      * Previous location
      *******************/
 
-    public double getPrevX() {
+    private double getPrevX() {
         return mPrevX;
     }
 
-    public double getPrevY() {
+    private double getPrevY() {
         return mPrevY;
     }
 
-    public double getPrevZ() {
+    private double getPrevZ() {
         return mPrevZ;
     }
 
@@ -300,10 +300,10 @@ public class SpatialEntity implements IMobileDimensionalEntity, IPhysicalEntity,
 
     public boolean isOverlapping(SpatialEntity other) {
         double minDistance = getRadius() + other.getRadius();
-        if (Math.abs(getX() - other.getX()) > minDistance) return false;
-        if (Math.abs(getY() - other.getY()) > minDistance) return false;
-        if (Math.abs(getZ() - other.getZ()) > minDistance) return false;
-        return getDistance(other) < minDistance;
+        return Math.abs(getX() - other.getX()) <= minDistance
+                && Math.abs(getY() - other.getY()) <= minDistance
+                && Math.abs(getZ() - other.getZ()) <= minDistance
+                && getDistance(other) < minDistance;
     }
 
     public static SpatialEntity collide(SpatialEntity a, SpatialEntity b) {
